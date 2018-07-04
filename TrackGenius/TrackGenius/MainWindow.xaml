@@ -9,7 +9,7 @@
         Title="Track Genius" Height="450" Width="800">
     <Grid Background="DarkGray">
         <StackPanel>
-            <Grid Column="3" Row="2">
+            <Grid Column="4" Row="2">
                 
             </Grid>
         </StackPanel>
