@@ -11,39 +11,46 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/Icons.xaml"/>
+                <ResourceDictionary Source="/Resources/IconsNonShared.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
     <Controls:MetroWindow.LeftWindowCommands>
         <Controls:WindowCommands>
-            <Button Content="←"></Button>
+            <Button Visibility="Collapsed" Content="←"></Button>
         </Controls:WindowCommands>
     </Controls:MetroWindow.LeftWindowCommands>
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
-            <Button Content="settings" />
-            <Button>
+            <Button Name="BtnSettings" Content="settings"  Click="OnSettingsButton_Click"/>
+                <Button>
                 <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20"
-                   Height="20"
-                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle Width="20"  Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_cupcake}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
-                    <TextBlock Margin="4 0 0 0"
-                   VerticalAlignment="Center"
-                   Text="deploy cupcakes" />
+                    <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="deploy cupcakes" />
                 </StackPanel>
             </Button>
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
-    <Grid Background="DarkGray">
-        <StackPanel>
-            <Grid Column="4" Row="2">
-
-            </Grid>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Name="NavHome" VerticalAlignment="Top" Orientation="Horizontal" Height="30" FlowDirection="LeftToRight" 
+                    Grid.Column="0" MouseEnter="UIElement_OnMouseEnter" MouseLeave="Nav_Home_OnMouseLeave"
+                     MouseLeftButtonDown="Nav_Home_OnMouseLeftButtonDown">
+            <Rectangle Width="20" Height="20" Margin="5">
+                <Rectangle.Fill>
+                    <VisualBrush Stretch="Fill" Visual="{StaticResource  appbar_weather_rain}" />
+                </Rectangle.Fill>
+            </Rectangle>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left">adsf</TextBlock>
         </StackPanel>
     </Grid>
+    
 </Controls:MetroWindow>
 
