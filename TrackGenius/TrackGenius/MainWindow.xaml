@@ -8,7 +8,37 @@
         Title="Track Genius" Height="450" Width="800"
         ShowIconOnTitleBar="True">
     <Window.Resources>
-        <ResourceDictionary>
+        <Style x:Key="NavItemStyle" TargetType="RadioButton">
+            <Style.Setters>
+                <Setter Property="OverridesDefaultStyle" Value="False"/>
+            </Style.Setters>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseOver" Value="True"></Condition>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="LightGray"></Setter>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        <ControlTemplate x:Key="NavItemTemp" TargetType="RadioButton">
+            <StackPanel Name="NavHome" VerticalAlignment="Top" Orientation="Horizontal" Height="30" FlowDirection="LeftToRight" 
+                        Grid.Column="0"
+                        MouseLeftButtonDown="Nav_Home_OnMouseLeftButtonDown">
+                <Rectangle Width="20" Height="20" Margin="5">
+                    <Rectangle.Fill>
+                        <VisualBrush Stretch="Fill" />
+                    </Rectangle.Fill>
+                </Rectangle>
+                <ContentPresenter/>
+            </StackPanel>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="NavHome" Property="Background" Value="DarkGray"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ResourceDictionary x:Key="resDict">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/Icons.xaml"/>
                 <ResourceDictionary Source="/Resources/IconsNonShared.xaml"/>
@@ -27,7 +57,7 @@
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20"  Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_cupcake}" />
+                            <VisualBrush Stretch="Fill" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
                     <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="deploy cupcakes" />
@@ -40,16 +70,16 @@
             <ColumnDefinition Width="200"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <StackPanel Name="NavHome" VerticalAlignment="Top" Orientation="Horizontal" Height="30" FlowDirection="LeftToRight" 
-                    Grid.Column="0" MouseEnter="UIElement_OnMouseEnter" MouseLeave="Nav_Home_OnMouseLeave"
-                     MouseLeftButtonDown="Nav_Home_OnMouseLeftButtonDown">
-            <Rectangle Width="20" Height="20" Margin="5">
-                <Rectangle.Fill>
-                    <VisualBrush Stretch="Fill" Visual="{StaticResource  appbar_weather_rain}" />
-                </Rectangle.Fill>
-            </Rectangle>
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left">adsf</TextBlock>
+        <StackPanel>
+            <RadioButton Style="{StaticResource ResourceKey=NavItemStyle}">
+                <StackPanel>
+                    <Image></Image>
+                    <TextBlock>adf</TextBlock>
+                </StackPanel>
+            </RadioButton>
+            <RadioButton Template="{StaticResource ResourceKey = NavItemTemp}">adsf</RadioButton>
         </StackPanel>
+        
     </Grid>
     
 </Controls:MetroWindow>

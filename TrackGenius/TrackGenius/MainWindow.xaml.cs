@@ -33,19 +33,8 @@ namespace TrackGenius
             MessageBox.Show("ShowSettings");
         }
 
-        private void UIElement_OnMouseEnter(object sender, MouseEventArgs e)
-        {
-            NavHome.Background = new SolidColorBrush(Color.FromRgb(128, 128, 128));
-        }
-
-        private void Nav_Home_OnMouseLeave(object sender, MouseEventArgs e)
-        {
-            NavHome.Background = null;
-        }
-
         private void Nav_Home_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            NavHome.Visibility = Visibility.Collapsed;
         }
     }
 }
