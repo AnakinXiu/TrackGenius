@@ -25,12 +25,10 @@ namespace TrackGenius
         public MainWindow()
         {
             InitializeComponent();
-            
         }
 
         private void OnSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ShowSettings");
         }
 
         private void Nav_Home_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

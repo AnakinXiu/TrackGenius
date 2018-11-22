@@ -36,6 +36,9 @@
                 <Trigger Property="IsChecked" Value="True">
                     <Setter TargetName="NavHome" Property="Background" Value="DarkGray"/>
                 </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="NavHome" Property="Background" Value="LightGray"/>
+                </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
         <ResourceDictionary x:Key="resDict">
@@ -79,7 +82,7 @@
             </RadioButton>
             <RadioButton Template="{StaticResource ResourceKey = NavItemTemp}">adsf</RadioButton>
         </StackPanel>
-        
+        <Controls:SplitView></Controls:SplitView>
     </Grid>
     
 </Controls:MetroWindow>
