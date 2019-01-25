@@ -1,0 +1,34 @@
+﻿<Window x:Class="TrackGenius.UI.MainForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="clr-namespace:TrackGenius.UI"
+        mc:Ignorable="d"
+        Title="Track Genius" Height="450" Width="800" Topmost="True" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <ui:MainFormParamViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding ToolBarSize.Height}"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="{Binding ToolBarSize.Height}"/>
+        </Grid.RowDefinitions>
+        <Grid Name="ToolBar" Grid.Row="0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding ToolBarButtonSize.Width}"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="Menu" Grid.Column="0"   Background="Aqua"/>
+            <StackPanel Grid.Column="1"  HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Background="Aqua" Width="{Binding ToolBarButtonSize.Width}" Content="1"/>
+                <Button Background="Aqua" Width="{Binding ToolBarButtonSize.Width}" Content="2"/>
+                <Button Name="NewDriver" Background="Aqua" Width="{Binding ToolBarButtonSize.Width}" Content="3" Click="NewDriver_OnClick"/>
+            </StackPanel>
+        </Grid>
+        <StackPanel Name="MainPanel" Background="Gainsboro" Grid.Row="1">
+            <TextBlock>sdfadf</TextBlock>
+        </StackPanel>
+        </Grid>
+</Window>

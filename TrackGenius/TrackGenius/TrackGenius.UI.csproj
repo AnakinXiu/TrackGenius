@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{27591BA7-415C-49D5-9806-42D972FA862F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TrackGenius</RootNamespace>
-    <AssemblyName>TrackGenius</AssemblyName>
+    <RootNamespace>TrackGenius.UI</RootNamespace>
+    <AssemblyName>TrackGenius.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -34,17 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
-    </Reference>
-    <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net46\MahApps.Metro.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -63,17 +54,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Forms\DriverCreationForm.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\MainForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
+    <Compile Include="Forms\DriverCreationForm.xaml.cs">
+      <DependentUpon>DriverCreationForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MainForm.xaml.cs">
+      <DependentUpon>MainForm.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -85,6 +82,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\MainFormParamViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -117,6 +115,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Entypo-license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj">
+      <Project>{e1457a1c-97e5-49b4-9636-83fa58408edb}</Project>
+      <Name>TrackGenius.Const</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TrackGenius.Model\TrackGenius.Model.csproj">
+      <Project>{652cb709-6e18-41df-a799-8f5d8c67941e}</Project>
+      <Name>TrackGenius.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
