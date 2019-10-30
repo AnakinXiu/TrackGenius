@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="clr-namespace:TrackGenius.UI"
         mc:Ignorable="d"
-        Title="Track Genius" Height="450" Width="800" Topmost="True" WindowStartupLocation="CenterScreen">
+        Title="Track Genius" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <ui:MainFormParamViewModel/>
     </Window.DataContext>

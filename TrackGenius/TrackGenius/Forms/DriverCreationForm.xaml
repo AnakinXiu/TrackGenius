@@ -6,15 +6,15 @@
         xmlns:local="clr-namespace:TrackGenius.UI.Forms"
         xmlns:model="clr-namespace:TrackGenius.Model;assembly=TrackGenius.Model"
         mc:Ignorable="d"
-        Title="DriverCreationForm" Height="450" Width="800" WindowStyle="ToolWindow">
+        Title="DriverCreationForm" Height="400" Width="300" WindowStartupLocation ="CenterOwner"  WindowStyle="ToolWindow">
     <Window.DataContext>
         <model:Driver/>
     </Window.DataContext>
     <Grid>
         <StackPanel>
-            <StackPanel Margin="100,10,100,0" Orientation="Horizontal">
+            <StackPanel Margin="20,10,20,0" Orientation="Horizontal">
                 <Border BorderBrush="Black" BorderThickness="2">
-                    <Image Name="UserFace" Width="200"/>
+                    <Image Name="UserFace" Width="80" Height="80"/>
                 </Border>
                 <StackPanel Orientation="Vertical" Margin="10">
                     <Grid>
