@@ -1,9 +1,8 @@
-﻿using System;
-using TrackGenius.Const;
+﻿using TrackGenius.Const;
 
 namespace TrackGenius.Model
 {
-    public interface IRecoder
+    public interface ITransponder
     {
         string RecoderName { get; set; }
 
