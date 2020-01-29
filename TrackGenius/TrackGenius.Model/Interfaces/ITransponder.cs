@@ -8,6 +8,6 @@ namespace TrackGenius.Model
 
         string RecoderNumber { get; set; }
 
-        RecoderType RecoderType { get; set; }
+        TransponderType RecoderType { get; set; }
     }
 }
