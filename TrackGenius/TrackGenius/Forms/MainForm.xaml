@@ -6,9 +6,6 @@
         xmlns:ui="clr-namespace:TrackGenius.UI"
         mc:Ignorable="d"
         Title="Track Genius" Height="450" Width="800" WindowStartupLocation="CenterScreen">
-    <Window.DataContext>
-        <ui:MainFormParamViewModel/>
-    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="{Binding ToolBarSize.Height}"/>
@@ -27,8 +24,13 @@
                 <Button Name="NewDriver" Background="Aqua" Width="{Binding ToolBarButtonSize.Width}" Content="3" Click="NewDriver_OnClick"/>
             </StackPanel>
         </Grid>
-        <StackPanel Name="MainPanel" Background="Gainsboro" Grid.Row="1">
-            <TextBlock>sdfadf</TextBlock>
-        </StackPanel>
+        <Grid Name="MainPanel" Background="Gainsboro" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0">sdfadf</TextBlock>
+            <ListBox Grid.Column="1" ItemsSource ="{Binding SerialPorts}"/>
+        </Grid>
         </Grid>
 </Window>

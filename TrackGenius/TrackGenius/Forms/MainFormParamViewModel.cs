@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using TrackGenius.Communication;
 
 namespace TrackGenius.UI
 {
@@ -7,5 +10,13 @@ namespace TrackGenius.UI
         public Size ToolBarSize { get; set; }
 
         public Size ToolBarButtonSize { get; set; }
+
+        public List<string> SerialPorts { get; }
+
+        public MainFormParamViewModel()
+        {
+            using(var serialPortWrapper = new SerialPortWrapper(null))
+                SerialPorts = serialPortWrapper.GetValidPortNames().ToList();
+        }
     }
 }

@@ -8,11 +8,13 @@ namespace TrackGenius.UI
     /// </summary>
     public partial class MainForm : Window
     {
+        private MainFormParamViewModel _viewModel;
+
         public MainForm()
         {
             InitializeComponent();
-
-            this.DataContext = LoadMainFormParams();
+            _viewModel = LoadMainFormParams();
+            DataContext = _viewModel;
         }
 
         private MainFormParamViewModel LoadMainFormParams() =>
