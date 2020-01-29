@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace TrackGenius.Protocol
+﻿namespace TrackGenius.Protocol
 {
     public interface ICommonMessage
     {

@@ -44,8 +44,10 @@
     <Compile Include="Driver.cs" />
     <Compile Include="Interfaces\ICar.cs" />
     <Compile Include="Interfaces\IDriver.cs" />
-    <Compile Include="Interfaces\IRecoder.cs" />
+    <Compile Include="Interfaces\IRaceClub.cs" />
+    <Compile Include="Interfaces\ITransponder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RaceClub.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj">
