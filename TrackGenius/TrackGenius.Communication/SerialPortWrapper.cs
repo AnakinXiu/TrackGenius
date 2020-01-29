@@ -1,34 +1,51 @@
-﻿using System;
-using System.IO.Ports;
+﻿using RJCP.IO.Ports;
+using System;
+using System.Collections.Generic;
 using TrackGenius.Protocol;
+using Parity = RJCP.IO.Ports.Parity;
+using StopBits = RJCP.IO.Ports.StopBits;
 
 namespace TrackGenius.Communication
 {
-    public class SerialPortWrapper : ISerialPortWrapper
+    public class SerialPortWrapper : ISerialPortWrapper, ISerialPortsEnumlator, IDisposable
     {
-        public SerialPort Port { get; private set; }
+        private SerialPortStream _serialPortStream;
+
         public string Name { get; }
+
         public int PortNumber { get; }
+
+        public ISerialPortSettings Settings { get; }
 
         public SerialPortWrapper(ISerialPortSettings settings)
         {
-            
+            Settings = settings;
         }
 
-        public void CreatePort(string portName, int baudRate, Parity parity)
+        public void OpenPort(string portName, int baud, int data, Parity parity, StopBits stopBits)
         {
-            Port = new SerialPort(portName, baudRate, parity);
-        }
-
-        public void OpenPort(int portNumber)
-        {
-            Port.Open();
-            
+            _serialPortStream = new SerialPortStream(portName, baud, data, parity, stopBits);
         }
 
         public void ClosePort()
         {
-            Port.Close();
+            _serialPortStream?.Close();
+        }
+
+        public IEnumerable<string> GetValidPortNames()
+        {
+            return SerialPortStream.GetPortNames();
+        }
+
+        public void SendBytes(byte[] sendData)
+        {
+            
+        }
+
+        public void Dispose()
+        {
+            ClosePort();
+            _serialPortStream.Dispose();
         }
     }
 }
