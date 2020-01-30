@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 
 namespace TrackGenius.Protocol.Robitronic
 {
@@ -9,6 +10,9 @@ namespace TrackGenius.Protocol.Robitronic
         public byte[] Serialize() => GetBytes();
 
 
-        public byte[] GetBytes() => _data.Split(SplitChar.Separator).Select(byte.Parse).ToArray();
+        public byte[] GetBytes() => _data.Split(SplitChar.Separator).Select(b=>byte.Parse(b, NumberStyles.HexNumber)).ToArray();
+
+        public override string ToString() => _data;
+
     }
 }

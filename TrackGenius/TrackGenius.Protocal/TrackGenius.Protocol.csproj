@@ -46,10 +46,13 @@
     <Compile Include="IMessageParser.cs" />
     <Compile Include="ISerialPortSettings.cs" />
     <Compile Include="IUplinkMessage.cs" />
+    <Compile Include="MessageParser.cs" />
+    <Compile Include="Parser\DetectedMessageParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Robitronic\DetectedMessage.cs" />
     <Compile Include="Robitronic\Initialize.cs" />
     <Compile Include="Robitronic\InitializeResponse.cs" />
+    <Compile Include="SerialPortSettings.cs" />
     <Compile Include="SplitChar.cs" />
   </ItemGroup>
   <ItemGroup />
