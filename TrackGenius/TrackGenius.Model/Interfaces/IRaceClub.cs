@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TrackGenius.Model.Interfaces
+namespace TrackGenius.Model
 {
     interface IRaceClub
     {
