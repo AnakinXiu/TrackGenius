@@ -52,9 +52,16 @@
     <Compile Include="Robitronic\DetectedMessage.cs" />
     <Compile Include="Robitronic\Initialize.cs" />
     <Compile Include="Robitronic\InitializeResponse.cs" />
+    <Compile Include="Robitronic\PacketType.cs" />
+    <Compile Include="Robitronic\TimeStampMessage.cs" />
     <Compile Include="SerialPortSettings.cs" />
     <Compile Include="SplitChar.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj">
+      <Project>{e1457a1c-97e5-49b4-9636-83fa58408edb}</Project>
+      <Name>TrackGenius.Const</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
