@@ -1,4 +1,8 @@
 ﻿using System.Windows;
+using System.Windows.Input;
+using TrackGenius.Communication;
+using TrackGenius.Protocol;
+using TrackGenius.Protocol.Robitronic;
 using TrackGenius.UI.Forms;
 
 namespace TrackGenius.UI
@@ -10,11 +14,15 @@ namespace TrackGenius.UI
     {
         private MainFormParamViewModel _viewModel;
 
+        CommunicateService _comService;
+
         public MainForm()
         {
             InitializeComponent();
             _viewModel = LoadMainFormParams();
             DataContext = _viewModel;
+
+            CommandBindings.Add(new CommandBinding(ApplicationCommands.New));
         }
 
         private MainFormParamViewModel LoadMainFormParams() =>
@@ -27,6 +35,19 @@ namespace TrackGenius.UI
         private void NewDriver_OnClick(object sender, RoutedEventArgs e)
         {
             new DriverCreationForm().ShowDialog();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            _comService = new CommunicateService();
+
+            var portSetting = new SerialPortSettings(38400, System.IO.Ports.StopBits.One, System.IO.Ports.Parity.None, 8);
+            _comService.StartService(ComSelection.Text, portSetting);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            _comService?.SendCommand(new Initialize());
         }
     }
 }

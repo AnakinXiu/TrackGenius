@@ -113,10 +113,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommunicateService.cs" />
     <Compile Include="ISerialPortsEnumlator.cs" />
     <Compile Include="ISerialPortWrapper.cs" />
+    <Compile Include="ParityExtension.cs" />
     <Compile Include="SerialPortWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StopBitExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TrackGenius.Protocal\TrackGenius.Protocol.csproj">

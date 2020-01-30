@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using TrackGenius.Communication;
 
 namespace TrackGenius.UI
 {
-    internal class MainFormParamViewModel
+    public class MainFormParamViewModel
     {
         public Size ToolBarSize { get; set; }
 
@@ -13,10 +14,14 @@ namespace TrackGenius.UI
 
         public List<string> SerialPorts { get; }
 
+        public RoutedUICommand OpenComPortCommand { get; }
+
         public MainFormParamViewModel()
         {
-            using(var serialPortWrapper = new SerialPortWrapper(null))
+            using(var serialPortWrapper = new SerialPortWrapper())
                 SerialPorts = serialPortWrapper.GetValidPortNames().ToList();
+
+            OpenComPortCommand = new RoutedUICommand("Open Serial Port", "OpenCom", typeof(MainFormParamViewModel));
         }
     }
 }
