@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using TrackGenius.Protocol;
 
 namespace TrackGenius.Communication
@@ -18,12 +17,11 @@ namespace TrackGenius.Communication
         public void StartService(string portName, SerialPortSettings settings)
         {
             _serialPortWrapper.OpenPort(portName, settings.BaudRate, settings.Length, settings.Parity.ToRJCPModel(), settings.StopBit.ToRJCPModel());
-            _serialPortWrapper.PropertyChanged += OnDataReceived;
+            _serialPortWrapper.DataReceived += OnDataReceived;
         }
 
         public void CloseService()
         {
-            _serialPortWrapper.PropertyChanged -= OnDataReceived;
             _serialPortWrapper.Dispose();
         }
 
@@ -32,9 +30,9 @@ namespace TrackGenius.Communication
             _serialPortWrapper.SendBytes(message.Serialize());
         }
 
-        private void OnDataReceived(object sender, PropertyChangedEventArgs args)
+        private void OnDataReceived(object sender, DataReceivedArgs args)
         {
-            var message = MessageParser.ParserMessage(_serialPortWrapper.ReadBytes());
+            var message = MessageParser.ParserMessage(args.Buffer);
             _upwardMessages.Enqueue(message);
         }
     }

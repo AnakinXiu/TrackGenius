@@ -8,6 +8,10 @@ namespace TrackGenius.Communication
 
         int PortNumber { get; }
 
+        bool isOpened { get; }
+
+        event DataReceivedEventHandler DataReceived;
+
         void OpenPort(string portName, int baud, int data, Parity parity, StopBits stopBits);
 
         void ClosePort();
