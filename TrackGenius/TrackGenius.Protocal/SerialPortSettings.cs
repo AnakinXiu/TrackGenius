@@ -4,13 +4,13 @@ namespace TrackGenius.Protocol
 {
     public class SerialPortSettings : ISerialPortSettings
     {
-        public int BaudRate { get; private set; }
+        public int BaudRate { get; }
 
-        public StopBits StopBit { get; private set; }
+        public StopBits StopBit { get; }
 
-        public Parity Parity { get; private set; }
+        public Parity Parity { get; }
 
-        public int Length { get; private set; }
+        public int Length { get; }
 
         public SerialPortSettings(int baudRate, StopBits stopBits, Parity parity, int length)
         {
