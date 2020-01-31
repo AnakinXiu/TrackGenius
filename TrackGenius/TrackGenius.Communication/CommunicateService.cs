@@ -5,11 +5,11 @@ namespace TrackGenius.Communication
 {
     public class CommunicateService
     {
-        private SerialPortWrapper _serialPortWrapper;
+        private readonly SerialPortWrapper _serialPortWrapper;
 
         private readonly IMessageParser _messageParser;
 
-        private Queue<IUplinkMessage> _upwardMessages = new Queue<IUplinkMessage>();
+        private readonly Queue<IUplinkMessage> _upwardMessages = new Queue<IUplinkMessage>();
 
         public CommunicateService(IMessageParser messageParser)
         {
