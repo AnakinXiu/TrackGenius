@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using TrackGenius.Communication;
+using TrackGenius.Const;
 using TrackGenius.Protocol;
-using TrackGenius.Protocol.Robitronic;
 using TrackGenius.UI.Forms;
 
 namespace TrackGenius.UI
@@ -39,7 +39,7 @@ namespace TrackGenius.UI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _comService = new CommunicateService();
+            _comService = new CommunicateService(MessageParserFactory.GetParserByProtocal(TransponderType.Robitronic));
 
             var portSetting = new SerialPortSettings(38400, System.IO.Ports.StopBits.One, System.IO.Ports.Parity.None, 8);
             _comService.StartService(ComSelection.Text, portSetting);
@@ -47,7 +47,7 @@ namespace TrackGenius.UI
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            _comService?.SendCommand(new Initialize());
+            //_comService?.SendCommand(new Initialize());
         }
     }
 }

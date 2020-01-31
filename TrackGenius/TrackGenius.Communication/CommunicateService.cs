@@ -7,11 +7,14 @@ namespace TrackGenius.Communication
     {
         private SerialPortWrapper _serialPortWrapper;
 
+        private readonly IMessageParser _messageParser;
+
         private Queue<IUplinkMessage> _upwardMessages = new Queue<IUplinkMessage>();
 
-        public CommunicateService()
+        public CommunicateService(IMessageParser messageParser)
         {
             _serialPortWrapper = new SerialPortWrapper();
+            _messageParser = messageParser;
         }
 
         public void StartService(string portName, SerialPortSettings settings)
@@ -32,7 +35,7 @@ namespace TrackGenius.Communication
 
         private void OnDataReceived(object sender, DataReceivedArgs args)
         {
-            var message = MessageParser.ParserMessage(args.Buffer);
+            var message = _messageParser.ParseMessage(args.Buffer);
             _upwardMessages.Enqueue(message);
         }
     }
