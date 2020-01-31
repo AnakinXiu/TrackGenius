@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Core;
+using System.Linq;
 using MoreLinq;
 
 namespace TrackGenius.Const
@@ -8,22 +8,22 @@ namespace TrackGenius.Const
     {
         public static byte[] Cut(this byte[] byteArray, int index, int length)
         {
+            if (byteArray == null)
+                throw new ArgumentNullException();
+
             if (index < 0 || index > byteArray.Length)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             if (index + length > byteArray.Length)
                 throw new ArgumentOutOfRangeException(nameof(length));
-
-            var result = new byte[length];
-            byteArray.CopyTo(result, index);
-
-            return result;
+            
+            return byteArray.Skip(index).Take(length).ToArray();
         }
 
         public static byte[] Reverse(this byte[] byteArray)
         {
             var result = new byte[byteArray.Length];
-            byteArray.ForEach((b, index) => result[byteArray.Length - index] = b);
+            byteArray.ForEach((b, index) => result[byteArray.Length - index - 1] = b);
 
             return result;
         }
