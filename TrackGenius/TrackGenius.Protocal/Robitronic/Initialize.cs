@@ -1,18 +1,17 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System;
 
 namespace TrackGenius.Protocol.Robitronic
 {
     public class Initialize : IDownlinkMessage
     {
-        private readonly string _data = $"03{SplitChar.Separator}B9{SplitChar.Separator}01";
+        private static readonly byte[] _byteData = new byte[] { 0x03, 0xB9, 0x01 };
+        
+        public int PacketLength => 3;
 
-        public byte[] Serialize() => GetBytes();
+        public byte[] ByteData { get; } = _byteData;
 
+        public byte[] Serialize() => _byteData;
 
-        public byte[] GetBytes() => _data.Split(SplitChar.Separator).Select(b=>byte.Parse(b, NumberStyles.HexNumber)).ToArray();
-
-        public override string ToString() => _data;
-
+        public override string ToString() => BitConverter.ToString(ByteData).Replace('-', SplitChar.Separator);
     }
 }

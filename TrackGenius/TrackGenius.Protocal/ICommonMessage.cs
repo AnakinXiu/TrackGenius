@@ -4,7 +4,7 @@
     {
         int PacketLength { get; }
 
-        byte[] GetBytes();
+        byte[] ByteData { get; }
 
         string ToString();
     }

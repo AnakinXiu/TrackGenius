@@ -5,7 +5,7 @@ namespace TrackGenius.Protocol.Robitronic
 {
     public class DetectedMessage : IUplinkMessage
     {
-        private byte[] ByteData { get; }
+        public byte[] ByteData { get; }
 
         public byte Checksum => ByteData[1];
 
@@ -13,9 +13,9 @@ namespace TrackGenius.Protocol.Robitronic
 
         public int PacketLength => ByteData[0];
 
-        public string CarID => ByteData.Cut(3, 4).Reverse().ToInt32().ToString();
+        public string TransponderID { get; }
 
-        public int Milliseconds => ByteData.Cut(7, 4).Reverse().ToInt32();
+        public int Milliseconds { get; }
 
         public int Hits => ByteData[11];
         
@@ -23,10 +23,20 @@ namespace TrackGenius.Protocol.Robitronic
 
         public DetectedMessage(byte[] data)
         {
-            ByteData = data;
-        }
+            if (data == null)
+                throw new ArgumentNullException();
 
-        public byte[] GetBytes() => ByteData;
+            if (data.Length < 3)
+                throw new ArgumentOutOfRangeException();
+
+            if (data[2] != 0x84)
+                throw new FormatException();
+
+            ByteData = data;
+
+            TransponderID = ByteData.Cut(3, 4).ToInt32().ToString();
+            Milliseconds = ByteData.Cut(7, 4).ToInt32();
+        }
 
         public string Deserialize()=> BitConverter.ToString(ByteData).Replace('-', SplitChar.Separator);
 

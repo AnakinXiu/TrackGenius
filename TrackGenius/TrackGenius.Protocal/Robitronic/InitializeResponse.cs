@@ -2,14 +2,20 @@
 {
     public class InitializeResponse : IUplinkMessage
     {
-        public byte[] GetBytes()
+        public byte[] ByteData { get; }
+
+        public int PacketLength => 1;
+
+        public byte Checksum => 0;
+
+        public PacketType PacketType => PacketType.InitializeResponse;
+
+        public InitializeResponse(byte[] data)
         {
-            throw new System.NotImplementedException();
+            ByteData = data;
         }
 
-        public string Deserialize()
-        {
-            throw new System.NotImplementedException();
-        }
+        public string Deserialize() => "00";
+
     }
 }
