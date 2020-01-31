@@ -17,7 +17,7 @@ namespace TrackGenius.Communication
             _messageParser = messageParser;
         }
 
-        public void StartService(string portName, SerialPortSettings settings)
+        public void StartService(string portName, ISerialPortSettings settings)
         {
             _serialPortWrapper.OpenPort(portName, settings.BaudRate, settings.Length, settings.Parity.ToRJCPModel(), settings.StopBit.ToRJCPModel());
             _serialPortWrapper.DataReceived += OnDataReceived;
