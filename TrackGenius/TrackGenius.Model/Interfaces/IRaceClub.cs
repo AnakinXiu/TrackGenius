@@ -7,5 +7,7 @@ namespace TrackGenius.Model
         Guid ClubID { get; set; }
 
         string ClubName { get; set; }
+
+
     }
 }
