@@ -1,5 +1,4 @@
 ﻿using System;
-using TrackGenius.Model.Interfaces;
 
 namespace TrackGenius.Model
 {
