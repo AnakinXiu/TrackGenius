@@ -37,17 +37,22 @@ namespace TrackGenius.UI
             new DriverCreationForm().ShowDialog();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            //_comService?.SendCommand(new Initialize());
+        }
+
+        private void OpenPort_OnCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = ComSelection.SelectedValue != null && (_comService == null || !_comService.IsOpened);
+        }
+
+        private void OpenPort_OnExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             _comService = new CommunicateService(MessageParserFactory.GetParserByProtocal(TransponderType.Robitronic));
 
             var portSetting = new SerialPortSettings(38400, System.IO.Ports.StopBits.One, System.IO.Ports.Parity.None, 8);
             _comService.StartService(ComSelection.Text, portSetting);
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            //_comService?.SendCommand(new Initialize());
         }
     }
 }

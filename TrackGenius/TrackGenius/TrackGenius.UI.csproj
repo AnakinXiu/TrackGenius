@@ -67,6 +67,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CustomCommands.cs" />
     <Compile Include="Forms\DriverCreationForm.xaml.cs">
       <DependentUpon>DriverCreationForm.xaml</DependentUpon>
     </Compile>

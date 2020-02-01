@@ -11,6 +11,8 @@ namespace TrackGenius.Communication
 
         private readonly Queue<IUplinkMessage> _upwardMessages = new Queue<IUplinkMessage>();
 
+        public bool IsOpened => _serialPortWrapper.IsOpened;
+
         public CommunicateService(IMessageParser messageParser)
         {
             _serialPortWrapper = new SerialPortWrapper();

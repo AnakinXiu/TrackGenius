@@ -17,7 +17,7 @@ namespace TrackGenius.Communication
 
         public int PortNumber { get; }
 
-        public bool isOpened => _serialPortStream.IsOpen;
+        public bool IsOpened => _serialPortStream.IsOpen;
 
         private byte[] _buffer = new byte[1024];
 
