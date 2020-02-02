@@ -13,6 +13,8 @@ namespace TrackGenius.Communication
 
         public bool IsOpened => _serialPortWrapper.IsOpened;
 
+        public MessageReceivedEventHandler MessageReceived;
+
         public CommunicateService(IMessageParser messageParser)
         {
             _serialPortWrapper = new SerialPortWrapper();
