@@ -37,11 +37,6 @@ namespace TrackGenius.UI
             new DriverCreationForm().ShowDialog();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            //_comService?.SendCommand(new Initialize());
-        }
-
         private void OpenPort_OnCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = ComSelection.SelectedValue != null && (_comService == null || !_comService.IsOpened);
@@ -53,6 +48,16 @@ namespace TrackGenius.UI
 
             var portSetting = new SerialPortSettings(38400, System.IO.Ports.StopBits.One, System.IO.Ports.Parity.None, 8);
             _comService.StartService(ComSelection.Text, portSetting);
+        }
+
+        private void StartRace_OnCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void StartRace_OnExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

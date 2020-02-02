@@ -10,6 +10,9 @@
         <CommandBinding Command="{x:Static ui:CustomCommands.OpenPortCommand}"
                         CanExecute="OpenPort_OnCanExecute" 
                         Executed="OpenPort_OnExecuted"/>
+        <CommandBinding Command="{x:Static ui:CustomCommands.StartRaceCommand}"
+                        CanExecute="StartRace_OnCanExecute" 
+                        Executed="StartRace_OnExecuted"/>
     </Window.CommandBindings>
         <Grid>
         <Grid.RowDefinitions>
@@ -37,9 +40,16 @@
             <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Send message" Click="Button_Click_1"/>
-            <Grid Grid.Column="1">
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="DeviceType"/>
+                <ComboBox Grid.Column="1" Width="auto" Name="DeviceSelection"/>
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -47,7 +57,7 @@
                 <ComboBox Grid.Column="0" Name="ComSelection" ItemsSource ="{Binding SerialPorts}"/>
                 <Button Grid.Column="1" Content="OpenCom" Command="{x:Static ui:CustomCommands.OpenPortCommand}"/>
             </Grid>
-            
+            <Button Grid.Row="1" Grid.Column="1" Content="Start Race" FontSize="20" Command="{x:Static ui:CustomCommands.StartRaceCommand}"/>
         </Grid>
         </Grid>
 </Window>
