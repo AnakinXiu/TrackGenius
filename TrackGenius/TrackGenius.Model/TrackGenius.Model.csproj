@@ -57,6 +57,7 @@
     <Compile Include="Race\Race.cs" />
     <Compile Include="Entity\RaceClub.cs" />
     <Compile Include="Race\BestLapRanker.cs" />
+    <Compile Include="Race\RaceStatus.cs" />
     <Compile Include="Race\RaceType.cs" />
     <Compile Include="Race\StartMode.cs" />
   </ItemGroup>
