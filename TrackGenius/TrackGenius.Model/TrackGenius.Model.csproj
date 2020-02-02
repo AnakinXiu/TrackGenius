@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,13 +42,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Driver.cs" />
-    <Compile Include="Interfaces\ICar.cs" />
-    <Compile Include="Interfaces\IDriver.cs" />
-    <Compile Include="Interfaces\IRaceClub.cs" />
-    <Compile Include="Interfaces\ITransponder.cs" />
+    <Compile Include="Entity\Driver.cs" />
+    <Compile Include="Entity\ICar.cs" />
+    <Compile Include="Entity\IDriver.cs" />
+    <Compile Include="Race\DurationMode.cs" />
+    <Compile Include="Race\IRace.cs" />
+    <Compile Include="Entity\IRaceClub.cs" />
+    <Compile Include="Entity\ITransponder.cs" />
+    <Compile Include="Race\IRaceDuration.cs" />
+    <Compile Include="Race\IRaceRanker.cs" />
+    <Compile Include="Race\IRaceStarter.cs" />
+    <Compile Include="Race\RaceClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RaceClub.cs" />
+    <Compile Include="Race\Race.cs" />
+    <Compile Include="Entity\RaceClub.cs" />
+    <Compile Include="Race\BestLapRanker.cs" />
+    <Compile Include="Race\RaceType.cs" />
+    <Compile Include="Race\StartMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj">
@@ -55,5 +66,6 @@
       <Name>TrackGenius.Const</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

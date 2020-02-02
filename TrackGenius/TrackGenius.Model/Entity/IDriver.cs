@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Windows.Media.Imaging;
 
 namespace TrackGenius.Model
 {
@@ -10,6 +12,10 @@ namespace TrackGenius.Model
 
         string NickName { get; set; }
 
-        string ClubName { get; }
+        Guid ClubID { get; set; }
+
+        BitmapImage Photo { get; set; }
+
+        ICollection<ICar> Cars { get; }
     }
 }
