@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace TrackGenius.Model
 {
+
     public interface IRace
     {
         Guid RaceID { get; }
@@ -10,8 +12,15 @@ namespace TrackGenius.Model
 
         RaceClass RaceClass { get; }
 
+        RaceTimer RaceTimer { get; }
+
+        IRaceRanker RaceRanker { get; set; }
+
         int CountDownTime { get; set; }
 
-        void StartRace();
+        ICollection<RaceStatus> RacersCollection { get; }
+
+        void UpdateRaceStatus(CarDetectMessage message);
     }
+
 }
