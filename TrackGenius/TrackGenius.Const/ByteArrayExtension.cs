@@ -22,6 +22,9 @@ namespace TrackGenius.Const
 
         public static byte[] Reverse(this byte[] byteArray)
         {
+            if (byteArray == null)
+                throw new ArgumentNullException();
+
             var result = new byte[byteArray.Length];
             byteArray.ForEach((b, index) => result[byteArray.Length - index - 1] = b);
 
@@ -30,6 +33,9 @@ namespace TrackGenius.Const
 
         public static int ToInt32(this byte[] byteArray)
         {
+            if (byteArray == null)
+                throw new ArgumentNullException();
+
             var result = 0;
             byteArray.ForEach((b, index) => result += b << (byteArray.Length - index - 1) * 8);
 
