@@ -17,7 +17,7 @@ namespace TrackGenius.Communication
 
         public int PortNumber { get; }
 
-        public bool IsOpened => _serialPortStream.IsOpen;
+        public bool IsOpened => _serialPortStream?.IsOpen ?? false;
 
         private byte[] _buffer = new byte[1024];
 
@@ -38,9 +38,9 @@ namespace TrackGenius.Communication
             return SerialPortStream.GetPortNames();
         }
 
-        public void SendBytes([NotNull]byte[] sendData)
+        public void SendBytes([NotNull] byte[] sendData)
         {
-            if(_serialPortStream.CanWrite)
+            if (_serialPortStream?.CanWrite ?? false)
                 _serialPortStream.Write(sendData, 0, sendData.Length);
         }
 
