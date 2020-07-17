@@ -116,7 +116,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CarDetectEventHandler.cs" />
+    <Compile Include="MessageReceivedEventHandler.cs" />
     <Compile Include="CommunicateService.cs" />
     <Compile Include="DataReceivedArgs.cs" />
     <Compile Include="DataReceivedEventHandler.cs" />
