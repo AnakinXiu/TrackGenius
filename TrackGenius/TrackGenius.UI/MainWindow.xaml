@@ -1,0 +1,89 @@
+﻿<Controls:MetroWindow x:Class="TrackGenius.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="Track Genius" Height="450" Width="800"
+        ShowIconOnTitleBar="True">
+    <Window.Resources>
+        <Style x:Key="NavItemStyle" TargetType="RadioButton">
+            <Style.Setters>
+                <Setter Property="OverridesDefaultStyle" Value="False"/>
+            </Style.Setters>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseOver" Value="True"></Condition>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="LightGray"></Setter>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        <ControlTemplate x:Key="NavItemTemp" TargetType="RadioButton">
+            <StackPanel Name="NavHome" VerticalAlignment="Top" Orientation="Horizontal" Height="30" FlowDirection="LeftToRight" 
+                        Grid.Column="0"
+                        MouseLeftButtonDown="Nav_Home_OnMouseLeftButtonDown">
+                <Rectangle Width="20" Height="20" Margin="5">
+                    <Rectangle.Fill>
+                        <VisualBrush Stretch="Fill" />
+                    </Rectangle.Fill>
+                </Rectangle>
+                <ContentPresenter/>
+            </StackPanel>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="NavHome" Property="Background" Value="DarkGray"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="NavHome" Property="Background" Value="LightGray"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ResourceDictionary x:Key="resDict">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Icons.xaml"/>
+                <ResourceDictionary Source="/Resources/IconsNonShared.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Controls:MetroWindow.LeftWindowCommands>
+        <Controls:WindowCommands>
+            <Button Visibility="Collapsed" Content="←"></Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.LeftWindowCommands>
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button Name="BtnSettings" Content="settings"  Click="OnSettingsButton_Click"/>
+                <Button>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20"  Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="deploy cupcakes" />
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <RadioButton Style="{StaticResource ResourceKey=NavItemStyle}">
+                <StackPanel>
+                    <Image></Image>
+                    <TextBlock>adf</TextBlock>
+                </StackPanel>
+            </RadioButton>
+            <RadioButton Template="{StaticResource ResourceKey = NavItemTemp}">adsf</RadioButton>
+        </StackPanel>
+        <Controls:SplitView></Controls:SplitView>
+    </Grid>
+    
+</Controls:MetroWindow>
+

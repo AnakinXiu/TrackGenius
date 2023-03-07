@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29230.47
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackGenius.UI", "TrackGenius\TrackGenius.UI.csproj", "{27591BA7-415C-49D5-9806-42D972FA862F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackGenius.UI.Legency", "TrackGenius\TrackGenius.UI.Legency.csproj", "{27591BA7-415C-49D5-9806-42D972FA862F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackGenius.Const", "TrackGenius.Const\TrackGenius.Const.csproj", "{E1457A1C-97E5-49B4-9636-83FA58408EDB}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackGenius.ConstTests", "TrackGenius.ConstTests\TrackGenius.ConstTests.csproj", "{D1B2AAA8-A378-4345-BB26-C119E85B586A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackGenius.Core", "TrackGenius.Core\TrackGenius.Core.csproj", "{4E459279-D57A-4BA4-A747-C1F23D5FEFC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackGenius.UI", "TrackGenius.UI\TrackGenius.UI.csproj", "{DB6C9942-2223-45F5-BF97-A72DB82025B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{4E459279-D57A-4BA4-A747-C1F23D5FEFC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E459279-D57A-4BA4-A747-C1F23D5FEFC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E459279-D57A-4BA4-A747-C1F23D5FEFC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB6C9942-2223-45F5-BF97-A72DB82025B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB6C9942-2223-45F5-BF97-A72DB82025B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB6C9942-2223-45F5-BF97-A72DB82025B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB6C9942-2223-45F5-BF97-A72DB82025B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

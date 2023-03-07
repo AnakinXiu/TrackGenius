@@ -1,0 +1,63 @@
+﻿<Window x:Class="TrackGenius.UI.MainForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="clr-namespace:TrackGenius.UI"
+        mc:Ignorable="d"
+        Title="Track Genius" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static ui:CustomCommands.OpenPortCommand}"
+                        CanExecute="OpenPort_OnCanExecute" 
+                        Executed="OpenPort_OnExecuted"/>
+        <CommandBinding Command="{x:Static ui:CustomCommands.StartRaceCommand}"
+                        CanExecute="StartRace_OnCanExecute" 
+                        Executed="StartRace_OnExecuted"/>
+    </Window.CommandBindings>
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding ToolBarSize.Height}"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="{Binding ToolBarSize.Height}"/>
+        </Grid.RowDefinitions>
+        <Grid Name="ToolBar" Grid.Row="0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding ToolBarButtonSize.Width}"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="Menu" Grid.Column="0"   Background="Aqua"/>
+            <StackPanel Grid.Column="1"  HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Background="Aqua" Width="{Binding ToolBarButtonSize.Width}" Content="1"/>
+                <Button Background="Aqua" Width="{Binding ToolBarButtonSize.Width}" Content="2"/>
+                <Button Name="NewDriver" Background="Aqua" Width="{Binding ToolBarButtonSize.Width}" Content="3" Click="NewDriver_OnClick"/>
+            </StackPanel>
+        </Grid>
+        <Grid Name="MainPanel" Background="Gainsboro" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="DeviceType"/>
+                <ComboBox Grid.Column="1" Width="auto" Name="DeviceSelection"/>
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0" Name="ComSelection" ItemsSource ="{Binding SerialPorts}"/>
+                <Button Grid.Column="1" Content="OpenCom" Command="{x:Static ui:CustomCommands.OpenPortCommand}"/>
+            </Grid>
+            <Button Grid.Row="1" Grid.Column="1" Content="Start Race" FontSize="20" Command="{x:Static ui:CustomCommands.StartRaceCommand}"/>
+        </Grid>
+        </Grid>
+</Window>
