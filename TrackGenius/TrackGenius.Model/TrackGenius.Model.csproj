@@ -15,10 +15,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
-    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj" />

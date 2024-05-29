@@ -15,9 +15,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Net.Http" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TrackGenius.Communication\TrackGenius.Communication.csproj" />
