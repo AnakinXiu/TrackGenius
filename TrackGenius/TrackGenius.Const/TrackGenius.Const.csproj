@@ -15,10 +15,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="morelinq" Version="3.3.2" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
 </Project>

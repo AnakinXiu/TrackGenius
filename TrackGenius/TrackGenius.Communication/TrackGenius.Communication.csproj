@@ -19,6 +19,7 @@
     <PackageReference Include="SerialPortStream" Version="2.2.0" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
     <PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.FileVersionInfo" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
@@ -39,7 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
