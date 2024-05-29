@@ -19,6 +19,7 @@
     <PackageReference Include="SerialPortStream" Version="2.2.0" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
     <PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.FileVersionInfo" Version="4.3.0" />
@@ -38,9 +39,6 @@
     <PackageReference Include="System.Threading.Overlapped" Version="4.3.0" />
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
     <PackageReference Include="System.Threading.ThreadPool" Version="4.3.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TrackGenius.Protocal\TrackGenius.Protocol.csproj" />
