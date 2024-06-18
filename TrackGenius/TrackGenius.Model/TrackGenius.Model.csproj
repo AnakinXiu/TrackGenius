@@ -1,74 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{652CB709-6E18-41DF-A799-8F5D8C67941E}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TrackGenius.Model</RootNamespace>
-    <AssemblyName>TrackGenius.Model</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyTitle>TrackGenius.Model</AssemblyTitle>
+    <Product>TrackGenius.Model</Product>
+    <Copyright>Copyright ©  2019</Copyright>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="PresentationCore" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entity\Driver.cs" />
-    <Compile Include="Entity\ICar.cs" />
-    <Compile Include="Entity\IDriver.cs" />
-    <Compile Include="Message\CarDetectMessage.cs" />
-    <Compile Include="Race\DurationMode.cs" />
-    <Compile Include="Race\IRace.cs" />
-    <Compile Include="Entity\IRaceClub.cs" />
-    <Compile Include="Entity\ITransponder.cs" />
-    <Compile Include="Race\IRaceDuration.cs" />
-    <Compile Include="Race\IRaceRanker.cs" />
-    <Compile Include="Race\IRaceStarter.cs" />
-    <Compile Include="Race\RaceClass.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Race\Race.cs" />
-    <Compile Include="Entity\RaceClub.cs" />
-    <Compile Include="Race\BestLapRanker.cs" />
-    <Compile Include="Race\RaceStatus.cs" />
-    <Compile Include="Race\RaceTimer.cs" />
-    <Compile Include="Race\RaceType.cs" />
-    <Compile Include="Race\StartMode.cs" />
+    <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj">
-      <Project>{E1457A1C-97E5-49B4-9636-83FA58408EDB}</Project>
-      <Name>TrackGenius.Const</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

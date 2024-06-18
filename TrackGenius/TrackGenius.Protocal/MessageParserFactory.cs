@@ -4,7 +4,7 @@ namespace TrackGenius.Protocol
 {
     public static class MessageParserFactory
     {
-        public static IMessageParser GetParserByProtocal(TransponderType transponder)
+        public static IMessageParser GetParserByProtocol(TransponderType transponder)
         {
             IMessageParser parser;
             switch (transponder)
