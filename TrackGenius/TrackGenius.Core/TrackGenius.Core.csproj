@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net6</TargetFramework>
     <AssemblyTitle>TrackGenius.Core</AssemblyTitle>
     <Product>TrackGenius.Core</Product>
     <Copyright>Copyright ©  2020</Copyright>

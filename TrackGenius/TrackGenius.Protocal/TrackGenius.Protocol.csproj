@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net6</TargetFramework>
     <AssemblyTitle>TrackGenius.Protocal</AssemblyTitle>
     <Product>TrackGenius.Protocal</Product>
     <Copyright>Copyright ©  2019</Copyright>
@@ -20,5 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SerialPort\" />
   </ItemGroup>
 </Project>

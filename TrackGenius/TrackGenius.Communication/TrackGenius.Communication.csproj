@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net6</TargetFramework>
     <AssemblyTitle>TrackGenius.Communication</AssemblyTitle>
     <Product>TrackGenius.Communication</Product>
     <Copyright>Copyright ©  2019</Copyright>
