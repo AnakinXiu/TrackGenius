@@ -45,8 +45,8 @@ namespace TrackGenius.UI
         private void OpenPort_OnExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             _comService = new CommunicateService(MessageParserFactory.GetParserByProtocol(TransponderType.Robitronic));
-
-            var portSetting = new SerialPortSettings(38400, System.IO.Ports.StopBits.One, System.IO.Ports.Parity.None, 8);
+            
+            var portSetting = new SerialPortSettings(38400, Protocol.SerialPort.StopBits.One, Protocol.SerialPort.Parity.None, 8);
             _comService.StartService(ComSelection.Text, portSetting);
         }
 

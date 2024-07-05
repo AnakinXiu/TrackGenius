@@ -5,7 +5,7 @@ namespace TrackGenius.Communication
 {
     internal static class StopBitExtension
     {
-        internal static StopBits ToRJCPModel(this System.IO.Ports.StopBits stopBits)
-            => (StopBits)Enum.Parse(typeof(StopBits), Enum.GetName(typeof(System.IO.Ports.StopBits), stopBits));
+        internal static StopBits ToRJCPModel(this Protocol.SerialPort.StopBits stopBits)
+            => (StopBits)Enum.Parse(typeof(StopBits), Enum.GetName(typeof(Protocol.SerialPort.StopBits), stopBits));
     }
 }
