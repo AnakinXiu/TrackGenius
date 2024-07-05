@@ -52,12 +52,10 @@ namespace TrackGenius.UI
 
         private void StartRace_OnCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            e.CanExecute = false;
         }
 
         private void StartRace_OnExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
+        { }
     }
 }
