@@ -1,4 +1,4 @@
-﻿using System.IO.Ports;
+﻿using TrackGenius.Protocol.SerialPort;
 
 namespace TrackGenius.Protocol
 {

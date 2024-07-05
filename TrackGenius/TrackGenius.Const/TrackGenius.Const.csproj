@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net6</TargetFramework>
     <AssemblyTitle>TrackGenius.Const</AssemblyTitle>
     <Product>TrackGenius.Const</Product>
     <Copyright>Copyright ©  2019</Copyright>
