@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using System.Windows.Shell;
 using TrackGenius.Communication;
 using TrackGenius.Const;
 using TrackGenius.Protocol;
@@ -19,6 +20,13 @@ namespace TrackGenius.UI
         public MainForm()
         {
             InitializeComponent();
+
+            WindowChrome.SetWindowChrome(this, new WindowChrome()
+            {
+                ResizeBorderThickness = new Thickness(0, 0, 5, 5),
+                CaptionHeight = 0
+            });
+
             _viewModel = LoadMainFormParams();
             DataContext = _viewModel;
 

@@ -35,4 +35,7 @@
     <ProjectReference Include="..\TrackGenius.Model\TrackGenius.Model.csproj" />
     <ProjectReference Include="..\TrackGenius.Protocal\TrackGenius.Protocol.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
 </Project>
