@@ -9,7 +9,8 @@ namespace TrackGenius.Communication
 {
     public class SerialPortWrapper : ISerialPortWrapper, ISerialPortsEnumlator, IDisposable
     {
-        private ISerialPortStream _serialPortStream;
+        [NotNull]
+        private SerialPortStream _serialPortStream;
 
         public event DataReceivedEventHandler DataReceived;
 
@@ -30,17 +31,17 @@ namespace TrackGenius.Communication
 
         public void ClosePort()
         {
-            _serialPortStream?.Close();
+            _serialPortStream.Close();
         }
 
         public IEnumerable<string> GetValidPortNames()
         {
-            return SerialPortStream.GetPortNames();
+            return _serialPortStream.GetPortNames();
         }
 
         public void SendBytes([NotNull] byte[] sendData)
         {
-            if (_serialPortStream?.CanWrite ?? false)
+            if (_serialPortStream.CanWrite)
                 _serialPortStream.Write(sendData, 0, sendData.Length);
         }
 
@@ -62,12 +63,12 @@ namespace TrackGenius.Communication
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if(e.EventType == SerialData.Chars)
-            {
-                var data = ReadBytes();
-                if(data != null && data.Length > 0)
-                    DataReceived(sender, new DataReceivedArgs(data));
-            }
+            if (e.EventType != SerialData.Chars) 
+                return;
+
+            var data = ReadBytes();
+            if(data != null && data.Length > 0)
+                DataReceived?.Invoke(sender, new DataReceivedArgs(data));
         }
 
         public void Dispose()
