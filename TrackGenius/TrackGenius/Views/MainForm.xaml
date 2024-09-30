@@ -5,13 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="clr-namespace:TrackGenius.UI"
         xmlns:views="clr-namespace:TrackGenius.UI.Views"
+        xmlns:viewModel="clr-namespace:TrackGenius.UI.ViewModels"
         mc:Ignorable="d"
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
         Title="Track Genius"
         Height="450" Width="800"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel}">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static ui:CustomCommands.OpenPortCommand}"
                         CanExecute="OpenPort_OnCanExecute"
@@ -86,7 +88,7 @@
                 </Grid>
             </Grid>
 
-            <views:NavigationBar HorizontalAlignment="Left"/>
+            <views:NavigationBar HorizontalAlignment="Left" DataContext="{Binding NavigationBarViewModel}"/>
 
         </Grid>
     </Border>
