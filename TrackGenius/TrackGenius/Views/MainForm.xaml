@@ -4,11 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="clr-namespace:TrackGenius.UI"
+        xmlns:views="clr-namespace:TrackGenius.UI.Views"
         mc:Ignorable="d"
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
-        Title="Track Genius" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Track Genius"
+        Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static ui:CustomCommands.OpenPortCommand}"
                         CanExecute="OpenPort_OnCanExecute"
@@ -18,20 +21,17 @@
                         Executed="StartRace_OnExecuted" />
     </Window.CommandBindings>
 
-    <Grid Background="Transparent">
-        <Border CornerRadius="10" BorderThickness="1" BorderBrush="DarkGray" Background="White">
-
+    <Border CornerRadius="10" BorderThickness="1" BorderBrush="DarkGray" Background="White">
+        <Grid>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="50" />
                 </Grid.RowDefinitions>
 
                 <!-- title bar -->
-                <Grid Row="0" Background="Transparent">
-
-                </Grid>
+                <Grid Row="0" Background="Transparent" />
 
                 <!-- Main Form -->
                 <Grid Grid.Row="1">
@@ -49,7 +49,8 @@
                         <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
                             <Button Background="Aqua" Width="{Binding ToolBarButtonSize.Width}" Content="1" />
                             <Button Background="Aqua" Width="{Binding ToolBarButtonSize.Width}" Content="2" />
-                            <Button Name="NewDriver" Background="Aqua" Width="{Binding ToolBarButtonSize.Width}" Content="3"
+                            <Button Name="NewDriver" Background="Aqua" Width="{Binding ToolBarButtonSize.Width}"
+                                    Content="3"
                                     Click="NewDriver_OnClick" />
                         </StackPanel>
                     </Grid>
@@ -76,13 +77,17 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <ComboBox Grid.Column="0" Name="ComSelection" ItemsSource="{Binding SerialPorts}" />
-                            <Button Grid.Column="1" Content="OpenCom" Command="{x:Static ui:CustomCommands.OpenPortCommand}" />
+                            <Button Grid.Column="1" Content="OpenCom"
+                                    Command="{x:Static ui:CustomCommands.OpenPortCommand}" />
                         </Grid>
                         <Button Grid.Row="1" Grid.Column="1" Content="Start Race" FontSize="20"
                                 Command="{x:Static ui:CustomCommands.StartRaceCommand}" />
                     </Grid>
                 </Grid>
             </Grid>
-        </Border>
-    </Grid>
+
+            <views:NavigationBar HorizontalAlignment="Left"/>
+
+        </Grid>
+    </Border>
 </Window>

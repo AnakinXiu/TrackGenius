@@ -31,12 +31,12 @@ namespace TrackGenius.Communication
 
         public void ClosePort()
         {
-            _serialPortStream.Close();
+            _serialPortStream?.Close();
         }
 
         public IEnumerable<string> GetValidPortNames()
         {
-            return _serialPortStream.GetPortNames();
+            return new SerialPortStream().GetPortNames();
         }
 
         public void SendBytes([NotNull] byte[] sendData)
