@@ -7,67 +7,66 @@
              xmlns:viewModel="clr-namespace:TrackGenius.UI.ViewModels"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="65"
-             Width="60"
+             x:Name="NavPnl"
+             Width="65"
              d:DataContext="{d:DesignInstance Type=viewModel:NavigationBarViewModel}">
-    <Grid x:Name="nav_pnl" Width="65" Background="RoyalBlue">
-        <StackPanel Orientation="Vertical" Margin="0, 10, 0, 10">
+    <Grid Background="RoyalBlue">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <ToggleButton x:Name="Tg_Btn"
+                      Grid.Row="0"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Left"
+                      Height="60"
+                      Width="65"
+                      Content="三">
 
-            <Grid>
-                <ToggleButton x:Name="Tg_Btn"
-                              Grid.Column="0"
-                              VerticalAlignment="Center"
-                              HorizontalAlignment="Left"
-                              Height="60"
-                              Width="60"
-                              BorderThickness="0"
-                              Background="Honeydew">
+            <!--// Toggle Button - Checked, Unchecked events //-->
+            <ToggleButton.Triggers>
+                <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                    <BeginStoryboard>
+                        <Storyboard x:Name="HideStackPanel">
+                            <DoubleAnimation
+                                Storyboard.TargetName="NavPnl"
+                                Storyboard.TargetProperty="Width"
+                                BeginTime="0:0:0"
+                                From="230" To="65"
+                                Duration="0:0:0.1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                    <BeginStoryboard>
+                        <Storyboard x:Name="ShowStackPanel">
+                            <DoubleAnimation
+                                Storyboard.TargetName="NavPnl"
+                                Storyboard.TargetProperty="Width"
+                                BeginTime="0:0:0"
+                                From="65" To="230"
+                                Duration="0:0:0.1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ToggleButton.Triggers>
+        </ToggleButton>
 
-                    <!--// Toggle Button - Checked, Unchecked events //-->
-                    <ToggleButton.Triggers>
-                        <EventTrigger RoutedEvent="ToggleButton.Unchecked">
-                            <BeginStoryboard>
-                                <Storyboard x:Name="HideStackPanel">
-                                    <DoubleAnimation
-                                        Storyboard.TargetName="nav_pnl"
-                                        Storyboard.TargetProperty="Width"
-                                        BeginTime="0:0:0"
-                                        From="230" To="65"
-                                        Duration="0:0:0.2"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="ToggleButton.Checked">
-                            <BeginStoryboard>
-                                <Storyboard x:Name="ShowStackPanel">
-                                    <DoubleAnimation
-                                        Storyboard.TargetName="nav_pnl"
-                                        Storyboard.TargetProperty="Width"
-                                        BeginTime="0:0:0"
-                                        From="65" To="230"
-                                        Duration="0:0:0.3"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </ToggleButton.Triggers>
-                </ToggleButton>
+        <ListView ItemsSource="{Binding NavigationItems}"
+                  Grid.Row="1">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type viewModel:NavigationItem}">
+                    <StackPanel>
+                        <Image Source="{Binding ItemIcon}"
+                               Width="32" Height="32"/>
 
-                <ListView ItemsSource="{Binding NavigationItems}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate DataType="{x:Type viewModel:NavigationItem}">
-                            <StackPanel>
-                                <Image Source="{Binding ItemIcon}"
-                                       Width="32" Height="32"/>
+                        <TextBlock Text="{Binding Title}"/>
 
-                                <TextBlock Text="{Binding Title}"/>
+                        <ToolTip Content="{Binding Tip}"/>
+                    </StackPanel>
+                </DataTemplate>
 
-                                <ToolTip Content="{Binding Tip}"/>
-                            </StackPanel>
-                        </DataTemplate>
-
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Grid>
-
-        </StackPanel>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </UserControl>

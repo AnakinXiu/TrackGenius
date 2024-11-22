@@ -4,27 +4,27 @@ namespace TrackGenius.UI.ViewModels;
 
 public class MainWindowViewModel
 {
-        public NavigationBarViewModel NavigationBarViewModel { get; set; }
+    public NavigationBarViewModel NavigationBarViewModel { get; set; }
 
-        public MainWindowViewModel()
+    public MainWindowViewModel()
+    {
+        var items = new[]
         {
-            var items = new[]
+            new NavigationItem
             {
-                new NavigationItem
-                {
-                    Title = "Home",
-                    Tip = "Home Tip",
-                    Command = new RelayCommand(() => { MessageBox.Show("Home Click."); })
-                },
-                new NavigationItem
-                {
-                    Title = "Home",
-                    Tip = "Home Tip",
-                    Command = new RelayCommand(() => { MessageBox.Show("Home Click."); })
-                }
-            };
+                Title = "Home",
+                Tip = "Home Tip",
+                Command = new RelayCommand(() => { MessageBox.Show("Home Click."); })
+            },
+            new NavigationItem
+            {
+                Title = "Home",
+                Tip = "Home Tip",
+                Command = new RelayCommand(() => { MessageBox.Show("Home Click."); })
+            }
+        };
 
-            NavigationBarViewModel = new NavigationBarViewModel(items);
+        NavigationBarViewModel = new NavigationBarViewModel(items);
     }
 
 }
