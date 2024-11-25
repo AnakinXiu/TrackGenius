@@ -1,30 +1,30 @@
-﻿using System.Windows;
+﻿using System;
 
 namespace TrackGenius.UI.ViewModels;
 
 public class MainWindowViewModel
 {
+
     public NavigationBarViewModel NavigationBarViewModel { get; set; }
 
-    public MainWindowViewModel()
+    public MainFormParamViewModel MainFormParamViewModel { get; set; }
+
+    public MainWindowViewModel(Action<string> setMainPage)
     {
         var items = new[]
         {
             new NavigationItem
             {
-                Title = "Home",
-                Tip = "Home Tip",
-                Command = new RelayCommand(() => { MessageBox.Show("Home Click."); })
+                Title = "QuickRace",
+                Tip = "QuickRace Tip"
             },
             new NavigationItem
             {
-                Title = "Home",
-                Tip = "Home Tip",
-                Command = new RelayCommand(() => { MessageBox.Show("Home Click."); })
+                Title = "Setting",
+                Tip = "Setting Tip"
             }
         };
 
-        NavigationBarViewModel = new NavigationBarViewModel(items);
+        NavigationBarViewModel = new NavigationBarViewModel(items, setMainPage);
     }
-
 }

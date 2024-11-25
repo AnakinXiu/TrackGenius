@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
 using System;
 
-namespace TrackGenius.UI;
+namespace TrackGenius.UI.Commands;
 
 public class RelayCommand : ICommand
 {
@@ -19,9 +19,9 @@ public class RelayCommand : ICommand
     {
     }
 
-    public bool CanExecute(object? parameter) => _canExecute();
+    public bool CanExecute(object parameter) => _canExecute();
 
-    public void Execute(object? parameter) => _execute();
+    public void Execute(object parameter) => _execute();
 
     public event EventHandler CanExecuteChanged = (sender, args) => { };
 

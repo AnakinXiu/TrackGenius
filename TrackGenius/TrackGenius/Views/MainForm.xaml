@@ -32,17 +32,15 @@
                              DataContext="{Binding NavigationBarViewModel}"/>
 
         <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="50" />
-            </Grid.RowDefinitions>
+
+            <DockPanel x:Name="QuickRace" Background="Plum"/>
+            <DockPanel x:Name="Settings"  Background="DarkCyan"/>
 
             <!-- title bar -->
             <!--Grid Row="0" Background="Transparent" /-->
 
             <!-- Main Form -->
-            <Grid Grid.Row="1">
+            <!--Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="{Binding ToolBarSize.Height}" />
                     <RowDefinition Height="*" />
@@ -91,7 +89,7 @@
                     <Button Grid.Row="1" Grid.Column="1" Content="Start Race" FontSize="20"
                             Command="{x:Static ui:CustomCommands.StartRaceCommand}" />
                 </Grid>
-            </Grid>
+            </Grid-->
         </Grid>
     </Grid>
 </Window>
