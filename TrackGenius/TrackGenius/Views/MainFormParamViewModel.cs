@@ -13,6 +13,7 @@ namespace TrackGenius.UI
 
         public List<string> SerialPorts { get; }
 
+
         public MainFormParamViewModel()
         {
             using(var serialPortWrapper = new SerialPortWrapper())

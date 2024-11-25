@@ -17,8 +17,8 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ControlzEx" Version="3.0.2.4" />
-    <PackageReference Include="MahApps.Metro" Version="1.6.5" />
+    <PackageReference Include="ControlzEx" Version="7.0.0-rc0118" />
+    <PackageReference Include="MahApps.Metro" Version="3.0.0-alpha0513" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
@@ -34,5 +34,21 @@
     <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj" />
     <ProjectReference Include="..\TrackGenius.Model\TrackGenius.Model.csproj" />
     <ProjectReference Include="..\TrackGenius.Protocal\TrackGenius.Protocol.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Mainform.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Mainform.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Mainform.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Mainform.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
