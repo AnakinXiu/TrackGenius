@@ -3,37 +3,46 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:TrackGenius.UI.Views"
              xmlns:behavior="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:viewModel="clr-namespace:TrackGenius.UI.ViewModels"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="65"
              d:DataContext="{d:DesignInstance Type=viewModel:NavigationBarViewModel}">
-    <Grid Background="RoyalBlue" x:Name="NavPnl">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid x:Name="NavPnl">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <StackPanel>
             <ToggleButton x:Name="Tg_Btn"
-                      VerticalAlignment="Center"
-                      HorizontalAlignment="Stretch"
-                      Height="60"
-                      Width="Auto">
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Stretch"
+                          Height="60"
+                          Width="Auto"
+                          Style="{StaticResource TrackGenius.Ui.Style.NavigationToggleButton}">
 
-                <ToggleButton.ContentTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="65"/>
-                                <ColumnDefinition Width="165"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="三" TextAlignment="Center"/>
-                            <TextBlock Grid.Column ="1"/>
-                        </Grid>
-                    </DataTemplate>
-                </ToggleButton.ContentTemplate>
+                <ToggleButton.Template>
+                    <ControlTemplate>
+                        <TextBlock Text="三"
+                                   TextAlignment="Left"
+                                   VerticalAlignment="Center"
+                                   Margin="26,0,0,0"/>
+                    </ControlTemplate>
+                </ToggleButton.Template>
+
+
 
                 <!--// Toggle Button - Checked, Unchecked events //-->
                 <ToggleButton.Triggers>
@@ -41,11 +50,11 @@
                         <BeginStoryboard>
                             <Storyboard x:Name="HideStackPanel">
                                 <DoubleAnimation
-                                Storyboard.TargetName="NavPnl"
-                                Storyboard.TargetProperty="Width"
-                                BeginTime="0:0:0"
-                                From="230" To="65"
-                                Duration="0:0:0.1"/>
+                                    Storyboard.TargetName="NavPnl"
+                                    Storyboard.TargetProperty="Width"
+                                    BeginTime="0:0:0"
+                                    From="230" To="65"
+                                    Duration="0:0:0.1"/>
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
@@ -53,11 +62,11 @@
                         <BeginStoryboard>
                             <Storyboard x:Name="ShowStackPanel">
                                 <DoubleAnimation
-                                Storyboard.TargetName="NavPnl"
-                                Storyboard.TargetProperty="Width"
-                                BeginTime="0:0:0"
-                                From="65" To="230"
-                                Duration="0:0:0.1"/>
+                                    Storyboard.TargetName="NavPnl"
+                                    Storyboard.TargetProperty="Width"
+                                    BeginTime="0:0:0"
+                                    From="65" To="230"
+                                    Duration="0:0:0.1"/>
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
@@ -66,15 +75,15 @@
         </StackPanel>
 
         <ListBox ItemsSource="{Binding NavigationItems}"
-                      Grid.Row="1"
-                      HorizontalAlignment="Stretch" 
-                      HorizontalContentAlignment="Stretch"
-                      ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                      Margin="0"
-                      x:Name="NavigationItems">
+                 Grid.Row="1"
+                 HorizontalAlignment="Stretch"
+                 HorizontalContentAlignment="Stretch"
+                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                 Margin="0"
+                 x:Name="NavigationItems">
             <behavior:Interaction.Triggers>
                 <behavior:EventTrigger EventName="SelectionChanged">
-                    <behavior:InvokeCommandAction Command="{Binding NaviBarClickCommand}" 
+                    <behavior:InvokeCommandAction Command="{Binding NaviBarClickCommand}"
                                                   CommandParameter="{Binding ElementName=NavigationItems,Path=SelectedItem}"/>
                 </behavior:EventTrigger>
             </behavior:Interaction.Triggers>
@@ -93,16 +102,16 @@
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Center">
                             <!--TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=Tg_Btn, Path=IsChecked}" Value="True">
-                                            <Setter Property="Width" Value="150"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ElementName=Tg_Btn, Path=IsChecked}" Value="False">
-                                            <Setter Property="Width" Value="0"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
+                            <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=Tg_Btn, Path=IsChecked}" Value="True">
+                            <Setter Property="Width" Value="150"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=Tg_Btn, Path=IsChecked}" Value="False">
+                            <Setter Property="Width" Value="0"/>
+                            </DataTrigger>
+                            </Style.Triggers>
+                            </Style>
                             </TextBlock.Style-->
                         </TextBlock>
 
@@ -112,5 +121,17 @@
 
             </ListBox.ItemTemplate>
         </ListBox>
+
+        <Button Grid.Row="2" Height="65">
+            <Button.Template>
+                <ControlTemplate>
+                    <TextBlock Text="&#xE115;"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="25"
+                               TextAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
     </Grid>
 </UserControl>
