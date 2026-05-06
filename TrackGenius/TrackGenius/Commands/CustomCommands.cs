@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace TrackGenius.UI
+namespace TrackGenius.UI.Commands
 {
     public static class CustomCommands
     {

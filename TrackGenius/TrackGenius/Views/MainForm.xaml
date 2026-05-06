@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ui="clr-namespace:TrackGenius.UI"
         xmlns:views="clr-namespace:TrackGenius.UI.Views"
         xmlns:viewModel="clr-namespace:TrackGenius.UI.ViewModels"
+        xmlns:commands="clr-namespace:TrackGenius.UI.Commands"
         mc:Ignorable="d"
         Title="Track Genius"
         Height="450" Width="800"
@@ -13,10 +13,10 @@
         d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel}">
 
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static ui:CustomCommands.OpenPortCommand}"
+        <CommandBinding Command="{x:Static commands:CustomCommands.OpenPortCommand}"
                         CanExecute="OpenPort_OnCanExecute"
                         Executed="OpenPort_OnExecuted" />
-        <CommandBinding Command="{x:Static ui:CustomCommands.StartRaceCommand}"
+        <CommandBinding Command="{x:Static commands:CustomCommands.StartRaceCommand}"
                         CanExecute="StartRace_OnCanExecute"
                         Executed="StartRace_OnExecuted" />
     </Window.CommandBindings>
