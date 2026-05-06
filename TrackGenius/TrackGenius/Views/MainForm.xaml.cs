@@ -92,5 +92,6 @@ namespace TrackGenius.UI
 
         private void StartRace_OnExecuted(object sender, ExecutedRoutedEventArgs e)
         { }
+
     }
 }

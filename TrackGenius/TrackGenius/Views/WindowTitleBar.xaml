@@ -1,0 +1,55 @@
+<UserControl x:Class="TrackGenius.UI.Views.WindowTitleBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+             mc:Ignorable="d"
+             d:DesignHeight="32"
+             d:DesignWidth="800">
+    <Border Background="#00FFFFFF"
+            MouseLeftButtonDown="TitleBar_OnMouseLeftButtonDown">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Margin="10,0,0,0"
+                       Foreground="#FF2D2D30"
+                       Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Width="46"
+                        Height="32"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Foreground="#FF2D2D30"
+                        FontSize="14"
+                        Content="─"
+                        shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                        Click="Minimize_Click" />
+                <Button Width="46"
+                        Height="32"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Foreground="#FF2D2D30"
+                        FontSize="12"
+                        Content="▢"
+                        shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                        Click="MaxRestore_Click" />
+                <Button Width="46"
+                        Height="32"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Foreground="#FF2D2D30"
+                        FontSize="14"
+                        Content="✕"
+                        shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                        Click="Close_Click" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

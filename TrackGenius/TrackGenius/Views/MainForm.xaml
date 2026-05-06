@@ -9,6 +9,8 @@
         mc:Ignorable="d"
         Title="Track Genius"
         Height="450" Width="800"
+        WindowStyle="None"
+        ResizeMode="CanResize"
         WindowStartupLocation="CenterScreen"
         d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel}">
 
@@ -22,16 +24,23 @@
     </Window.CommandBindings>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
+        <views:WindowTitleBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+
         <views:NavigationBar Grid.Column="0"
+                             Grid.Row="1"
                              HorizontalAlignment="Left"
                              DataContext="{Binding NavigationBarViewModel}"/>
 
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" Grid.Row="1">
 
             <DockPanel x:Name="QuickRace" Background="Plum"/>
             <DockPanel x:Name="Settings"  Background="DarkCyan"/>
