@@ -21,6 +21,6 @@
     <ProjectReference Include="..\TrackGenius.Communication\TrackGenius.Communication.csproj" />
     <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj" />
     <ProjectReference Include="..\TrackGenius.Model\TrackGenius.Model.csproj" />
-    <ProjectReference Include="..\TrackGenius.Protocal\TrackGenius.Protocol.csproj" />
+    <ProjectReference Include="..\TrackGenius.Protocol\TrackGenius.Protocol.csproj" />
   </ItemGroup>
 </Project>

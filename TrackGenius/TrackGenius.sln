@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackGenius.Model", "TrackG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackGenius.Communication", "TrackGenius.Communication\TrackGenius.Communication.csproj", "{0CC155BA-3575-470D-BA1F-D88B5E2C91E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackGenius.Protocol", "TrackGenius.Protocal\TrackGenius.Protocol.csproj", "{B85B5D84-CC31-448D-B9D7-E8E50970999A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackGenius.Protocol", "TrackGenius.Protocol\TrackGenius.Protocol.csproj", "{B85B5D84-CC31-448D-B9D7-E8E50970999A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D9F04882-4E31-4C1E-AED0-9AD30D3A4424}"
 EndProject

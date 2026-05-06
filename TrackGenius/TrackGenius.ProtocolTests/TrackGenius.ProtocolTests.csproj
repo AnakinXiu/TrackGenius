@@ -34,6 +34,6 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TrackGenius.Protocal\TrackGenius.Protocol.csproj" />
+    <ProjectReference Include="..\TrackGenius.Protocol\TrackGenius.Protocol.csproj" />
   </ItemGroup>
 </Project>
