@@ -1,46 +1,66 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TrackGenius.Protocol;
 
 namespace TrackGenius.Communication
 {
-    public class CommunicateService
+    public class CommunicateService : IDisposable
     {
-        private readonly SerialPortWrapper _serialPortWrapper;
+        private SerialPortWrapper _portWrapper;
 
         private readonly IMessageParser _messageParser;
 
         private readonly Queue<IUplinkMessage> _upwardMessages = new Queue<IUplinkMessage>();
 
-        public bool IsOpened => _serialPortWrapper.IsOpened;
+        public bool IsOpened => _portWrapper.IsOpened;
 
         public MessageReceivedEventHandler MessageReceived;
 
+        public EventHandler PortOpenStateEventHandler;
+
         public CommunicateService(IMessageParser messageParser)
         {
-            _serialPortWrapper = new SerialPortWrapper();
             _messageParser = messageParser;
         }
 
-        public void StartService(string portName, ISerialPortSettings settings)
+        public void StartService(string portName)
         {
-            _serialPortWrapper.OpenPort(portName, settings.BaudRate, settings.Length, settings.Parity.ToRJCPModel(), settings.StopBit.ToRJCPModel());
-            _serialPortWrapper.DataReceived += OnDataReceived;
+            _portWrapper = SerialPortWrapper.CreatePort(portName);
+            if (!_portWrapper.IsOpened)
+            {
+                _portWrapper.OpenPort();
+                RaisePortOpenStateChanged();
+            }
+
+            _portWrapper.DataReceived += OnDataReceived;
+        }
+
+        public void RaisePortOpenStateChanged()
+        {
+            PortOpenStateEventHandler?.Invoke(this, EventArgs.Empty);
         }
 
         public void CloseService()
         {
-            _serialPortWrapper.Dispose();
-        }
+            _portWrapper.ClosePort();
+            RaisePortOpenStateChanged();
+        }   
 
         public void SendCommand(IDownlinkMessage message)
         {
-            _serialPortWrapper.SendBytes(message.Serialize());
+            _portWrapper.SendBytes(message.Serialize());
         }
 
         private void OnDataReceived(object sender, DataReceivedArgs args)
         {
             var message = _messageParser.ParseMessage(args.Buffer);
             _upwardMessages.Enqueue(message);
+        }
+
+        public void Dispose()
+        {
+            CloseService();
+            _portWrapper.Dispose();
         }
     }
 }

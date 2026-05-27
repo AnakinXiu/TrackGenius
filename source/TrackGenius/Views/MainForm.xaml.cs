@@ -63,11 +63,11 @@ namespace TrackGenius.UI
             {
                 case "QuickRace":
                     QuickRace.Visibility = Visibility.Visible;
-                    _mainPages.Except(new [] { QuickRace }).ForEach(item =>item.Visibility = Visibility.Hidden);
+                    _mainPages.Except([QuickRace]).ForEach(item =>item.Visibility = Visibility.Hidden);
                     break;
                 case "Setting":
                     Settings.Visibility = Visibility.Visible;
-                    _mainPages.Except(new[] { Settings }).ForEach(item => item.Visibility = Visibility.Hidden);
+                    _mainPages.Except([Settings]).ForEach(item => item.Visibility = Visibility.Hidden);
                     break;
             }
         }

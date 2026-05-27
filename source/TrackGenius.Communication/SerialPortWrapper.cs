@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
 using RJCP.IO.Ports;
 using System;
-using System.Collections.Generic;
 using Parity = RJCP.IO.Ports.Parity;
 using StopBits = RJCP.IO.Ports.StopBits;
 
@@ -18,9 +17,37 @@ namespace TrackGenius.Communication
 
         public int PortNumber { get; }
 
-        public bool IsOpened => _serialPortStream?.IsOpen ?? false;
+        public bool IsOpened => _serialPortStream.IsOpen;
 
         private byte[] _buffer = new byte[1024];
+
+        public static SerialPortWrapper CreatePort(string portName)
+        {
+            var portWrapper = new SerialPortWrapper();
+            portWrapper._serialPortStream.PortName = portName;
+            portWrapper._serialPortStream.GetPortSettings();
+
+            return portWrapper;
+        }
+
+        public static SerialPortWrapper CreatePort(string portName, int baud, int data, Parity parity, StopBits stopBits)
+        {
+            var portWrapper = new SerialPortWrapper();
+            portWrapper.OpenPort(portName, baud, data, parity, stopBits);
+            portWrapper._serialPortStream.Open();
+
+            return portWrapper;
+        }
+
+        private SerialPortWrapper()
+        {
+            _serialPortStream = new SerialPortStream();
+        }
+
+        public void OpenPort()
+        {
+            _serialPortStream.Open();
+        }
 
         public void OpenPort(string portName, int baud, int data, Parity parity, StopBits stopBits)
         {
@@ -31,7 +58,8 @@ namespace TrackGenius.Communication
 
         public void ClosePort()
         {
-            _serialPortStream?.Close();
+            if (_serialPortStream.IsOpen)
+                _serialPortStream?.Close();
         }
 
         public void SendBytes([NotNull] byte[] sendData)
@@ -69,7 +97,9 @@ namespace TrackGenius.Communication
         public void Dispose()
         {
             ClosePort();
-            _serialPortStream?.Dispose();
+
+            if (!_serialPortStream.IsDisposed)
+                _serialPortStream?.Dispose();
         }
     }
 }

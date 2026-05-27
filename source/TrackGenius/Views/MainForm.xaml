@@ -42,8 +42,31 @@
 
         <Grid Grid.Column="1" Grid.Row="1">
 
-            <DockPanel x:Name="QuickRace" Background="Plum"/>
-            <DockPanel x:Name="Settings"  Background="DarkCyan"/>
+            <DockPanel x:Name="QuickRace"/>
+            <DockPanel x:Name="Settings">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox ItemsSource="{Binding MainFormParamViewModel.SerialPorts}" 
+                              DisplayMemberPath="Description"
+                              SelectedItem="{Binding MainFormParamViewModel.SelectedSerialPort}"/>
+                    <Button Grid.Column="1" Grid.Row="0"
+                            Command="{Binding MainFormParamViewModel.OpenPortCommand}" >Open Port</Button>
+
+                    <TextBlock Grid.Column="0" Grid.Row="1"
+                               Text="{Binding MainFormParamViewModel.IsPortOpenedString }" />
+
+                    <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"></ListView>
+                </Grid>
+            </DockPanel>
 
             <!-- title bar -->
             <!--Grid Row="0" Background="Transparent" /-->
