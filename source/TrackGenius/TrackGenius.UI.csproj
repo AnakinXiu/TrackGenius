@@ -34,9 +34,6 @@
     <ProjectReference Include="..\TrackGenius.Protocol\TrackGenius.Protocol.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Update="Mainform.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

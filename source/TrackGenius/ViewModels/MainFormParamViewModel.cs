@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using TrackGenius.Communication;
 
-namespace TrackGenius.UI
+namespace TrackGenius.UI.ViewModels
 {
     public class MainFormParamViewModel
     {
@@ -12,7 +12,6 @@ namespace TrackGenius.UI
         public Size ToolBarButtonSize { get; set; }
 
         public List<string> SerialPorts { get; }
-
 
         public MainFormParamViewModel()
         {
