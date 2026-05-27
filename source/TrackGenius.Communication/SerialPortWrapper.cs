@@ -7,7 +7,7 @@ using StopBits = RJCP.IO.Ports.StopBits;
 
 namespace TrackGenius.Communication
 {
-    public class SerialPortWrapper : ISerialPortWrapper, ISerialPortsEnumlator, IDisposable
+    public class SerialPortWrapper : ISerialPortWrapper, IDisposable
     {
         [NotNull]
         private SerialPortStream _serialPortStream;
@@ -32,11 +32,6 @@ namespace TrackGenius.Communication
         public void ClosePort()
         {
             _serialPortStream?.Close();
-        }
-
-        public IEnumerable<string> GetValidPortNames()
-        {
-            return new SerialPortStream().GetPortNames();
         }
 
         public void SendBytes([NotNull] byte[] sendData)
