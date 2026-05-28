@@ -34,7 +34,6 @@ namespace TrackGenius.Communication
         {
             var portWrapper = new SerialPortWrapper();
             portWrapper.OpenPort(portName, baud, data, parity, stopBits);
-            portWrapper._serialPortStream.Open();
 
             return portWrapper;
         }
@@ -46,6 +45,7 @@ namespace TrackGenius.Communication
 
         public void OpenPort()
         {
+            _serialPortStream.DataReceived += SerialPort_DataReceived;
             _serialPortStream.Open();
         }
 
@@ -72,11 +72,11 @@ namespace TrackGenius.Communication
         {
             if (_serialPortStream.CanRead)
             {
-                var dataLength = Math.Min(_serialPortStream.BytesToRead, _buffer.Length - 1);
-                _serialPortStream.Read(_buffer, 0, dataLength);
+                // var dataLength = Math.Min(_serialPortStream.BytesToRead, _buffer.Length - 1);
+                var dataLength = _serialPortStream.Read(_buffer);
 
                 var result = new byte[dataLength];
-                _buffer.CopyTo(result, dataLength);
+                Array.Copy(_buffer, result, dataLength);
 
                 return result;
             }
