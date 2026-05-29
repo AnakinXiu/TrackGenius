@@ -10,14 +10,14 @@ namespace TrackGenius.Protocol
 
         public Parity Parity { get; }
 
-        public int Length { get; }
+        public int DataBits { get; }
 
         public SerialPortSettings(int baudRate, StopBits stopBits, Parity parity, int length)
         {
             BaudRate = baudRate;
             StopBit = stopBits;
             Parity = Parity;
-            Length = length;
+            DataBits = length;
         }
     }
 }

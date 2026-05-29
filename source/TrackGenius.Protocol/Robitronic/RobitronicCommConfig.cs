@@ -10,5 +10,5 @@ public record RobitronicCommConfig : ISerialPortSettings
 
     public Parity Parity => Parity.None;
 
-    public int Length => 8;
+    public int DataBits => 8;
 }
