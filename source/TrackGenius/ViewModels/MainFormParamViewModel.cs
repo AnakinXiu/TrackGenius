@@ -7,7 +7,7 @@ using System.Windows.Input;
 using TrackGenius.Communication;
 using TrackGenius.Communication.interfaces;
 using TrackGenius.Const;
-using TrackGenius.Protocol;
+using TrackGenius.Protocol.Robitronic;
 using TrackGenius.UI.Commands;
 
 namespace TrackGenius.UI.ViewModels
@@ -43,8 +43,7 @@ namespace TrackGenius.UI.ViewModels
 
         private void OpenPort()
         {
-            var robitronicMessageParser = new RobitronicMessageParser();
-            _communicateService = new CommunicateService(robitronicMessageParser);
+            _communicateService = new CommunicateService(new RobitronicProtocol());
             _communicateService.PortOpenStateEventHandler += (sender, args) => OnPropertyChanged(nameof(IsPortOpenedString));
             _communicateService.StartService(SelectedSerialPort.PortName);
         }

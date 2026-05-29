@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TrackGenius.Protocol;
+using TrackGenius.Protocol.Interfaces;
 
 namespace TrackGenius.Communication
 {
@@ -10,22 +11,28 @@ namespace TrackGenius.Communication
 
         private readonly IMessageParser _messageParser;
 
-        private readonly Queue<IUplinkMessage> _upwardMessages = new Queue<IUplinkMessage>();
+        private readonly Queue<IUplinkMessage> _upwardMessages = new();
 
         public bool IsOpened => _portWrapper.IsOpened;
 
         public MessageReceivedEventHandler MessageReceived;
 
         public EventHandler PortOpenStateEventHandler;
+        private readonly SerialPortSetting _serialPortSettings;
 
-        public CommunicateService(IMessageParser messageParser)
+        public CommunicateService(IProtocol protocol)
         {
-            _messageParser = messageParser;
+            _messageParser = protocol.MessageParser;
+            _serialPortSettings = SerialPortSettingConvert.ToSerialPortSetting(protocol.SerialPortSettings);
         }
 
         public void StartService(string portName)
         {
-            _portWrapper = SerialPortWrapper.CreatePort(portName);
+            _portWrapper = SerialPortWrapper.CreatePort(portName,
+                _serialPortSettings.Baud,
+                _serialPortSettings.DataBits,
+                _serialPortSettings.Parity,
+                _serialPortSettings.StopBits);
             if (!_portWrapper.IsOpened)
             {
                 _portWrapper.OpenPort();
