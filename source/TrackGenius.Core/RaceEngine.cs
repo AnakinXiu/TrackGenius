@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TrackGenius.Communication;
 using TrackGenius.Model;
-using TrackGenius.Protocol;
+using TrackGenius.Protocol.Robitronic;
 
 namespace TrackGenius.Core
 {
@@ -17,7 +17,7 @@ namespace TrackGenius.Core
         public RaceEngine(IMessageConsumer messageConsumer)
         {
             _messageConsumer = messageConsumer;
-            _communicateService = new CommunicateService(new RobitronicMessageParser());
+            _communicateService = new CommunicateService(new RobitronicProtocol());
 
             _communicateService.MessageReceived += _messageConsumer.ConsumeMessage;
         }

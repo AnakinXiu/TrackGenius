@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:behaviour="clr-namespace:TrackGenius.UI.Behaviors"
         xmlns:views="clr-namespace:TrackGenius.UI.Views"
         xmlns:viewModel="clr-namespace:TrackGenius.UI.ViewModels"
         xmlns:commands="clr-namespace:TrackGenius.UI.Commands"
@@ -64,7 +65,10 @@
                     <TextBlock Grid.Column="0" Grid.Row="1"
                                Text="{Binding MainFormParamViewModel.IsPortOpenedString }" />
 
-                    <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"></ListView>
+                    <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                              Name="MessageView"
+                              ItemsSource="{Binding MainFormParamViewModel.Messages}"
+                              behaviour:ListViewAutoScrollBehavior.AutoScrollToEnd="True"/>
                 </Grid>
             </DockPanel>
 

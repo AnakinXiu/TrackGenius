@@ -8,6 +8,7 @@ using MoreLinq;
 using TrackGenius.Communication;
 using TrackGenius.Const;
 using TrackGenius.Protocol;
+using TrackGenius.Protocol.Robitronic;
 using TrackGenius.UI.Forms;
 using TrackGenius.UI.ViewModels;
 
@@ -79,7 +80,7 @@ namespace TrackGenius.UI
 
         private void OpenPort_OnExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            _comService = new CommunicateService(MessageParserFactory.GetParserByProtocol(TransponderType.Robitronic));
+            _comService = new CommunicateService(new RobitronicProtocol());
             
             var portSetting = new SerialPortSettings(38400, Protocol.SerialPort.StopBits.One, Protocol.SerialPort.Parity.None, 8);
             //_comService.StartService(ComSelection.Text, portSetting);

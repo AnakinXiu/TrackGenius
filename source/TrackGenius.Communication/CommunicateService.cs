@@ -58,6 +58,18 @@ namespace TrackGenius.Communication
             _portWrapper.SendBytes(message.Serialize());
         }
 
+        public bool TryGetNextMessage(out IUplinkMessage uplinkMessage)
+        {
+            if (_upwardMessages.Count > 0)
+            {
+                uplinkMessage = _upwardMessages.Dequeue();
+                return true;
+            }
+
+            uplinkMessage = null;
+            return false;
+        }
+
         private void OnDataReceived(object sender, DataReceivedArgs args)
         {
             var message = _messageParser.ParseMessage(args.Buffer);
