@@ -1,6 +1,4 @@
-﻿using TrackGenius.Protocol;
-
-namespace TrackGenius.Communication
+﻿namespace TrackGenius.Communication
 {
     public class DataReceivedArgs
     {

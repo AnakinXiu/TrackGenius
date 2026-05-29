@@ -6,7 +6,6 @@ using System.Windows.Input;
 using System.Windows.Shell;
 using MoreLinq;
 using TrackGenius.Communication;
-using TrackGenius.Const;
 using TrackGenius.Protocol;
 using TrackGenius.Protocol.Robitronic;
 using TrackGenius.UI.Forms;
