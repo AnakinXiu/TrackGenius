@@ -24,9 +24,14 @@ namespace TrackGenius.UI
 
         private readonly List<DockPanel> _mainPages;
 
-        public MainForm()
+        public MainForm() : this(null)
+        { }
+
+        public MainForm(CommunicateService communicateService)
         {
             InitializeComponent();
+
+            _comService = communicateService;
 
             _mainPages = new List<DockPanel> { QuickRace, Settings };
 
@@ -79,7 +84,7 @@ namespace TrackGenius.UI
 
         private void OpenPort_OnExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            _comService = new CommunicateService(new RobitronicProtocol());
+            _comService ??= new CommunicateService(new RobitronicProtocol());
             
             var portSetting = new SerialPortSettings(38400, Protocol.SerialPort.StopBits.One, Protocol.SerialPort.Parity.None, 8);
             //_comService.StartService(ComSelection.Text, portSetting);
