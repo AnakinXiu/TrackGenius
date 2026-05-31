@@ -10,7 +10,6 @@ using System.Windows.Input;
 using TrackGenius.Communication;
 using TrackGenius.Communication.interfaces;
 using TrackGenius.Const;
-using TrackGenius.Protocol.Robitronic;
 using TrackGenius.UI.Commands;
 
 namespace TrackGenius.UI.ViewModels
@@ -42,8 +41,9 @@ namespace TrackGenius.UI.ViewModels
 
         public ICommand OpenPortCommand { get; }
 
-        public MainFormParamViewModel()
+        public MainFormParamViewModel(CommunicateService communicateService)
         {
+            _communicateService = communicateService ?? throw new System.ArgumentNullException(nameof(communicateService));
             SerialPorts = SerialPortEnumerator.GetValidPortDescriptions().ToList();
             OpenPortCommand = new RelayCommand(OpenPort);
         }
@@ -53,7 +53,6 @@ namespace TrackGenius.UI.ViewModels
             StopMessagePolling();
             Messages.Clear();
 
-            _communicateService = new CommunicateService(new RobitronicProtocol());
             _communicateService.PortOpenStateEventHandler += (sender, args) => OnPropertyChanged(nameof(IsPortOpenedString));
             _communicateService.StartService(SelectedSerialPort.PortName);
            

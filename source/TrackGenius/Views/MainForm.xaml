@@ -16,9 +16,6 @@
         d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel}">
 
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static commands:CustomCommands.OpenPortCommand}"
-                        CanExecute="OpenPort_OnCanExecute"
-                        Executed="OpenPort_OnExecuted" />
         <CommandBinding Command="{x:Static commands:CustomCommands.StartRaceCommand}"
                         CanExecute="StartRace_OnCanExecute"
                         Executed="StartRace_OnExecuted" />
