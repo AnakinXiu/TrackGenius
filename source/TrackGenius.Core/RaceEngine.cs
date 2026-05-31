@@ -20,6 +20,7 @@ namespace TrackGenius.Core
             _communicateService = new CommunicateService(new RobitronicProtocol());
 
             _communicateService.MessageReceived += _messageConsumer.ConsumeMessage;
+            _messageConsumer.CarDetected += OnCarDetected;
         }
 
         public void RaceStart(ICollection<RaceStatus> racers)
