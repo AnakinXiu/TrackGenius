@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -45,8 +46,25 @@ namespace TrackGenius
         void App_DispatcherUnhandledException(object sender,
             System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            //处理完后，我们需要将Handler=true表示已此异常已处理过
-            e.Handled = true;
+            Trace.TraceError($"Unhandled UI exception: {e.Exception}");
+
+            if (IsRecoverableException(e.Exception))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            MessageBox.Show("An unexpected error occurred and the application needs to close.",
+                "TrackGenius Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+
+            e.Handled = false;
+        }
+
+        private static bool IsRecoverableException(Exception exception)
+        {
+            return exception is OperationCanceledException;
         }
     }
 }
