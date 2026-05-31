@@ -7,13 +7,15 @@ namespace TrackGenius.Communication
 {
     public class CommunicateService : IDisposable
     {
-        private SerialPortWrapper _portWrapper;
+        private ISerialPortWrapper _portWrapper;
+
+        private bool _dataReceivedSubscribed;
 
         private readonly IMessageParser _messageParser;
 
         private readonly Queue<IUplinkMessage> _upwardMessages = new();
 
-        public bool IsOpened => _portWrapper.IsOpened;
+        public bool IsOpened => _portWrapper?.IsOpened ?? false;
 
         public MessageReceivedEventHandler MessageReceived;
 
@@ -21,25 +23,43 @@ namespace TrackGenius.Communication
         private readonly SerialPortSetting _serialPortSettings;
 
         public CommunicateService(IProtocol protocol)
+            : this(protocol?.MessageParser, protocol?.SerialPortSettings)
         {
-            _messageParser = protocol.MessageParser;
-            _serialPortSettings = SerialPortSettingConvert.ToSerialPortSetting(protocol.SerialPortSettings);
+        }
+
+        public CommunicateService(IMessageParser messageParser, ISerialPortSettings serialPortSettings, ISerialPortWrapper portWrapper = null)
+        {
+            _messageParser = messageParser ?? throw new ArgumentNullException(nameof(messageParser));
+            _serialPortSettings = SerialPortSettingConvert.ToSerialPortSetting(serialPortSettings ?? throw new ArgumentNullException(nameof(serialPortSettings)));
+            _portWrapper = portWrapper;
         }
 
         public void StartService(string portName)
         {
-            _portWrapper = SerialPortWrapper.CreatePort(portName,
-                _serialPortSettings.Baud,
-                _serialPortSettings.DataBits,
-                _serialPortSettings.Parity,
-                _serialPortSettings.StopBits);
+            if (_portWrapper == null)
+            {
+                _portWrapper = SerialPortWrapper.CreatePort(portName,
+                    _serialPortSettings.Baud,
+                    _serialPortSettings.DataBits,
+                    _serialPortSettings.Parity,
+                    _serialPortSettings.StopBits);
+            }
+
             if (!_portWrapper.IsOpened)
             {
-                _portWrapper.OpenPort();
+                _portWrapper.OpenPort(portName,
+                    _serialPortSettings.Baud,
+                    _serialPortSettings.DataBits,
+                    _serialPortSettings.Parity,
+                    _serialPortSettings.StopBits);
                 RaisePortOpenStateChanged();
             }
 
-            _portWrapper.DataReceived += OnDataReceived;
+            if (!_dataReceivedSubscribed)
+            {
+                _portWrapper.DataReceived += OnDataReceived;
+                _dataReceivedSubscribed = true;
+            }
         }
 
         public void RaisePortOpenStateChanged()
@@ -49,12 +69,18 @@ namespace TrackGenius.Communication
 
         public void CloseService()
         {
+            if (_portWrapper == null)
+                return;
+
             _portWrapper.ClosePort();
             RaisePortOpenStateChanged();
         }   
 
         public void SendCommand(IDownlinkMessage message)
         {
+            if (_portWrapper == null)
+                return;
+
             _portWrapper.SendBytes(message.Serialize());
         }
 
@@ -79,8 +105,19 @@ namespace TrackGenius.Communication
 
         public void Dispose()
         {
+            if (_portWrapper == null)
+                return;
+
+            if (_dataReceivedSubscribed)
+            {
+                _portWrapper.DataReceived -= OnDataReceived;
+                _dataReceivedSubscribed = false;
+            }
+
             CloseService();
-            _portWrapper.Dispose();
+
+            if (_portWrapper is IDisposable disposablePort)
+                disposablePort.Dispose();
         }
     }
 }

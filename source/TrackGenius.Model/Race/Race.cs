@@ -22,13 +22,17 @@ namespace TrackGenius.Model
         public int CountDownTime { get; set; }
 
         public Race(Guid raceID, RaceType raceType, RaceClass raceClass, ICollection<RaceStatus> racersCollection)
+            : this(raceID, raceType, raceClass, racersCollection, new RaceTimer(10))
+        {
+        }
+
+        public Race(Guid raceID, RaceType raceType, RaceClass raceClass, ICollection<RaceStatus> racersCollection, RaceTimer raceTimer)
         {
             RaceID = raceID;
             RaceType = raceType;
-            RaceClass = raceClass;
-            RacersCollection = racersCollection;
-
-            RaceTimer = new RaceTimer(10);
+            RaceClass = raceClass ?? throw new ArgumentNullException(nameof(raceClass));
+            RacersCollection = racersCollection ?? throw new ArgumentNullException(nameof(racersCollection));
+            RaceTimer = raceTimer ?? throw new ArgumentNullException(nameof(raceTimer));
         }
 
         public ICollection<RaceStatus> RacersCollection { get; private set; }
