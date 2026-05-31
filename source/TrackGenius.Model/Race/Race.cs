@@ -6,6 +6,10 @@ namespace TrackGenius.Model
 {
     public class Race : IRace
     {
+        private const int MinLapIntervalMilliseconds = 1500;
+
+        private readonly Dictionary<string, int> _lastDetectedMillisecondsByTransponder = new();
+
         public Guid RaceID { get; }
 
         public RaceType RaceType { get; private set; }
@@ -31,11 +35,27 @@ namespace TrackGenius.Model
 
         public void UpdateRaceStatus(CarDetectMessage message)
         {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
             var racer = GetRacer(message.TransponderID);
+            if (racer == null)
+                return;
+
+            if (_lastDetectedMillisecondsByTransponder.TryGetValue(message.TransponderID, out var lastDetectedMilliseconds))
+            {
+                var interval = message.Milliseconds - lastDetectedMilliseconds;
+                if (interval <= 0 || interval < MinLapIntervalMilliseconds)
+                    return;
+            }
+
+            _lastDetectedMillisecondsByTransponder[message.TransponderID] = message.Milliseconds;
+
             racer.LapsCount++;
+            racer.RacedTime = TimeSpan.FromMilliseconds(message.Milliseconds);
         }
 
-        private RaceStatus GetRacer(string transponderID) => RacersCollection.ToList()
-            .Find(racer => racer.Car.Transponder.RecoderNumber == transponderID);
+        private RaceStatus GetRacer(string transponderID) => RacersCollection
+            .FirstOrDefault(racer => racer.Car.Transponder.RecoderNumber == transponderID);
     }
 }
