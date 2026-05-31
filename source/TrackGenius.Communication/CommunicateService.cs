@@ -74,6 +74,7 @@ namespace TrackGenius.Communication
         {
             var message = _messageParser.ParseMessage(args.Buffer);
             _upwardMessages.Enqueue(message);
+            MessageReceived?.Invoke(this, message);
         }
 
         public void Dispose()
