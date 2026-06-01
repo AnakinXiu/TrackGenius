@@ -16,7 +16,7 @@ namespace TrackGenius.Protocol
         {
             BaudRate = baudRate;
             StopBit = stopBits;
-            Parity = Parity;
+            Parity = parity;
             DataBits = length;
         }
     }
