@@ -51,6 +51,9 @@ namespace TrackGenius.Communication
 
         public void OpenPort(string portName, int baud, int data, Parity parity, StopBits stopBits)
         {
+            _serialPortStream.DataReceived -= SerialPort_DataReceived;
+            _serialPortStream.Dispose();
+
             _serialPortStream = new SerialPortStream(portName, baud, data, parity, stopBits);
             _serialPortStream.DataReceived += SerialPort_DataReceived;
             _serialPortStream.Open();
