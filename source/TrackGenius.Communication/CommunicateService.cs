@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using TrackGenius.Protocol;
 using TrackGenius.Protocol.Interfaces;
 
@@ -13,7 +13,7 @@ namespace TrackGenius.Communication
 
         private readonly IMessageParser _messageParser;
 
-        private readonly Queue<IUplinkMessage> _upwardMessages = new();
+        private readonly ConcurrentQueue<IUplinkMessage> _upwardMessages = new();
 
         public bool IsOpened => _portWrapper?.IsOpened ?? false;
 
@@ -86,14 +86,7 @@ namespace TrackGenius.Communication
 
         public bool TryGetNextMessage(out IUplinkMessage uplinkMessage)
         {
-            if (_upwardMessages.Count > 0)
-            {
-                uplinkMessage = _upwardMessages.Dequeue();
-                return true;
-            }
-
-            uplinkMessage = null;
-            return false;
+            return _upwardMessages.TryDequeue(out uplinkMessage);
         }
 
         private void OnDataReceived(object sender, DataReceivedArgs args)
