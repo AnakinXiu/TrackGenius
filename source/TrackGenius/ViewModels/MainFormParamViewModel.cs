@@ -77,7 +77,11 @@ namespace TrackGenius.UI.ViewModels
                     var messageText = message.Deserialize();
                     if (Application.Current?.Dispatcher is { } dispatcher)
                     {
-                        dispatcher.Invoke(() => Messages.Add(messageText));
+                        dispatcher.BeginInvoke(() => Messages.Add(messageText));
+                    }
+                    else
+                    {
+                        Messages.Add(messageText);
                     }
                     else
                     {
