@@ -44,16 +44,19 @@ namespace TrackGenius.UI.ViewModels
         public MainFormParamViewModel(CommunicateService communicateService)
         {
             _communicateService = communicateService ?? throw new System.ArgumentNullException(nameof(communicateService));
+            _communicateService.PortOpenStateEventHandler += (_, _) => OnPropertyChanged(nameof(IsPortOpenedString));
             SerialPorts = SerialPortEnumerator.GetValidPortDescriptions().ToList();
             OpenPortCommand = new RelayCommand(OpenPort);
         }
 
         private void OpenPort()
         {
+            if (SelectedSerialPort == null)
+                return;
+
             StopMessagePolling();
             Messages.Clear();
 
-            _communicateService.PortOpenStateEventHandler += (sender, args) => OnPropertyChanged(nameof(IsPortOpenedString));
             _communicateService.StartService(SelectedSerialPort.PortName);
            
             StartMessagePolling();
