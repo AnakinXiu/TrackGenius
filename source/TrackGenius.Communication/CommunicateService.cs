@@ -19,7 +19,7 @@ namespace TrackGenius.Communication
 
         public MessageReceivedEventHandler MessageReceived;
 
-        public EventHandler PortOpenStateEventHandler;
+        public event EventHandler PortOpenStateEventHandler;
         private readonly SerialPortSetting _serialPortSettings;
 
         public CommunicateService(IProtocol protocol)
