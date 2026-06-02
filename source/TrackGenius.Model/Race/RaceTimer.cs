@@ -21,7 +21,7 @@ namespace TrackGenius.Model
 
         public void Start()
         {
-            _stopwatch.Start();
+            _stopwatch.Restart();
             IsStarted = true;
         }
 
