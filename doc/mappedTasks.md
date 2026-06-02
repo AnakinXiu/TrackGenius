@@ -3,7 +3,7 @@
 Source: `doc/CurrentToDo.md`  
 Branch: `FixCommunicatePipeline`
 
-## Updated Priority Order Mapping (1–14)
+## Updated Priority Order Mapping (1-14)
 
 | # | TODO step | Status | Exact file(s) checked |
 |---|---|---|---|
@@ -24,9 +24,9 @@ Branch: `FixCommunicatePipeline`
 
 ## Additional Revalidation Notes
 
-- `App.xaml` class reference is already correct: `x:Class="TrackGenius.App"` (`TrackGenius/App.xaml`) — **Done**.
-- `Protocal` naming issue appears resolved (no remaining `Protocal` references found) — **Done**.
-- Parameterless argument exceptions still exist and should be updated with parameter names — **Pending**:
+- `App.xaml` class reference is already correct: `x:Class="TrackGenius.App"` (`TrackGenius/App.xaml`) ï¿½ **Done**.
+- `Protocal` naming issue appears resolved (no remaining `Protocal` references found) ï¿½ **Done**.
+- Parameterless argument exceptions still exist and should be updated with parameter names ï¿½ **Pending**:
   - `TrackGenius.Const/ByteArrayExtension.cs`
   - `TrackGenius.Protocol/Parser/RobitronicMessageParser.cs`
   - `TrackGenius.Protocol/Robitronic/DetectedMessage.cs`
