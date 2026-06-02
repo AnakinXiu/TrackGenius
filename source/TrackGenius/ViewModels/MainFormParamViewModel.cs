@@ -83,10 +83,6 @@ namespace TrackGenius.UI.ViewModels
                     {
                         Messages.Add(messageText);
                     }
-                    else
-                    {
-                        Messages.Add(messageText);
-                    }
 
                     continue;
                 }
