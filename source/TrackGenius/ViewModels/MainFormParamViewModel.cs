@@ -93,21 +93,16 @@ namespace TrackGenius.UI.ViewModels
 
         private void StopMessagePolling()
         {
-            _messagePollingCancellationTokenSource?.Cancel();
+            var cts = _messagePollingCancellationTokenSource;
+            _messagePollingCancellationTokenSource = null;
 
-            try
+            if (cts != null)
             {
-                _messagePollingTask?.Wait(System.TimeSpan.FromSeconds(1));
+                cts.Cancel();
+                cts.Dispose();
             }
-            catch (System.AggregateException ex) when (ex.InnerExceptions.All(err => err is TaskCanceledException or System.OperationCanceledException))
-            {
-            }
-            finally
-            {
-                _messagePollingCancellationTokenSource?.Dispose();
-                _messagePollingCancellationTokenSource = null;
-                _messagePollingTask = null;
-            }
+
+            _messagePollingTask = null;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
