@@ -2,24 +2,30 @@
 using System.Collections.Generic;
 using TrackGenius.Communication;
 using TrackGenius.Model;
-using TrackGenius.Protocol;
+using TrackGenius.Protocol.Robitronic;
 
 namespace TrackGenius.Core
 {
     public class RaceEngine
     {
-        private CommunicateService _communicateService;
+        private readonly CommunicateService _communicateService;
 
         private readonly IMessageConsumer _messageConsumer;
 
         private IRace _race;
 
         public RaceEngine(IMessageConsumer messageConsumer)
+            : this(messageConsumer, new CommunicateService(new RobitronicProtocol()))
         {
-            _messageConsumer = messageConsumer;
-            _communicateService = new CommunicateService(new RobitronicMessageParser());
+        }
+
+        public RaceEngine(IMessageConsumer messageConsumer, CommunicateService communicateService)
+        {
+            _messageConsumer = messageConsumer ?? throw new ArgumentNullException(nameof(messageConsumer));
+            _communicateService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
 
             _communicateService.MessageReceived += _messageConsumer.ConsumeMessage;
+            _messageConsumer.CarDetected += OnCarDetected;
         }
 
         public void RaceStart(ICollection<RaceStatus> racers)

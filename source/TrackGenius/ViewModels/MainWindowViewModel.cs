@@ -4,7 +4,6 @@ namespace TrackGenius.UI.ViewModels;
 
 public class MainWindowViewModel
 {
-
     public NavigationBarViewModel NavigationBarViewModel { get; set; }
 
     public MainFormParamViewModel MainFormParamViewModel { get; set; }

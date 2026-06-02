@@ -9,7 +9,7 @@ namespace TrackGenius.Const
         public static byte[] Cut(this byte[] byteArray, int index, int length)
         {
             if (byteArray == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(byteArray));
 
             if (index < 0 || index > byteArray.Length)
                 throw new ArgumentOutOfRangeException(nameof(index));
@@ -23,7 +23,7 @@ namespace TrackGenius.Const
         public static byte[] Reverse(this byte[] byteArray)
         {
             if (byteArray == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(byteArray));
 
             var result = new byte[byteArray.Length];
             byteArray.ForEach((b, index) => result[byteArray.Length - index - 1] = b);
@@ -34,7 +34,7 @@ namespace TrackGenius.Const
         public static int ToInt32(this byte[] byteArray)
         {
             if (byteArray == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(byteArray));
 
             var result = 0;
             byteArray.ForEach((b, index) => result += b << (byteArray.Length - index - 1) * 8);

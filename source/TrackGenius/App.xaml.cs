@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
+using TrackGenius.Communication;
+using TrackGenius.Protocol.Robitronic;
+using TrackGenius.UI;
 
 namespace TrackGenius
 {
@@ -9,13 +13,19 @@ namespace TrackGenius
     /// </summary>
     public partial class App : Application
     {
+        private MainForm _mainForm;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            
+
             //注册Application_Error
             this.DispatcherUnhandledException +=
                 new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
+
+            _mainForm = CreateMainWindow();
+            MainWindow = _mainForm;
+            _mainForm.Show();
         }
 
         protected void OnActivated(EventArgs e)
@@ -30,8 +40,9 @@ namespace TrackGenius
             //TODO  your code
         }
 
-        private void OnExit(ExitEventArgs e)
+        protected override void OnExit(ExitEventArgs e)
         {
+            _mainForm?.Close();
             base.OnExit(e);
         }
 
@@ -45,8 +56,31 @@ namespace TrackGenius
         void App_DispatcherUnhandledException(object sender,
             System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            //处理完后，我们需要将Handler=true表示已此异常已处理过
-            e.Handled = true;
+            Trace.TraceError($"Unhandled UI exception: {e.Exception}");
+
+            if (IsRecoverableException(e.Exception))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            MessageBox.Show("An unexpected error occurred and the application needs to close.",
+                "TrackGenius Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+
+            e.Handled = false;
+        }
+
+        private static bool IsRecoverableException(Exception exception)
+        {
+            return exception is OperationCanceledException;
+        }
+
+        private static MainForm CreateMainWindow()
+        {
+            var communicateService = new CommunicateService(new RobitronicProtocol());
+            return new MainForm(communicateService);
         }
     }
 }

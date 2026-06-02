@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:behaviour="clr-namespace:TrackGenius.UI.Behaviors"
         xmlns:views="clr-namespace:TrackGenius.UI.Views"
         xmlns:viewModel="clr-namespace:TrackGenius.UI.ViewModels"
         xmlns:commands="clr-namespace:TrackGenius.UI.Commands"
@@ -15,9 +16,6 @@
         d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel}">
 
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static commands:CustomCommands.OpenPortCommand}"
-                        CanExecute="OpenPort_OnCanExecute"
-                        Executed="OpenPort_OnExecuted" />
         <CommandBinding Command="{x:Static commands:CustomCommands.StartRaceCommand}"
                         CanExecute="StartRace_OnCanExecute"
                         Executed="StartRace_OnExecuted" />
@@ -42,8 +40,34 @@
 
         <Grid Grid.Column="1" Grid.Row="1">
 
-            <DockPanel x:Name="QuickRace" Background="Plum"/>
-            <DockPanel x:Name="Settings"  Background="DarkCyan"/>
+            <DockPanel x:Name="QuickRace"/>
+            <DockPanel x:Name="Settings">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox ItemsSource="{Binding MainFormParamViewModel.SerialPorts}" 
+                              DisplayMemberPath="Description"
+                              SelectedItem="{Binding MainFormParamViewModel.SelectedSerialPort}"/>
+                    <Button Grid.Column="1" Grid.Row="0"
+                            Command="{Binding MainFormParamViewModel.OpenPortCommand}" >Open Port</Button>
+
+                    <TextBlock Grid.Column="0" Grid.Row="1"
+                               Text="{Binding MainFormParamViewModel.IsPortOpenedString }" />
+
+                    <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                              Name="MessageView"
+                              ItemsSource="{Binding MainFormParamViewModel.Messages}"
+                              behaviour:ListViewAutoScrollBehavior.AutoScrollToEnd="True"/>
+                </Grid>
+            </DockPanel>
 
             <!-- title bar -->
             <!--Grid Row="0" Background="Transparent" /-->

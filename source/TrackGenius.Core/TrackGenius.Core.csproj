@@ -13,9 +13,6 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\TrackGenius.Communication\TrackGenius.Communication.csproj" />
     <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj" />
     <ProjectReference Include="..\TrackGenius.Model\TrackGenius.Model.csproj" />

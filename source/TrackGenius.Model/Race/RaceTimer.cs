@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace TrackGenius.Model
 {
     public class RaceTimer
     {
-        private long _startTime;
-
-        private long _stopTime;
+        private readonly Stopwatch _stopwatch = new();
 
         public int CountDownTime { get; set; }
 
@@ -18,16 +17,18 @@ namespace TrackGenius.Model
 
         public bool IsStarted { get; private set; }
 
-        public TimeSpan GetRaceTime() => new TimeSpan(DateTime.Now.Ticks - _startTime) - new TimeSpan(0, 0, 0, CountDownTime);
+        public TimeSpan GetRaceTime() => _stopwatch.Elapsed - TimeSpan.FromSeconds(CountDownTime);
 
         public void Start()
         {
-            _startTime = DateTime.Now.Ticks;
+            _stopwatch.Restart();
+            IsStarted = true;
         }
 
         public void Stop()
         {
-            _stopTime = DateTime.Now.Ticks;
+            _stopwatch.Stop();
+            IsStarted = false;
         }
     }
 }

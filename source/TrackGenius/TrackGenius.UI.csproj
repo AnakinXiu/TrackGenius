@@ -19,7 +19,6 @@
   <ItemGroup>
     <PackageReference Include="ControlzEx" Version="5.0.2" />
     <PackageReference Include="MahApps.Metro" Version="2.4.11" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Xaml" />
@@ -32,9 +31,6 @@
     <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj" />
     <ProjectReference Include="..\TrackGenius.Model\TrackGenius.Model.csproj" />
     <ProjectReference Include="..\TrackGenius.Protocol\TrackGenius.Protocol.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Mainform.Designer.cs">

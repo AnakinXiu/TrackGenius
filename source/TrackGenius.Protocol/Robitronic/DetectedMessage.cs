@@ -24,10 +24,10 @@ namespace TrackGenius.Protocol.Robitronic
         public DetectedMessage(byte[] data)
         {
             if (data == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(data));
 
             if (data.Length < 3)
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(data));
 
             if (data[2] != 0x84)
                 throw new FormatException();

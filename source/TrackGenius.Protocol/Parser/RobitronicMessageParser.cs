@@ -8,14 +8,17 @@ namespace TrackGenius.Protocol
     {
         public IUplinkMessage ParseMessage([NotNull]byte[] dataBytes)
         {
-            if (dataBytes == null || dataBytes.Length < 1)
-                throw new ArgumentNullException();
+            if (dataBytes == null)
+                throw new ArgumentNullException(nameof(dataBytes));
+
+            if (dataBytes.Length < 1)
+                throw new ArgumentException("Message data cannot be empty.", nameof(dataBytes));
 
             if (dataBytes.Length ==1 && dataBytes[0] == 0)
                 return new InitializeResponse(dataBytes);
 
             if (dataBytes[0] > dataBytes.Length)
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(dataBytes));
 
             switch (dataBytes[2])
             {

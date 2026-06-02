@@ -10,6 +10,6 @@ namespace TrackGenius.Protocol
 
         Parity Parity { get; }
 
-        int Length { get; }
+        int DataBits { get; }
     }
 }
