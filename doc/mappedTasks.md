@@ -8,11 +8,11 @@ Branch: `FixCommunicatePipeline`
 | # | TODO step | Status | Exact file(s) checked |
 |---|---|---|---|
 | 1 | Fix `SerialPortWrapper.ReadBytes()` copy logic | Done | `TrackGenius.Communication/SerialPortWrapper.cs` (`Array.Copy(_buffer, result, dataLength)` present) |
-| 2 | Raise `MessageReceived` in `CommunicateService.OnDataReceived()` | Pending | `TrackGenius.Communication/CommunicateService.cs` (message enqueued only; no event invoke) |
-| 3 | Connect message-consumer output to `RaceEngine.OnCarDetected()` | Pending | `TrackGenius.Core/RobitronicMessageConsumer.cs`, `TrackGenius.Core/RaceEngine.cs` |
-| 4 | Stop silently swallowing global UI exceptions | Pending | `TrackGenius/App.xaml.cs` (`e.Handled = true` only) |
-| 5 | Implement `Driver.DriverID` and `Driver.NickName` | Pending | `TrackGenius.Model/Entity/Driver.cs` (`NotImplementedException`) |
-| 6 | Replace `DateTime.Now.Ticks` with `Stopwatch` in `RaceTimer` | Pending | `TrackGenius.Model/Race/RaceTimer.cs` |
+| 2 | Raise `MessageReceived` in `CommunicateService.OnDataReceived()` | Done | `TrackGenius.Communication/CommunicateService.cs` (`MessageReceived?.Invoke(this, message)` present) |
+| 3 | Connect message-consumer output to `RaceEngine.OnCarDetected()` | Done | `TrackGenius.Core/RobitronicMessageConsumer.cs`, `TrackGenius.Core/RaceEngine.cs` (CarDetected event wired) |
+| 4 | Stop silently swallowing global UI exceptions | Done | `TrackGenius/App.xaml.cs` (logs + shows dialog; `e.Handled = false` for non-recoverable) |
+| 5 | Implement `Driver.DriverID` and `Driver.NickName` | Done | `TrackGenius.Model/Entity/Driver.cs` (implemented) |
+| 6 | Replace `DateTime.Now.Ticks` with `Stopwatch` in `RaceTimer` | Done | `TrackGenius.Model/Race/RaceTimer.cs` (uses `Stopwatch`) |
 | 7 | Improve `Race.UpdateRaceStatus()` for timing and duplicate filtering | Pending | `TrackGenius.Model/Race/Race.cs` |
 | 8 | Refactor constructors to accept dependencies | Pending | `TrackGenius.Communication/CommunicateService.cs`, `TrackGenius.Core/RaceEngine.cs`, `TrackGenius.Model/Race/Race.cs` |
 | 9 | Add a composition root in `App.xaml.cs` | Pending | `TrackGenius/App.xaml.cs` |
