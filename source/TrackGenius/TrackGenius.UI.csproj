@@ -17,8 +17,7 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ControlzEx" Version="5.0.2" />
-    <PackageReference Include="MahApps.Metro" Version="2.4.11" />
+    <PackageReference Include="WPF-UI" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Xaml" />
@@ -31,18 +30,5 @@
     <ProjectReference Include="..\TrackGenius.Const\TrackGenius.Const.csproj" />
     <ProjectReference Include="..\TrackGenius.Model\TrackGenius.Model.csproj" />
     <ProjectReference Include="..\TrackGenius.Protocol\TrackGenius.Protocol.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Mainform.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Mainform.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Mainform.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Mainform.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 </Project>

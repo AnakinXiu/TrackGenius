@@ -1,75 +1,56 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
+using System;
 using System.Windows.Input;
-using System.Windows.Shell;
-using MoreLinq;
 using TrackGenius.Communication;
 using TrackGenius.UI.Forms;
 using TrackGenius.UI.ViewModels;
+using TrackGenius.UI.Views.Pages;
+using Wpf.Ui.Controls;
 
 namespace TrackGenius.UI
 {
     /// <summary>
     /// Interaction logic for MainForm.xaml
     /// </summary>
-    public partial class MainForm : Window
+    public partial class MainForm : FluentWindow
     {
-        private MainWindowViewModel _viewModel;
-
+        private readonly MainWindowViewModel _viewModel;
         private readonly CommunicateService _comService;
-
-        private readonly List<DockPanel> _mainPages;
 
         public MainForm(CommunicateService communicateService)
         {
             InitializeComponent();
 
-            _comService = communicateService ?? throw new System.ArgumentNullException(nameof(communicateService));
+            _comService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
 
-            _mainPages = new List<DockPanel> { QuickRace, Settings };
-
-            WindowChrome.SetWindowChrome(this, new WindowChrome()
+            _viewModel = new MainWindowViewModel
             {
-                ResizeBorderThickness = new Thickness(0, 0, 5, 5),
-                CaptionHeight = 0
-            });
+                MainFormParamViewModel = new MainFormParamViewModel(_comService),
+            };
 
-            _viewModel = LoadMainWindowViewModel();
             DataContext = _viewModel;
 
+            RootNavigation.Navigated += OnNavigated;
             CommandBindings.Add(new CommandBinding(ApplicationCommands.New));
         }
 
-        private MainWindowViewModel LoadMainWindowViewModel() =>
-            new(SetMainPage)
-            {
-                MainFormParamViewModel = new MainFormParamViewModel(_comService)
-                {
-                    ToolBarSize = new Size(Width, 50),
-                    ToolBarButtonSize = new Size(50, 50),
-                }
-            };
-
-        private void NewDriver_OnClick(object sender, RoutedEventArgs e)
+        private void OnNavigated(NavigationView sender, NavigatedEventArgs args)
         {
-            new DriverCreationForm().ShowDialog();
-        }
-
-        private void SetMainPage(string title)
-        {
-            switch (title)
+            // Pages are instantiated by the NavigationView via their parameterless ctor.
+            // Inject the appropriate view-model on each navigation.
+            switch (args.Page)
             {
-                case "QuickRace":
-                    QuickRace.Visibility = Visibility.Visible;
-                    _mainPages.Except([QuickRace]).ForEach(item =>item.Visibility = Visibility.Hidden);
+                case SettingsPage settingsPage:
+                    settingsPage.DataContext = _viewModel.MainFormParamViewModel;
                     break;
-                case "Setting":
-                    Settings.Visibility = Visibility.Visible;
-                    _mainPages.Except([Settings]).ForEach(item => item.Visibility = Visibility.Hidden);
+                case QuickRacePage quickRacePage:
+                    quickRacePage.DataContext = _viewModel;
                     break;
             }
+        }
+
+        private void NewDriver_OnClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            new DriverCreationForm().ShowDialog();
         }
 
         private void StartRace_OnCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -79,6 +60,5 @@ namespace TrackGenius.UI
 
         private void StartRace_OnExecuted(object sender, ExecutedRoutedEventArgs e)
         { }
-
     }
 }

@@ -1,19 +1,20 @@
-﻿<Window x:Class="TrackGenius.UI.MainForm"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:behaviour="clr-namespace:TrackGenius.UI.Behaviors"
-        xmlns:views="clr-namespace:TrackGenius.UI.Views"
-        xmlns:viewModel="clr-namespace:TrackGenius.UI.ViewModels"
-        xmlns:commands="clr-namespace:TrackGenius.UI.Commands"
-        mc:Ignorable="d"
-        Title="Track Genius"
-        Height="450" Width="800"
-        WindowStyle="None"
-        ResizeMode="CanResize"
-        WindowStartupLocation="CenterScreen"
-        d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel}">
+﻿<ui:FluentWindow x:Class="TrackGenius.UI.MainForm"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:pages="clr-namespace:TrackGenius.UI.Views.Pages"
+                 xmlns:viewModel="clr-namespace:TrackGenius.UI.ViewModels"
+                 xmlns:commands="clr-namespace:TrackGenius.UI.Commands"
+                 mc:Ignorable="d"
+                 Title="Track Genius"
+                 Height="450" Width="800"
+                 ExtendsContentIntoTitleBar="True"
+                 WindowBackdropType="Mica"
+                 WindowCornerPreference="Round"
+                 WindowStartupLocation="CenterScreen"
+                 d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel}">
 
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static commands:CustomCommands.StartRaceCommand}"
@@ -23,106 +24,35 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="32"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
 
-        <views:WindowTitleBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <ui:TitleBar Grid.Row="0"
+                     Title="Track Genius" />
 
-        <views:NavigationBar Grid.Column="0"
-                             Grid.Row="1"
-                             HorizontalAlignment="Left"
-                             DataContext="{Binding NavigationBarViewModel}"/>
+        <ui:NavigationView x:Name="RootNavigation"
+                           Grid.Row="1"
+                           PaneDisplayMode="Left"
+                           IsBackButtonVisible="Collapsed"
+                           IsPaneToggleVisible="True">
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="Quick Race"
+                                       TargetPageType="{x:Type pages:QuickRacePage}">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:SymbolIcon Symbol="Flag24" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.MenuItems>
 
-        <Grid Grid.Column="1" Grid.Row="1">
-
-            <DockPanel x:Name="QuickRace"/>
-            <DockPanel x:Name="Settings">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="100"/>
-                    </Grid.ColumnDefinitions>
-
-                    <ComboBox ItemsSource="{Binding MainFormParamViewModel.SerialPorts}" 
-                              DisplayMemberPath="Description"
-                              SelectedItem="{Binding MainFormParamViewModel.SelectedSerialPort}"/>
-                    <Button Grid.Column="1" Grid.Row="0"
-                            Command="{Binding MainFormParamViewModel.OpenPortCommand}" >Open Port</Button>
-
-                    <TextBlock Grid.Column="0" Grid.Row="1"
-                               Text="{Binding MainFormParamViewModel.IsPortOpenedString }" />
-
-                    <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                              Name="MessageView"
-                              ItemsSource="{Binding MainFormParamViewModel.Messages}"
-                              behaviour:ListViewAutoScrollBehavior.AutoScrollToEnd="True"/>
-                </Grid>
-            </DockPanel>
-
-            <!-- title bar -->
-            <!--Grid Row="0" Background="Transparent" /-->
-
-            <!-- Main Form -->
-            <!--Grid Grid.Row="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="{Binding ToolBarSize.Height}" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="{Binding ToolBarSize.Height}" />
-                </Grid.RowDefinitions>
-                <Grid Name="ToolBar" Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{Binding ToolBarButtonSize.Width}" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Button Name="Menu" Grid.Column="0" Background="Aqua" />
-                    <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
-                        <Button Background="Aqua" Width="{Binding ToolBarButtonSize.Width}" Content="1" />
-                        <Button Background="Aqua" Width="{Binding ToolBarButtonSize.Width}" Content="2" />
-                        <Button Name="NewDriver" Background="Aqua" Width="{Binding ToolBarButtonSize.Width}"
-                                Content="3"
-                                Click="NewDriver_OnClick" />
-                    </StackPanel>
-                </Grid>
-                <Grid Name="MainPanel" Background="Gainsboro" Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="20" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="DeviceType" />
-                        <ComboBox Grid.Column="1" Width="auto" Name="DeviceSelection" />
-                    </Grid>
-                    <Grid Grid.Row="0" Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="ComSelection" ItemsSource="{Binding SerialPorts}" />
-                        <Button Grid.Column="1" Content="OpenCom"
-                                Command="{x:Static ui:CustomCommands.OpenPortCommand}" />
-                    </Grid>
-                    <Button Grid.Row="1" Grid.Column="1" Content="Start Race" FontSize="20"
-                            Command="{x:Static ui:CustomCommands.StartRaceCommand}" />
-                </Grid>
-            </Grid-->
-        </Grid>
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem Content="Settings"
+                                       TargetPageType="{x:Type pages:SettingsPage}">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:SymbolIcon Symbol="Settings24" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.FooterMenuItems>
+        </ui:NavigationView>
     </Grid>
-</Window>
+</ui:FluentWindow>
