@@ -34,6 +34,7 @@
         <ui:NavigationView x:Name="RootNavigation"
                            Grid.Row="1"
                            PaneDisplayMode="Left"
+                           OpenPaneLength="200"
                            IsBackButtonVisible="Collapsed"
                            IsPaneToggleVisible="True">
             <ui:NavigationView.MenuItems>
