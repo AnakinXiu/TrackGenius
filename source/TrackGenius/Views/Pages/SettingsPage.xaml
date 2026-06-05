@@ -9,6 +9,8 @@
       mc:Ignorable="d"
       Title="Settings"
       d:DesignHeight="450" d:DesignWidth="800"
+      ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+      ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
       d:DataContext="{d:DesignInstance Type=viewModel:MainFormParamViewModel}">
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -24,18 +26,17 @@
 
         <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
                     Margin="0, 0, 0,20">
-            <ui:CardControl Icon="{ui:SymbolIcon PaintBrush16}"
-                        
-                        >
+            <ui:CardControl Icon="{ui:SymbolIcon PaintBrush16}" >
             <ui:CardControl.Header>
                 <StackPanel>
                     <ui:TextBlock
                         Margin="0"
+                        Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Page}}"
                         FontTypography="BodyStrong"
                         Text="Theme"
                         TextWrapping="WrapWithOverflow" />
                     <ui:TextBlock
-                        Appearance="Secondary"
+                        Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Page}}"
                         Text="Choose the application theme."
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
@@ -65,6 +66,8 @@
 
         <ui:ListView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                   Name="MessageView"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                   ItemsSource="{Binding Messages}"
                   behaviour:ListViewAutoScrollBehavior.AutoScrollToEnd="True" />
     </Grid>
