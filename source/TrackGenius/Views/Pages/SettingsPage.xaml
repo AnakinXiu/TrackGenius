@@ -10,8 +10,9 @@
       Title="Settings"
       d:DesignHeight="450" d:DesignWidth="800"
       d:DataContext="{d:DesignInstance Type=viewModel:MainFormParamViewModel}">
-    <Grid Margin="16">
+    <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -21,24 +22,48 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <ComboBox Grid.Row="0" Grid.Column="0"
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
+                    Margin="0, 0, 0,20">
+            <ui:CardControl Icon="{ui:SymbolIcon PaintBrush16}"
+                        
+                        >
+            <ui:CardControl.Header>
+                <StackPanel>
+                    <ui:TextBlock
+                        Margin="0"
+                        FontTypography="BodyStrong"
+                        Text="Theme"
+                        TextWrapping="WrapWithOverflow" />
+                    <ui:TextBlock
+                        Appearance="Secondary"
+                        Text="Choose the application theme."
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ComboBox Width="150"
+                      Name="ComboBoxSelectTheme"
+                      ItemsSource="{Binding Themes}" 
+                      SelectedItem="{Binding SelectedTheme}" />
+        </ui:CardControl>
+        </StackPanel>
+        <ComboBox Grid.Row="1" Grid.Column="0"
                   Margin="0,0,8,8"
                   ItemsSource="{Binding SerialPorts}"
                   DisplayMemberPath="Description"
                   SelectedItem="{Binding SelectedSerialPort}" />
 
-        <ui:Button Grid.Row="0" Grid.Column="1"
+        <ui:Button Grid.Row="1" Grid.Column="1"
                    Margin="0,0,0,8"
                    MinWidth="100"
                    Appearance="Primary"
                    Content="Open Port"
                    Command="{Binding OpenPortCommand}" />
 
-        <ui:TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+        <ui:TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                       Margin="0,0,0,8"
                       Text="{Binding IsPortOpenedString}" />
 
-        <ui:ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+        <ui:ListView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                   Name="MessageView"
                   ItemsSource="{Binding Messages}"
                   behaviour:ListViewAutoScrollBehavior.AutoScrollToEnd="True" />
