@@ -29,8 +29,22 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ui:TitleBar Grid.Row="0"
-                     Title="Track Genius" />
+        <ui:TitleBar Grid.Row="0" >
+
+            <ui:TitleBar.CenterContent>
+                <StackPanel Orientation="Horizontal" Margin="8">
+                    <TextBlock Text="Track Genius"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </ui:TitleBar.CenterContent>
+
+            <ui:TitleBar.TrailingContent>
+                <TextBlock Text="v1.0.0"
+                           VerticalAlignment="Center"
+                           Margin="0, 0, 10, 0" />
+            </ui:TitleBar.TrailingContent>
+        </ui:TitleBar>
+
 
         <ui:NavigationView x:Name="RootNavigation"
                            Grid.Row="1"

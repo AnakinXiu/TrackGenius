@@ -17,6 +17,14 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\TraceGeniusLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\TraceGeniusLogo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="WPF-UI" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>

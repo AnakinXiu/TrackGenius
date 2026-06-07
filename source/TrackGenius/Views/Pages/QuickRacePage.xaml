@@ -8,9 +8,13 @@
       Title="Quick Race"
       d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ui:TextBlock HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      FontTypography="Title"
-                      Text="Quick Race" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <ui:DataGrid Grid.Row="0" HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     ItemsSource="{Binding }"/>
     </Grid>
 </Page>
