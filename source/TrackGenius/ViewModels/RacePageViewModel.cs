@@ -7,11 +7,11 @@ using TrackGenius.Model;
 
 namespace TrackGenius.UI.ViewModels;
 
-public class RacePageViewModel :INotifyPropertyChanged
+public class RacePageViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged;
 
-    public ObservableCollection<RaceDataItem> RaceDataItems { get; set; } = new ObservableCollection<RaceDataItem>();
+    public ObservableCollection<RaceDataItem> RaceDataItems { get; set; } = [];
 }
 
 public class RaceDataItem : INotifyPropertyChanged
@@ -63,6 +63,6 @@ public class RaceDataItem : INotifyPropertyChanged
 
     public RaceDataItem()
     {
-        
+
     }
 }
