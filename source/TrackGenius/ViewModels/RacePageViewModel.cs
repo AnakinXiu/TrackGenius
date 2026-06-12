@@ -1,6 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using JetBrains.Annotations;
 using TrackGenius.Const;
+using TrackGenius.Model;
 
 namespace TrackGenius.UI.ViewModels;
 
@@ -16,9 +19,15 @@ public class RaceDataItem : INotifyPropertyChanged
     private int _racerNumber;
     private int _racerPosition;
     private int _lapsCount;
+    private TimeSpan _lastLapTime;
     public event PropertyChangedEventHandler PropertyChanged;
-    
-    public string DriverName { get; set; }
+
+    public string DriverName => _driverInfo?.DriverName ?? string.Empty;
+
+    [CanBeNull]
+    private IDriver _driverInfo;
+
+    private TimeSpan _bestLapTime;
 
     public int RacerNumber
     {
@@ -38,11 +47,22 @@ public class RaceDataItem : INotifyPropertyChanged
         set => PropertyChanged.RaiseIfChanged(this, ref _lapsCount, value, nameof(LapsCount));
     }
 
-    public int LapsCount
+    public TimeSpan LastLapTime
     {
-        get => _lapsCount;
-        set => PropertyChanged.RaiseIfChanged(this, ref _lapsCount, value, nameof(LapsCount));
+        get => _lastLapTime;
+        set => PropertyChanged.RaiseIfChanged(this, ref _lastLapTime, value, nameof(LastLapTime));
+    }
+
+    public TimeSpan BestLapTime
+    {
+        get => _bestLapTime;
+        set => PropertyChanged.RaiseIfChanged(this, ref _bestLapTime, value, nameof(BestLapTime));
     }
 
     public string Description { get; set; }
+
+    public RaceDataItem()
+    {
+        
+    }
 }
