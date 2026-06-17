@@ -18,6 +18,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -48,24 +49,30 @@
                       SelectedItem="{Binding SelectedTheme}" />
         </ui:CardControl>
         </StackPanel>
-        <ComboBox Grid.Row="1" Grid.Column="0"
+        <ComboBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                  Margin="0,0,0,8"
+                  ItemsSource="{Binding Protocols}"
+                  DisplayMemberPath="Name"
+                  SelectedItem="{Binding SelectedProtocol}" />
+
+        <ComboBox Grid.Row="2" Grid.Column="0"
                   Margin="0,0,8,8"
                   ItemsSource="{Binding SerialPorts}"
                   DisplayMemberPath="Description"
                   SelectedItem="{Binding SelectedSerialPort}" />
 
-        <ui:Button Grid.Row="1" Grid.Column="1"
+        <ui:Button Grid.Row="2" Grid.Column="1"
                    Margin="0,0,0,8"
                    MinWidth="100"
                    Appearance="Primary"
                    Content="Open Port"
                    Command="{Binding OpenPortCommand}" />
 
-        <ui:TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+        <ui:TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                       Margin="0,0,0,8"
                       Text="{Binding IsPortOpenedString}" />
 
-        <ui:ListView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+        <ui:ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
            Name="MessageView"
            ScrollViewer.VerticalScrollBarVisibility="Auto"
            ScrollViewer.HorizontalScrollBarVisibility="Hidden"

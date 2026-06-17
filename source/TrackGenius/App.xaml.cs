@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 using TrackGenius.Communication;
-using TrackGenius.Protocol.Robitronic;
 using TrackGenius.UI;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
@@ -91,9 +90,8 @@ namespace TrackGenius
 
         private static MainForm CreateMainWindow()
         {
-            var protocol = new RobitronicProtocol();
             var communicateService = new CommunicateService();
-            return new MainForm(communicateService, protocol);
+            return new MainForm(communicateService);
         }
 
         private static void ApplyAppearance()

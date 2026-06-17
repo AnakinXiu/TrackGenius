@@ -1,7 +1,6 @@
 using System;
 using System.Windows.Input;
 using TrackGenius.Communication;
-using TrackGenius.Protocol.Interfaces;
 using TrackGenius.UI.ViewModels;
 using TrackGenius.UI.Views.Pages;
 using Wpf.Ui.Controls;
@@ -14,16 +13,14 @@ namespace TrackGenius.UI
     public partial class MainForm : FluentWindow
     {
         private readonly MainWindowViewModel _viewModel;
-        private readonly CommunicateService _comService;
 
-        public MainForm(CommunicateService communicateService, IProtocol protocol)
+        public MainForm(CommunicateService communicateService)
         {
             InitializeComponent();
 
-            _comService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
-            var currentProtocol = protocol ?? throw new ArgumentNullException(nameof(protocol));
+            var comService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
 
-            _viewModel = new MainWindowViewModel(new RacePageViewModel(), new MainFormParamViewModel(_comService, currentProtocol));
+            _viewModel = new MainWindowViewModel(new RacePageViewModel(comService), new MainFormParamViewModel(comService));
 
             DataContext = _viewModel;
 

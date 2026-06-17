@@ -19,20 +19,20 @@ namespace TrackGenius.UI.ViewModels;
 
 public class MainFormParamViewModel : INotifyPropertyChanged
 {
+    public sealed record ProtocolOption(string Name, IProtocol Protocol);
+
     private ISerialPortDescription _selectedSerialPort;
-    private CommunicateService _communicateService;
+    private readonly CommunicateService _communicateService;
     private CancellationTokenSource _messagePollingCancellationTokenSource;
     private Task _messagePollingTask;
     private ThemeType _selectedTheme;
-    private readonly IProtocol _protocol;
-
-    public Size ToolBarSize { get; set; }
-
-    public Size ToolBarButtonSize { get; set; }
+    private ProtocolOption _selectedProtocol;
 
     public List<ThemeType> Themes { get; } = Enum.GetValues(typeof(ThemeType)).Cast<ThemeType>().ToList();  
 
     public List<ISerialPortDescription> SerialPorts { get; }
+
+    public List<ProtocolOption> Protocols { get; }
 
     public ObservableCollection<string> Messages { get; } = [];
 
@@ -48,6 +48,12 @@ public class MainFormParamViewModel : INotifyPropertyChanged
 
     public ICommand OpenPortCommand { get; }
 
+    public ProtocolOption SelectedProtocol
+    {
+        get => _selectedProtocol;
+        set => PropertyChanged.RaiseIfChanged(this, ref _selectedProtocol, value, Equals, nameof(SelectedProtocol));
+    }
+
     public ThemeType SelectedTheme
     {
         get => _selectedTheme;
@@ -60,12 +66,13 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         }
     }
 
-    public MainFormParamViewModel(CommunicateService communicateService, IProtocol protocol)
+    public MainFormParamViewModel(CommunicateService communicateService)
     {
         _communicateService = communicateService ?? throw new System.ArgumentNullException(nameof(communicateService));
-        _protocol = protocol ?? throw new ArgumentNullException(nameof(protocol));
         _communicateService.PortOpenStateEventHandler += (_, _) => OnPropertyChanged(nameof(IsPortOpenedString));
         SerialPorts = SerialPortEnumerator.GetValidPortDescriptions().ToList();
+        Protocols = Protocol.Protocols.AvailableProtocols.Select(p => new ProtocolOption(p.ProtocolName, p)).ToList();
+        _selectedProtocol = Protocols.First();
         OpenPortCommand = new RelayCommand(OpenPort);
 
         _selectedTheme = GetThemeTypeFromCurrentTheme();
@@ -96,10 +103,13 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         if (SelectedSerialPort == null)
             return;
 
+        if (SelectedProtocol?.Protocol == null)
+            return;
+
         StopMessagePolling();
         Messages.Clear();
 
-        _communicateService.StartService(SelectedSerialPort.PortName, _protocol);
+        _communicateService.StartService(SelectedSerialPort.PortName, SelectedProtocol.Protocol);
            
         StartMessagePolling();
     }
