@@ -11,7 +11,8 @@ namespace TrackGenius.Communication
 
         private bool _dataReceivedSubscribed;
 
-        private readonly IMessageParser _messageParser;
+        private IMessageParser _messageParser;
+        private SerialPortSetting _serialPortSettings;
 
         private readonly ConcurrentQueue<IUplinkMessage> _upwardMessages = new();
 
@@ -20,22 +21,20 @@ namespace TrackGenius.Communication
         public MessageReceivedEventHandler MessageReceived;
 
         public event EventHandler PortOpenStateEventHandler;
-        private readonly SerialPortSetting _serialPortSettings;
 
-        public CommunicateService(IProtocol protocol)
-            : this(protocol?.MessageParser, protocol?.SerialPortSettings)
+        public CommunicateService(ISerialPortWrapper portWrapper = null)
         {
-        }
-
-        public CommunicateService(IMessageParser messageParser, ISerialPortSettings serialPortSettings, ISerialPortWrapper portWrapper = null)
-        {
-            _messageParser = messageParser ?? throw new ArgumentNullException(nameof(messageParser));
-            _serialPortSettings = SerialPortSettingConvert.ToSerialPortSetting(serialPortSettings ?? throw new ArgumentNullException(nameof(serialPortSettings)));
             _portWrapper = portWrapper;
         }
 
-        public void StartService(string portName)
+        public void StartService(string portName, IProtocol protocol)
         {
+            var currentProtocol = protocol ?? throw new ArgumentNullException(nameof(protocol));
+            _messageParser = currentProtocol.MessageParser ?? throw new ArgumentNullException(nameof(protocol.MessageParser));
+            var serialPortSettings = currentProtocol.SerialPortSettings 
+                                     ?? throw new ArgumentNullException(nameof(protocol.SerialPortSettings));
+            _serialPortSettings = SerialPortSettingConvert.ToSerialPortSetting(serialPortSettings);
+
             if (_portWrapper == null)
             {
                 _portWrapper = SerialPortWrapper.CreatePort(portName,

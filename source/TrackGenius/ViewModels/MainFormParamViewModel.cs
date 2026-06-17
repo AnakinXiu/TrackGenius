@@ -11,6 +11,7 @@ using System.Windows.Input;
 using TrackGenius.Communication;
 using TrackGenius.Communication.interfaces;
 using TrackGenius.Const;
+using TrackGenius.Protocol.Interfaces;
 using TrackGenius.UI.Commands;
 using Wpf.Ui.Appearance;
 
@@ -23,6 +24,7 @@ public class MainFormParamViewModel : INotifyPropertyChanged
     private CancellationTokenSource _messagePollingCancellationTokenSource;
     private Task _messagePollingTask;
     private ThemeType _selectedTheme;
+    private readonly IProtocol _protocol;
 
     public Size ToolBarSize { get; set; }
 
@@ -58,9 +60,10 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         }
     }
 
-    public MainFormParamViewModel(CommunicateService communicateService)
+    public MainFormParamViewModel(CommunicateService communicateService, IProtocol protocol)
     {
         _communicateService = communicateService ?? throw new System.ArgumentNullException(nameof(communicateService));
+        _protocol = protocol ?? throw new ArgumentNullException(nameof(protocol));
         _communicateService.PortOpenStateEventHandler += (_, _) => OnPropertyChanged(nameof(IsPortOpenedString));
         SerialPorts = SerialPortEnumerator.GetValidPortDescriptions().ToList();
         OpenPortCommand = new RelayCommand(OpenPort);
@@ -96,7 +99,7 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         StopMessagePolling();
         Messages.Clear();
 
-        _communicateService.StartService(SelectedSerialPort.PortName);
+        _communicateService.StartService(SelectedSerialPort.PortName, _protocol);
            
         StartMessagePolling();
     }

@@ -91,8 +91,9 @@ namespace TrackGenius
 
         private static MainForm CreateMainWindow()
         {
-            var communicateService = new CommunicateService(new RobitronicProtocol());
-            return new MainForm(communicateService);
+            var protocol = new RobitronicProtocol();
+            var communicateService = new CommunicateService();
+            return new MainForm(communicateService, protocol);
         }
 
         private static void ApplyAppearance()
