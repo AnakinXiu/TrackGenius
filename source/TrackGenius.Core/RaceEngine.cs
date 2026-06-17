@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using TrackGenius.Communication;
 using TrackGenius.Model;
-using TrackGenius.Protocol.Robitronic;
 
 namespace TrackGenius.Core
 {
@@ -13,11 +12,6 @@ namespace TrackGenius.Core
         private readonly IMessageConsumer _messageConsumer;
 
         private IRace _race;
-
-        public RaceEngine(IMessageConsumer messageConsumer)
-            : this(messageConsumer, new CommunicateService(new RobitronicProtocol()))
-        {
-        }
 
         public RaceEngine(IMessageConsumer messageConsumer, CommunicateService communicateService)
         {

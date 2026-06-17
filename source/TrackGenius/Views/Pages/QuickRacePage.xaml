@@ -12,16 +12,43 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-        <ui:DataGrid Grid.Row="0" HorizontalAlignment="Center"
-                     VerticalAlignment="Center"
+        
+        <ui:DataGrid Grid.Row="0" HorizontalAlignment="Stretch"
+                     VerticalAlignment="Stretch"
+                     CanUserSortColumns="False"
+                     AutoGenerateColumns="False"
                      ItemsSource="{Binding RaceDataItems}">
-          <ui:DataGrid.RowHeaderTemplate>
+
+            <ui:DataGrid.Columns>
+                <DataGridTextColumn Header="RacerPosition" Binding="{Binding RacerPosition}">
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding}" />
+                                <TextBlock Text="Tag" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="RacerNumber" Binding="{Binding RacerNumber}"/>
+            </ui:DataGrid.Columns>
+
+
+            <ui:DataGrid.RowHeaderTemplate>
               <DataTemplate></DataTemplate>
           </ui:DataGrid.RowHeaderTemplate>
         </ui:DataGrid>
+
+        <StackPanel Grid.Row="1" 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+            <Button Content="Start"
+                    Command="{Binding StartRaceCommand}"/>
+        </StackPanel>
     </Grid>
 </Page>

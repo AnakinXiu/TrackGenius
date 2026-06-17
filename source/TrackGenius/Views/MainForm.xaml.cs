@@ -1,7 +1,6 @@
 using System;
 using System.Windows.Input;
 using TrackGenius.Communication;
-using TrackGenius.UI.Forms;
 using TrackGenius.UI.ViewModels;
 using TrackGenius.UI.Views.Pages;
 using Wpf.Ui.Controls;
@@ -22,10 +21,7 @@ namespace TrackGenius.UI
 
             _comService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
 
-            _viewModel = new MainWindowViewModel
-            {
-                MainFormParamViewModel = new MainFormParamViewModel(_comService),
-            };
+            _viewModel = new MainWindowViewModel(new RacePageViewModel(), new MainFormParamViewModel(_comService));
 
             DataContext = _viewModel;
 
@@ -43,14 +39,9 @@ namespace TrackGenius.UI
                     settingsPage.DataContext = _viewModel.MainFormParamViewModel;
                     break;
                 case QuickRacePage quickRacePage:
-                    quickRacePage.DataContext = _viewModel;
+                    quickRacePage.DataContext = _viewModel.RacePageViewModel;
                     break;
             }
-        }
-
-        private void NewDriver_OnClick(object sender, System.Windows.RoutedEventArgs e)
-        {
-            new DriverCreationForm().ShowDialog();
         }
 
         private void StartRace_OnCanExecute(object sender, CanExecuteRoutedEventArgs e)
