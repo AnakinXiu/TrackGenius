@@ -3,8 +3,9 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 using TrackGenius.Communication;
-using TrackGenius.Protocol.Robitronic;
 using TrackGenius.UI;
+using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
 
 namespace TrackGenius
 {
@@ -13,6 +14,11 @@ namespace TrackGenius
     /// </summary>
     public partial class App : Application
     {
+        // Default appearance settings. These can be persisted to user settings later
+        // and re-applied at startup to honour the user's preference.
+        private const ApplicationTheme DefaultTheme = ApplicationTheme.Unknown; // System-follow
+        private const WindowBackdropType DefaultBackdrop = WindowBackdropType.Mica;
+
         private MainForm _mainForm;
 
         protected override void OnStartup(StartupEventArgs e)
@@ -22,6 +28,8 @@ namespace TrackGenius
             //注册Application_Error
             this.DispatcherUnhandledException +=
                 new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
+
+            ApplyAppearance();
 
             _mainForm = CreateMainWindow();
             MainWindow = _mainForm;
@@ -64,10 +72,13 @@ namespace TrackGenius
                 return;
             }
 
-            MessageBox.Show("An unexpected error occurred and the application needs to close.",
-                "TrackGenius Error",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
+            var dialog = new Wpf.Ui.Controls.MessageBox
+            {
+                Title = "TrackGenius Error",
+                Content = "An unexpected error occurred and the application needs to close.",
+                CloseButtonText = "OK",
+            };
+            _ = dialog.ShowDialogAsync();
 
             e.Handled = false;
         }
@@ -79,8 +90,19 @@ namespace TrackGenius
 
         private static MainForm CreateMainWindow()
         {
-            var communicateService = new CommunicateService(new RobitronicProtocol());
+            var communicateService = new CommunicateService();
             return new MainForm(communicateService);
+        }
+
+        private static void ApplyAppearance()
+        {
+            // Apply the configured theme. ApplicationTheme.Unknown means "follow the system theme".
+            ApplicationThemeManager.Apply(DefaultTheme, DefaultBackdrop, updateAccent: true);
+
+            if (DefaultTheme == ApplicationTheme.Unknown)
+            {
+                SystemThemeWatcher.Watch(null, DefaultBackdrop, updateAccents: true);
+            }
         }
     }
 }

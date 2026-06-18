@@ -34,8 +34,8 @@ namespace TrackGenius.Protocol.Robitronic
 
             ByteData = data;
 
-            TransponderID = ByteData.Cut(3, 4).ToInt32().ToString();
-            Milliseconds = ByteData.Cut(7, 4).ToInt32();
+            TransponderID = ByteData.Cut(3, 4).Reverse().ToInt32().ToString();
+            Milliseconds = ByteData.Cut(7, 4).Reverse().ToInt32();
         }
 
         public string Deserialize()=> BitConverter.ToString(ByteData).Replace('-', SplitChar.Separator);

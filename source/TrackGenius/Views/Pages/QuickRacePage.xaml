@@ -1,0 +1,54 @@
+<Page x:Class="TrackGenius.UI.Views.Pages.QuickRacePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:viewModels="clr-namespace:TrackGenius.UI.ViewModels"
+      mc:Ignorable="d"
+      Title="Quick Race"
+      d:DesignHeight="450" d:DesignWidth="800"
+      d:DataContext="{d:DesignInstance Type=viewModels:RacePageViewModel}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        
+        <ui:DataGrid Grid.Row="0" HorizontalAlignment="Stretch"
+                     VerticalAlignment="Stretch"
+                     CanUserSortColumns="False"
+                     AutoGenerateColumns="False"
+                     ItemsSource="{Binding RaceDataItems}">
+
+            <ui:DataGrid.Columns>
+                <DataGridTextColumn Header="RacerPosition" Binding="{Binding RacerPosition}">
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding}" />
+                                <TextBlock Text="Tag" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="RacerNumber" Binding="{Binding RacerNumber}"/>
+            </ui:DataGrid.Columns>
+
+
+            <ui:DataGrid.RowHeaderTemplate>
+              <DataTemplate></DataTemplate>
+          </ui:DataGrid.RowHeaderTemplate>
+        </ui:DataGrid>
+
+        <StackPanel Grid.Row="1" 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+            <Button Content="Start"
+                    Command="{Binding StartRaceCommand}"/>
+        </StackPanel>
+    </Grid>
+</Page>

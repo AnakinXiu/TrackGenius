@@ -1,29 +1,18 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 
 namespace TrackGenius.UI.ViewModels;
 
 public class MainWindowViewModel
 {
-    public NavigationBarViewModel NavigationBarViewModel { get; set; }
+    [NotNull]
+    public RacePageViewModel RacePageViewModel { get; set; }
 
+    [NotNull]
     public MainFormParamViewModel MainFormParamViewModel { get; set; }
 
-    public MainWindowViewModel(Action<string> setMainPage)
+    public MainWindowViewModel([NotNull] RacePageViewModel racePageViewModel, [NotNull] MainFormParamViewModel mainFormParamViewModel)
     {
-        var items = new[]
-        {
-            new NavigationItem
-            {
-                Title = "QuickRace",
-                Tip = "QuickRace Tip"
-            },
-            new NavigationItem
-            {
-                Title = "Setting",
-                Tip = "Setting Tip"
-            }
-        };
-
-        NavigationBarViewModel = new NavigationBarViewModel(items, setMainPage);
+        RacePageViewModel = racePageViewModel;
+        MainFormParamViewModel = mainFormParamViewModel;
     }
 }
