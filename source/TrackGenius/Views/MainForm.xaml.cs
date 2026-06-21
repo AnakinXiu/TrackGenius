@@ -20,7 +20,7 @@ namespace TrackGenius.UI
 
             var comService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
 
-            _viewModel = new MainWindowViewModel(new RacePageViewModel(comService), new MainFormParamViewModel(comService));
+            _viewModel = new MainWindowViewModel(new RacePageViewModel(comService), new SettingPageViewModel(comService));
 
             DataContext = _viewModel;
 
@@ -35,7 +35,7 @@ namespace TrackGenius.UI
             switch (args.Page)
             {
                 case SettingsPage settingsPage:
-                    settingsPage.DataContext = _viewModel.MainFormParamViewModel;
+                    settingsPage.DataContext = _viewModel.SettingPageViewModel;
                     break;
                 case QuickRacePage quickRacePage:
                     quickRacePage.DataContext = _viewModel.RacePageViewModel;

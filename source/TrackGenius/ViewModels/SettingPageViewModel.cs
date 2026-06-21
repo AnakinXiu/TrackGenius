@@ -17,7 +17,7 @@ using Wpf.Ui.Appearance;
 
 namespace TrackGenius.UI.ViewModels;
 
-public class MainFormParamViewModel : INotifyPropertyChanged
+public class SettingPageViewModel : INotifyPropertyChanged
 {
     public sealed record ProtocolOption(string Name, IProtocol Protocol);
 
@@ -66,7 +66,7 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         }
     }
 
-    public MainFormParamViewModel(CommunicateService communicateService)
+    public SettingPageViewModel(CommunicateService communicateService)
     {
         _communicateService = communicateService ?? throw new System.ArgumentNullException(nameof(communicateService));
         _communicateService.PortOpenStateEventHandler += (_, _) => OnPropertyChanged(nameof(IsPortOpenedString));

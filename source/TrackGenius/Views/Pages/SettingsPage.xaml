@@ -12,7 +12,7 @@
       ScrollViewer.CanContentScroll="False"
       ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
       ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-      d:DataContext="{d:DesignInstance Type=viewModel:MainFormParamViewModel}">
+      d:DataContext="{d:DesignInstance Type=viewModel:SettingPageViewModel}">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
