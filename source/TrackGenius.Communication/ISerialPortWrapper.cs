@@ -6,8 +6,6 @@ namespace TrackGenius.Communication
     {
         string Name { get; }
 
-        int PortNumber { get; }
-
         bool IsOpened { get; }
 
         event DataReceivedEventHandler DataReceived;

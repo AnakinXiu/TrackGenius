@@ -4,105 +4,74 @@ using System;
 using Parity = RJCP.IO.Ports.Parity;
 using StopBits = RJCP.IO.Ports.StopBits;
 
-namespace TrackGenius.Communication
+namespace TrackGenius.Communication;
+
+public class SerialPortWrapper : ISerialPortWrapper, IDisposable
 {
-    public class SerialPortWrapper : ISerialPortWrapper, IDisposable
+    [CanBeNull]
+    private SerialPortStream _serialPortStream;
+
+    public event DataReceivedEventHandler DataReceived;
+
+    public string Name => _serialPortStream?.PortName ?? string.Empty;
+
+    public bool IsOpened => _serialPortStream is { IsOpen: true };
+
+    private readonly byte[] _buffer = new byte[1024];
+
+    public void OpenPort(string portName, int baud, int data, Parity parity, StopBits stopBits)
     {
-        [NotNull]
-        private SerialPortStream _serialPortStream;
-
-        public event DataReceivedEventHandler DataReceived;
-
-        public string Name { get; }
-
-        public int PortNumber { get; }
-
-        public bool IsOpened => _serialPortStream.IsOpen;
-
-        private byte[] _buffer = new byte[1024];
-
-        public static SerialPortWrapper CreatePort(string portName)
-        {
-            var portWrapper = new SerialPortWrapper();
-            portWrapper._serialPortStream.PortName = portName;
-            portWrapper._serialPortStream.GetPortSettings();
-
-            return portWrapper;
-        }
-
-        public static SerialPortWrapper CreatePort(string portName, int baud, int data, Parity parity, StopBits stopBits)
-        {
-            var portWrapper = new SerialPortWrapper();
-            portWrapper.OpenPort(portName, baud, data, parity, stopBits);
-
-            return portWrapper;
-        }
-
-        private SerialPortWrapper()
-        {
-            _serialPortStream = new SerialPortStream();
-        }
-
-        public void OpenPort()
-        {
-            _serialPortStream.DataReceived += SerialPort_DataReceived;
-            _serialPortStream.Open();
-        }
-
-        public void OpenPort(string portName, int baud, int data, Parity parity, StopBits stopBits)
+        if (_serialPortStream != null)
         {
             _serialPortStream.DataReceived -= SerialPort_DataReceived;
             _serialPortStream.Dispose();
-
-            _serialPortStream = new SerialPortStream(portName, baud, data, parity, stopBits);
-            _serialPortStream.DataReceived += SerialPort_DataReceived;
-            _serialPortStream.Open();
         }
 
-        public void ClosePort()
-        {
-            if (_serialPortStream.IsOpen)
-                _serialPortStream?.Close();
-        }
+        _serialPortStream = new SerialPortStream(portName, baud, data, parity, stopBits);
+        _serialPortStream.DataReceived += SerialPort_DataReceived;
+        _serialPortStream.Open();
+    }
 
-        public void SendBytes([NotNull] byte[] sendData)
-        {
-            if (_serialPortStream.CanWrite)
-                _serialPortStream.Write(sendData, 0, sendData.Length);
-        }
+    public void ClosePort()
+    {
+        if (_serialPortStream is { IsOpen: true })
+            _serialPortStream.Close();
+    }
 
-        private byte[] ReadBytes()
-        {
-            if (_serialPortStream.CanRead)
-            {
-                // var dataLength = Math.Min(_serialPortStream.BytesToRead, _buffer.Length - 1);
-                var dataLength = _serialPortStream.Read(_buffer);
+    public void SendBytes([NotNull] byte[] sendData)
+    {
+        if (_serialPortStream is { CanWrite: true })
+            _serialPortStream.Write(sendData, 0, sendData.Length);
+    }
 
-                var result = new byte[dataLength];
-                Array.Copy(_buffer, result, dataLength);
+    private byte[] ReadBytes()
+    {
+        if (_serialPortStream is not { CanRead: true }) 
+            return [];
 
-                return result;
-            }
+        var dataLength = _serialPortStream.Read(_buffer);
 
-            return null;
-        }
+        var result = new byte[dataLength];
+        Array.Copy(_buffer, result, dataLength);
 
-        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            if (e.EventType != SerialData.Chars) 
-                return;
+        return result;
+    }
 
-            var data = ReadBytes();
-            if(data != null && data.Length > 0)
-                DataReceived?.Invoke(sender, new DataReceivedArgs(data));
-        }
+    private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+    {
+        if (e.EventType != SerialData.Chars) 
+            return;
 
-        public void Dispose()
-        {
-            ClosePort();
+        var data = ReadBytes();
+        if(data is { Length: > 0 })
+            DataReceived?.Invoke(sender, new DataReceivedArgs(data));
+    }
 
-            if (!_serialPortStream.IsDisposed)
-                _serialPortStream?.Dispose();
-        }
+    public void Dispose()
+    {
+        ClosePort();
+
+        if (_serialPortStream is { IsDisposed: false })
+            _serialPortStream.Dispose();
     }
 }
