@@ -27,6 +27,7 @@ public class MainFormParamViewModel : INotifyPropertyChanged
     private Task _messagePollingTask;
     private ThemeType _selectedTheme;
     private ProtocolOption _selectedProtocol;
+    private string _lastError;
 
     public List<ThemeType> Themes { get; } = Enum.GetValues(typeof(ThemeType)).Cast<ThemeType>().ToList();  
 
@@ -35,6 +36,12 @@ public class MainFormParamViewModel : INotifyPropertyChanged
     public List<ProtocolOption> Protocols { get; }
 
     public ObservableCollection<string> Messages { get; } = [];
+
+    public string LastError
+    {
+        get => _lastError;
+        private set => PropertyChanged.RaiseIfChanged(this, ref _lastError, value, Equals, nameof(LastError));
+    }
 
     public bool IsPortOpened => _communicateService?.IsOpened ?? false;
 
@@ -107,11 +114,26 @@ public class MainFormParamViewModel : INotifyPropertyChanged
             return;
 
         StopMessagePolling();
-        Messages.Clear();
 
-        _communicateService.StartService(SelectedSerialPort.PortName, SelectedProtocol.Protocol);
-           
-        StartMessagePolling();
+        try
+        {
+            _communicateService.StartService(SelectedSerialPort.PortName, SelectedProtocol.Protocol);
+            Messages.Clear();
+            LastError = string.Empty;
+            StartMessagePolling();
+        }
+        catch (ArgumentException ex)
+        {
+            HandleCommunicationError(ex);
+        }
+        catch (ObjectDisposedException ex)
+        {
+            HandleCommunicationError(ex);
+        }
+        catch (InvalidOperationException ex)
+        {
+            HandleCommunicationError(ex);
+        }
     }
 
     private void StartMessagePolling()
@@ -122,24 +144,38 @@ public class MainFormParamViewModel : INotifyPropertyChanged
 
     private async Task PollMessageAsync(CancellationToken cancellationToken)
     {
-        while (!cancellationToken.IsCancellationRequested)
+        try
         {
-            if (_communicateService.TryGetNextMessage(out var message))
+            while (!cancellationToken.IsCancellationRequested)
             {
-                var messageText = message.Deserialize();
-                if (Application.Current?.Dispatcher is { } dispatcher)
+                if (_communicateService.TryGetNextMessage(out var message))
                 {
-                    dispatcher.BeginInvoke(() => Messages.Add(messageText));
-                }
-                else
-                {
-                    Messages.Add(messageText);
+                    var messageText = message.Deserialize();
+                    if (Application.Current?.Dispatcher is { } dispatcher)
+                    {
+                        dispatcher.BeginInvoke(() => Messages.Add(messageText));
+                    }
+                    else
+                    {
+                        Messages.Add(messageText);
+                    }
+
+                    continue;
                 }
 
-                continue;
+                await Task.Delay(50, cancellationToken).ConfigureAwait(false);
             }
-
-            await Task.Delay(50, cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ObjectDisposedException ex)
+        {
+            HandleCommunicationError(ex);
+        }
+        catch (InvalidOperationException ex)
+        {
+            HandleCommunicationError(ex);
         }
     }
 
@@ -155,6 +191,19 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         }
 
         _messagePollingTask = null;
+    }
+
+    private void HandleCommunicationError(Exception exception)
+    {
+        LastError = exception.Message;
+
+        if (Application.Current?.Dispatcher is { } dispatcher)
+        {
+            dispatcher.BeginInvoke(() => Messages.Add(exception.Message));
+            return;
+        }
+
+        Messages.Add(exception.Message);
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
