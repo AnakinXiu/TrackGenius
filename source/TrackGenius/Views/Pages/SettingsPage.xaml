@@ -65,10 +65,11 @@
                    Margin="0,0,0,8"
                    MinWidth="100"
                    Appearance="Primary"
-                   Content="Open Port"
-                   Command="{Binding OpenPortCommand}" />
+                   Content="{Binding ButtonContent}"
+                   Command="{Binding OpenClosePortCommand}" />
 
         <ui:TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                      Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Page}}"
                       Margin="0,0,0,8"
                       Text="{Binding IsPortOpenedString}" />
 

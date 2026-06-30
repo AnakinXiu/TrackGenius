@@ -45,6 +45,8 @@ public class MainFormParamViewModel : INotifyPropertyChanged
 
     public bool IsPortOpened => _communicateService?.IsOpened ?? false;
 
+    public string ButtonContent => IsPortOpened ? "Close Port" : "Open Port";
+
     public string IsPortOpenedString => IsPortOpened ? "Opened" : "Closed";
 
     public ISerialPortDescription SelectedSerialPort
@@ -53,7 +55,7 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         set => PropertyChanged.RaiseIfChanged(this, ref _selectedSerialPort, value, Equals, nameof(SelectedSerialPort));
     }
 
-    public ICommand OpenPortCommand { get; }
+    public ICommand OpenClosePortCommand { get; }
 
     public ProtocolOption SelectedProtocol
     {
@@ -75,12 +77,17 @@ public class MainFormParamViewModel : INotifyPropertyChanged
 
     public MainFormParamViewModel(CommunicateService communicateService)
     {
-        _communicateService = communicateService ?? throw new System.ArgumentNullException(nameof(communicateService));
-        _communicateService.PortOpenStateEventHandler += (_, _) => OnPropertyChanged(nameof(IsPortOpenedString));
+        _communicateService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
+        _communicateService.PortOpenStateEventHandler += (_, _) =>
+        {
+            OnPropertyChanged(nameof(IsPortOpenedString));
+            OnPropertyChanged(nameof(ButtonContent));
+        };
+
         SerialPorts = SerialPortEnumerator.GetValidPortDescriptions().ToList();
         Protocols = Protocol.Protocols.AvailableProtocols.Select(p => new ProtocolOption(p.ProtocolName, p)).ToList();
         _selectedProtocol = Protocols.First();
-        OpenPortCommand = new RelayCommand(OpenPort);
+        OpenClosePortCommand = new RelayCommand(OpenClosePort);
 
         _selectedTheme = GetThemeTypeFromCurrentTheme();
     }
@@ -105,7 +112,7 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         ApplicationThemeManager.Apply(applicationTheme);
     }
 
-    private void OpenPort()
+    private void OpenClosePort()
     {
         if (SelectedSerialPort == null)
             return;
@@ -117,10 +124,17 @@ public class MainFormParamViewModel : INotifyPropertyChanged
 
         try
         {
-            _communicateService.StartService(SelectedSerialPort.PortName, SelectedProtocol.Protocol);
-            Messages.Clear();
-            LastError = string.Empty;
-            StartMessagePolling();
+            if (_communicateService.IsOpened)
+            {
+                _communicateService.CloseService();
+            }
+            else
+            {
+                _communicateService.StartService(SelectedSerialPort.PortName, SelectedProtocol.Protocol);
+                Messages.Clear();
+                LastError = string.Empty;
+                StartMessagePolling();
+            }
         }
         catch (ArgumentException ex)
         {
