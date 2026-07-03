@@ -30,9 +30,7 @@ public static class LoggingBootstrapper
                     restrictedToMinimumLevel: LogEventLevel.Debug,
                     shared: true))
             .WriteTo.Logger(configuration => configuration
-                .Filter.ByIncludingOnly(logEvent =>
-                    logEvent.Properties.TryGetValue("SourceContext", out var sourceContext)
-                    && sourceContext.ToString().Contains("TrackGenius.UserBehavior", StringComparison.Ordinal))
+                .Filter.ByIncludingOnly(Matching.FromSource("TrackGenius.UserBehavior"))
                 .WriteTo.File(
                     Path.Combine(logDirectory, "user-behavior-.log"),
                     rollingInterval: RollingInterval.Day,
@@ -41,9 +39,7 @@ public static class LoggingBootstrapper
                     shared: true))
             .WriteTo.Logger(configuration => configuration
                 .Filter.ByExcluding(Matching.FromSource("TrackGenius.Communication"))
-                .Filter.ByExcluding(logEvent =>
-                    logEvent.Properties.TryGetValue("SourceContext", out var sourceContext)
-                    && sourceContext.ToString().Contains("TrackGenius.UserBehavior", StringComparison.Ordinal))
+                .Filter.ByExcluding(Matching.FromSource("TrackGenius.UserBehavior"))
                 .WriteTo.File(
                     Path.Combine(logDirectory, "application-.log"),
                     rollingInterval: RollingInterval.Day,
