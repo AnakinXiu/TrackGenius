@@ -8,6 +8,7 @@
       mc:Ignorable="d"
       Title="Quick Race"
       d:DesignHeight="450" d:DesignWidth="800"
+      ScrollViewer.CanContentScroll="False"
       d:DataContext="{d:DesignInstance Type=viewModels:RacePageViewModel}">
 
     <Grid>
@@ -17,31 +18,64 @@
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
         
-        <ui:DataGrid Grid.Row="0" HorizontalAlignment="Stretch"
-                     VerticalAlignment="Stretch"
-                     CanUserSortColumns="False"
-                     AutoGenerateColumns="False"
-                     ItemsSource="{Binding RaceDataItems}">
+        <ui:ListView Grid.Row="0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  BorderThickness="0"
+                  Margin="5"
+                  ScrollViewer.CanContentScroll="False"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                  ItemsSource="{Binding RaceDataItems}">
 
-            <ui:DataGrid.Columns>
-                <DataGridTextColumn Header="RacerPosition" Binding="{Binding RacerPosition}">
-                    <DataGridTextColumn.HeaderTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding}" />
-                                <TextBlock Text="Tag" />
+            <ui:ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Margin" Value="0,0,0,8" />
+                </Style>
+            </ui:ListView.ItemContainerStyle>
+
+            <ui:ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="12">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+                                <TextBlock FontSize="20"
+                                           FontWeight="SemiBold"
+                                           Text="{Binding RacerPosition}" />
+                                <TextBlock FontSize="12" Opacity="0.75" Text="Position" />
                             </StackPanel>
-                        </DataTemplate>
-                    </DataGridTextColumn.HeaderTemplate>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="RacerNumber" Binding="{Binding RacerNumber}"/>
-            </ui:DataGrid.Columns>
 
+                            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical">
+                                <TextBlock FontSize="20"
+                                           FontWeight="SemiBold"
+                                           Text="{Binding RacerNumber}" />
+                                <TextBlock FontSize="12" Opacity="0.75" Text="{Binding DriverName}" />
+                            </StackPanel>
 
-            <ui:DataGrid.RowHeaderTemplate>
-              <DataTemplate></DataTemplate>
-          </ui:DataGrid.RowHeaderTemplate>
-        </ui:DataGrid>
+                            <ProgressBar Grid.Row="2"
+                                         Grid.Column="0"
+                                         Grid.ColumnSpan="3"
+                                         Height="8"
+                                         Minimum="0"
+                                         Maximum="100"
+                                         Value="{Binding LapsCount}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ui:ListView.ItemTemplate>
+        </ui:ListView>
 
         <StackPanel Grid.Row="1" 
                     Orientation="Horizontal"

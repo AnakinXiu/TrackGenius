@@ -20,6 +20,17 @@ public class RacePageViewModel : INotifyPropertyChanged
     {
         _comService = comService;
         StartRaceCommand = new RelayCommand(StartRace);
+
+        AddTestData();
+    }
+
+    private void AddTestData()
+    {
+        RaceDataItems.Add(new RaceDataItem("88156"));
+        RaceDataItems.Add(new RaceDataItem("44401"));
+        RaceDataItems.Add(new RaceDataItem("48825"));
+        RaceDataItems.Add(new RaceDataItem("35890"));
+        RaceDataItems.Add(new RaceDataItem("99812"));
     }
 
     private void StartRace()
