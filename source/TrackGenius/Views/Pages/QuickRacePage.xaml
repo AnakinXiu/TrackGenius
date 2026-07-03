@@ -11,73 +11,101 @@
       ScrollViewer.CanContentScroll="False"
       d:DataContext="{d:DesignInstance Type=viewModels:RacePageViewModel}">
 
-    <Grid>
+    <Grid Grid.IsSharedSizeScope="True">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-        
-        <ui:ListView Grid.Row="0"
+
+        <Border Grid.Row="0"
+                Grid.RowSpan="2"
+                Margin="15"
+                BorderThickness="1"
+                BorderBrush="Gray"
+                CornerRadius="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Padding="12,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" SharedSizeGroup="PositionColumn"/>
+                            <ColumnDefinition Width="20" SharedSizeGroup="GapColumn"/>
+                            <ColumnDefinition Width="*" SharedSizeGroup="RacerColumn"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" FontWeight="SemiBold" Text="Position" />
+                        <TextBlock Grid.Column="2" FontWeight="SemiBold" Text="Racer" />
+                    </Grid>
+                </Border>
+
+                <ui:ListView Grid.Row="1"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                   BorderThickness="0"
-                  Margin="5"
+                  Margin="0"
                   ScrollViewer.CanContentScroll="False"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                   ItemsSource="{Binding RaceDataItems}">
 
-            <ui:ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    <Setter Property="Margin" Value="0,0,0,8" />
-                </Style>
-            </ui:ListView.ItemContainerStyle>
+                    <ui:ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Margin" Value="0,0,0,8" />
+                        </Style>
+                    </ui:ListView.ItemContainerStyle>
 
-            <ui:ListView.ItemTemplate>
-                <DataTemplate>
-                    <Border Padding="12">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="10" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                    <ui:ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="12">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="10" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" SharedSizeGroup="PositionColumn"/>
+                                        <ColumnDefinition Width="20" SharedSizeGroup="GapColumn"/>
+                                        <ColumnDefinition Width="*" SharedSizeGroup="RacerColumn"/>
+                                    </Grid.ColumnDefinitions>
 
-                            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
-                                <TextBlock FontSize="20"
-                                           FontWeight="SemiBold"
-                                           Text="{Binding RacerPosition}" />
-                                <TextBlock FontSize="12" Opacity="0.75" Text="Position" />
-                            </StackPanel>
+                                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+                                        <TextBlock FontSize="20"
+                                                   FontWeight="SemiBold"
+                                                   Text="{Binding RacerPosition}" />
+                                        <TextBlock FontSize="12" Opacity="0.75" Text="Position" />
+                                    </StackPanel>
 
-                            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical">
-                                <TextBlock FontSize="20"
-                                           FontWeight="SemiBold"
-                                           Text="{Binding RacerNumber}" />
-                                <TextBlock FontSize="12" Opacity="0.75" Text="{Binding DriverName}" />
-                            </StackPanel>
+                                    <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical">
+                                        <TextBlock FontSize="20"
+                                                   FontWeight="SemiBold"
+                                                   Text="{Binding RacerNumber}" />
+                                        <TextBlock FontSize="12" Opacity="0.75" Text="{Binding DriverName}" />
+                                    </StackPanel>
 
-                            <ProgressBar Grid.Row="2"
-                                         Grid.Column="0"
-                                         Grid.ColumnSpan="3"
-                                         Height="8"
-                                         Minimum="0"
-                                         Maximum="100"
-                                         Value="{Binding LapsCount}" />
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ui:ListView.ItemTemplate>
-        </ui:ListView>
+                                    <ProgressBar Grid.Row="2"
+                                                 Grid.Column="0"
+                                                 Grid.ColumnSpan="3"
+                                                 Height="8"
+                                                 Minimum="0"
+                                                 Maximum="100"
+                                                 Value="{Binding LapsCount}" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ui:ListView.ItemTemplate>
+                </ui:ListView>
+            </Grid>
+        </Border>
 
-        <StackPanel Grid.Row="1" 
+        <StackPanel Grid.Row="2" 
                     Orientation="Horizontal"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center">
