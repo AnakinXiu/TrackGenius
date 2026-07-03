@@ -150,3 +150,75 @@ Task 1 is complete when:
 - level policy is specified per domain
 - event naming and structured field guidelines are documented
 - privacy constraints are declared
+
+## 9. Runtime Configuration (Implemented)
+
+Current implementation uses:
+- `Microsoft.Extensions.Logging` as abstraction
+- `Serilog` as provider
+- rolling file sinks
+
+Bootstrap entry point:
+- `TrackGenius.Logging.LoggingBootstrapper.Configure()`
+
+Composition root:
+- `TrackGenius/App.xaml.cs`
+
+## 10. Log File Locations
+
+Default log directory:
+- `<AppBaseDirectory>/logs`
+
+Generated files:
+- `communication-YYYYMMDD.log`
+- `user-behavior-YYYYMMDD.log`
+- `application-YYYYMMDD.log`
+- `error-YYYYMMDD.log`
+
+Retention defaults:
+- communication/user behavior: 14 files
+- application/error: 30 files
+
+## 11. How to Add New Logs
+
+1. Inject logger from `Microsoft.Extensions.Logging` into the target component.
+2. Use structured properties instead of string concatenation.
+3. Use event names from this taxonomy (or add a stable PascalCase name).
+4. Keep payload logging disabled by default unless required for diagnostics.
+
+Example pattern:
+- `logger.LogInformation("PortOpenRequested PortName={PortName} ProtocolName={ProtocolName}", portName, protocolName);`
+
+## 12. Choosing Levels Quickly
+
+- `Debug`: high-frequency technical diagnostics
+- `Information`: expected business/operation milestones
+- `Warning`: recoverable anomalies
+- `Error`: operation failed
+- `Critical`: app-level fatal condition
+
+## 13. Troubleshooting Checklist
+
+If no logs are produced:
+1. Check app startup path calls `LoggingBootstrapper.Configure()`.
+2. Check process write permission for `<AppBaseDirectory>/logs`.
+3. Check `OnExit` executes `Log.CloseAndFlush()`.
+4. Check category naming aligns with configured filters.
+
+If logs are in wrong file:
+1. Verify `SourceContext` category value.
+2. Verify sink filter rules in `LoggingBootstrapper`.
+3. Verify the logger category used in component creation.
+
+## 14. Current Wiring Summary
+
+- `App.xaml.cs`
+  - initializes logging bootstrap
+  - creates typed/categorized loggers
+  - routes unhandled exceptions to structured logs
+- `SerialPortWrapper`
+  - communication logs for open/close/send/read lifecycle
+- `CommunicateService`
+  - service-level operation/failure logs
+- `MainFormParamViewModel`
+  - user behavior logs for UI actions and polling
