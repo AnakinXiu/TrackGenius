@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using TrackGenius.Communication;
 using TrackGenius.Communication.interfaces;
 using TrackGenius.Const;
@@ -23,6 +25,7 @@ public class MainFormParamViewModel : INotifyPropertyChanged
 
     private ISerialPortDescription _selectedSerialPort;
     private readonly CommunicateService _communicateService;
+    private readonly ILogger _userBehaviorLogger;
     private CancellationTokenSource _messagePollingCancellationTokenSource;
     private Task _messagePollingTask;
     private ThemeType _selectedTheme;
@@ -75,9 +78,13 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         }
     }
 
-    public MainFormParamViewModel(CommunicateService communicateService)
+    public MainFormParamViewModel(CommunicateService communicateService, ILogger userBehaviorLogger = null)
     {
         _communicateService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
+        _userBehaviorLogger = userBehaviorLogger ?? NullLogger.Instance;
+
+        _userBehaviorLogger.LogInformation("ViewModelInitialized ViewModel={ViewModel}", nameof(MainFormParamViewModel));
+
         _communicateService.PortOpenStateEventHandler += (_, _) =>
         {
             OnPropertyChanged(nameof(IsPortOpenedString));
@@ -120,6 +127,13 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         if (SelectedProtocol?.Protocol == null)
             return;
 
+        _userBehaviorLogger.LogInformation(
+            "UserOpenClosePortRequested ActionName={ActionName} PortName={PortName} ProtocolName={ProtocolName} IsPortOpened={IsPortOpened}",
+            nameof(OpenClosePort),
+            SelectedSerialPort.PortName,
+            SelectedProtocol.Name,
+            _communicateService.IsOpened);
+
         StopMessagePolling();
 
         try
@@ -127,6 +141,7 @@ public class MainFormParamViewModel : INotifyPropertyChanged
             if (_communicateService.IsOpened)
             {
                 _communicateService.CloseService();
+                _userBehaviorLogger.LogInformation("UserPortClosed ActionName={ActionName} PortName={PortName}", nameof(OpenClosePort), SelectedSerialPort.PortName);
             }
             else
             {
@@ -134,19 +149,24 @@ public class MainFormParamViewModel : INotifyPropertyChanged
                 Messages.Clear();
                 LastError = string.Empty;
                 StartMessagePolling();
+                _userBehaviorLogger.LogInformation(
+                    "UserPortOpened ActionName={ActionName} PortName={PortName} ProtocolName={ProtocolName}",
+                    nameof(OpenClosePort),
+                    SelectedSerialPort.PortName,
+                    SelectedProtocol.Name);
             }
         }
         catch (ArgumentException ex)
         {
-            HandleCommunicationError(ex);
+            HandleCommunicationError(ex, nameof(OpenClosePort));
         }
         catch (ObjectDisposedException ex)
         {
-            HandleCommunicationError(ex);
+            HandleCommunicationError(ex, nameof(OpenClosePort));
         }
         catch (InvalidOperationException ex)
         {
-            HandleCommunicationError(ex);
+            HandleCommunicationError(ex, nameof(OpenClosePort));
         }
     }
 
@@ -154,6 +174,7 @@ public class MainFormParamViewModel : INotifyPropertyChanged
     {
         _messagePollingCancellationTokenSource = new CancellationTokenSource();
         _messagePollingTask = PollMessageAsync(_messagePollingCancellationTokenSource.Token);
+        _userBehaviorLogger.LogDebug("MessagePollingStarted");
     }
 
     private async Task PollMessageAsync(CancellationToken cancellationToken)
@@ -185,11 +206,11 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         }
         catch (ObjectDisposedException ex)
         {
-            HandleCommunicationError(ex);
+            HandleCommunicationError(ex, nameof(PollMessageAsync));
         }
         catch (InvalidOperationException ex)
         {
-            HandleCommunicationError(ex);
+            HandleCommunicationError(ex, nameof(PollMessageAsync));
         }
     }
 
@@ -205,10 +226,17 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         }
 
         _messagePollingTask = null;
+        _userBehaviorLogger.LogDebug("MessagePollingStopped");
     }
 
-    private void HandleCommunicationError(Exception exception)
+    private void HandleCommunicationError(Exception exception, string actionName)
     {
+        _userBehaviorLogger.LogError(
+            exception,
+            "UserCommunicationActionFailed ActionName={ActionName} ViewModel={ViewModel}",
+            actionName,
+            nameof(MainFormParamViewModel));
+
         LastError = exception.Message;
 
         if (Application.Current?.Dispatcher is { } dispatcher)
