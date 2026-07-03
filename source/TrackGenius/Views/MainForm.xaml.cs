@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Input;
+using Microsoft.Extensions.Logging;
 using TrackGenius.Communication;
 using TrackGenius.UI.ViewModels;
 using TrackGenius.UI.Views.Pages;
@@ -14,13 +15,14 @@ namespace TrackGenius.UI
     {
         private readonly MainWindowViewModel _viewModel;
 
-        public MainForm(CommunicateService communicateService)
+        public MainForm(CommunicateService communicateService, ILogger userBehaviorLogger)
         {
             InitializeComponent();
 
             var comService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
+            ArgumentNullException.ThrowIfNull(userBehaviorLogger);
 
-            _viewModel = new MainWindowViewModel(new RacePageViewModel(comService), new MainFormParamViewModel(comService));
+            _viewModel = new MainWindowViewModel(new RacePageViewModel(comService), new MainFormParamViewModel(comService, userBehaviorLogger));
 
             DataContext = _viewModel;
 
