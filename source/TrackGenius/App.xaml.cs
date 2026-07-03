@@ -4,12 +4,11 @@ using System.Windows.Threading;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using TrackGenius.Communication;
-using TrackGenius.Logging;
-using TrackGenius.UI;
+using TrackGenius.UI.Logging;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
-namespace TrackGenius
+namespace TrackGenius.UI
 {
     /// <summary>
     /// App.xaml 的交互逻辑

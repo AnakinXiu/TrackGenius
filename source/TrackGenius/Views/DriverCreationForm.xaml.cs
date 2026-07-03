@@ -1,6 +1,6 @@
 ﻿using Wpf.Ui.Controls;
 
-namespace TrackGenius.UI.Forms
+namespace TrackGenius.UI
 {
     /// <summary>
     /// Interaction logic for DriverCreationForm.xaml

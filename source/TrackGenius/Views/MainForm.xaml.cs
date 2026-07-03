@@ -2,8 +2,8 @@ using System;
 using System.Windows.Input;
 using Microsoft.Extensions.Logging;
 using TrackGenius.Communication;
+using TrackGenius.UI.Pages;
 using TrackGenius.UI.ViewModels;
-using TrackGenius.UI.Views.Pages;
 using Wpf.Ui.Controls;
 
 namespace TrackGenius.UI

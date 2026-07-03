@@ -5,7 +5,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Filters;
 
-namespace TrackGenius.Logging;
+namespace TrackGenius.UI.Logging;
 
 public static class LoggingBootstrapper
 {
@@ -64,5 +64,3 @@ public static class LoggingBootstrapper
         return new LoggingContext(loggerFactory, sessionId, logDirectory);
     }
 }
-
-public sealed record LoggingContext(ILoggerFactory LoggerFactory, string SessionId, string LogDirectory);
