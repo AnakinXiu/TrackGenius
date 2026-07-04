@@ -40,6 +40,11 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0" FontWeight="SemiBold" Text="Position" />
+                        <Border Grid.Column="1"
+                                Width="1"
+                                Margin="0,2"
+                                HorizontalAlignment="Center"
+                                Background="Gray" />
                         <TextBlock Grid.Column="2" FontWeight="SemiBold" Text="Racer" />
                     </Grid>
                 </Border>
@@ -82,6 +87,14 @@
                                                    Text="{Binding RacerPosition}" />
                                         <TextBlock FontSize="12" Opacity="0.75" Text="Position" />
                                     </StackPanel>
+
+                                    <Border Grid.Row="0"
+                                            Grid.RowSpan="2"
+                                            Grid.Column="1"
+                                            Width="1"
+                                            Margin="0,2"
+                                            HorizontalAlignment="Center"
+                                            Background="Gray" />
 
                                     <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical">
                                         <TextBlock FontSize="20"
