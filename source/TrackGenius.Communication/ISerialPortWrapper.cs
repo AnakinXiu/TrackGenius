@@ -1,4 +1,5 @@
-﻿using RJCP.IO.Ports;
+﻿using JetBrains.Annotations;
+using RJCP.IO.Ports;
 
 namespace TrackGenius.Communication
 {
@@ -6,16 +7,14 @@ namespace TrackGenius.Communication
     {
         string Name { get; }
 
-        int PortNumber { get; }
-
         bool IsOpened { get; }
 
         event DataReceivedEventHandler DataReceived;
 
-        void OpenPort(string portName, int baud, int data, Parity parity, StopBits stopBits);
+        void OpenPort([NotNull] string portName, int baud, int data, Parity parity, StopBits stopBits);
 
         void ClosePort();
 
-        void SendBytes(byte[] sendData);
+        void SendBytes([NotNull] byte[] sendData);
     }
 }

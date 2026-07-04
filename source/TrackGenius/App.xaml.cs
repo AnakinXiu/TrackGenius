@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using TrackGenius.Communication;
-using TrackGenius.UI;
+using TrackGenius.UI.Logging;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
-namespace TrackGenius
+namespace TrackGenius.UI
 {
     /// <summary>
     /// App.xaml 的交互逻辑
@@ -20,9 +21,15 @@ namespace TrackGenius
         private const WindowBackdropType DefaultBackdrop = WindowBackdropType.Mica;
 
         private MainForm _mainForm;
+        private LoggingContext _loggingContext;
+        private ILogger<App> _logger;
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            _loggingContext = LoggingBootstrapper.Configure();
+            _logger = _loggingContext.LoggerFactory.CreateLogger<App>();
+            _logger.LogInformation("Application startup. SessionId={SessionId}, LogDirectory={LogDirectory}", _loggingContext.SessionId, _loggingContext.LogDirectory);
+
             base.OnStartup(e);
 
             //注册Application_Error
@@ -50,8 +57,17 @@ namespace TrackGenius
 
         protected override void OnExit(ExitEventArgs e)
         {
-            _mainForm?.Close();
-            base.OnExit(e);
+            try
+            {
+                _logger?.LogInformation("Application exiting.");
+                _mainForm?.Close();
+                base.OnExit(e);
+            }
+            finally
+            {
+                _loggingContext?.LoggerFactory.Dispose();
+                Log.CloseAndFlush();
+            }
         }
 
         protected override void OnSessionEnding(SessionEndingCancelEventArgs e)
@@ -62,12 +78,13 @@ namespace TrackGenius
         }
 
         void App_DispatcherUnhandledException(object sender,
-            System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+            DispatcherUnhandledExceptionEventArgs e)
         {
-            Trace.TraceError($"Unhandled UI exception: {e.Exception}");
+            _logger?.LogError(e.Exception, "ApplicationUnhandledException");
 
             if (IsRecoverableException(e.Exception))
             {
+                _logger?.LogWarning(e.Exception, "ApplicationRecoverableException");
                 e.Handled = true;
                 return;
             }
@@ -88,10 +105,16 @@ namespace TrackGenius
             return exception is OperationCanceledException;
         }
 
-        private static MainForm CreateMainWindow()
+        private MainForm CreateMainWindow()
         {
-            var communicateService = new CommunicateService();
-            return new MainForm(communicateService);
+            var serialPortLogger = _loggingContext.LoggerFactory.CreateLogger<SerialPortWrapper>();
+            var serviceLogger = _loggingContext.LoggerFactory.CreateLogger<CommunicateService>();
+            var userBehaviorLogger = _loggingContext.LoggerFactory.CreateLogger("TrackGenius.UserBehavior.MainFormParamViewModel");
+
+            var serialPortWrapper = new SerialPortWrapper(serialPortLogger);
+            var communicateService = new CommunicateService(serialPortWrapper, serviceLogger);
+
+            return new MainForm(communicateService, userBehaviorLogger);
         }
 
         private static void ApplyAppearance()

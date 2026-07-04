@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using TrackGenius.Communication;
 using TrackGenius.Communication.interfaces;
 using TrackGenius.Const;
@@ -23,10 +25,12 @@ public class SettingPageViewModel : INotifyPropertyChanged
 
     private ISerialPortDescription _selectedSerialPort;
     private readonly CommunicateService _communicateService;
+    private readonly ILogger _userBehaviorLogger;
     private CancellationTokenSource _messagePollingCancellationTokenSource;
     private Task _messagePollingTask;
     private ThemeType _selectedTheme;
     private ProtocolOption _selectedProtocol;
+    private string _lastError;
 
     public List<ThemeType> Themes { get; } = Enum.GetValues(typeof(ThemeType)).Cast<ThemeType>().ToList();  
 
@@ -36,7 +40,15 @@ public class SettingPageViewModel : INotifyPropertyChanged
 
     public ObservableCollection<string> Messages { get; } = [];
 
+    public string LastError
+    {
+        get => _lastError;
+        private set => PropertyChanged.RaiseIfChanged(this, ref _lastError, value, Equals, nameof(LastError));
+    }
+
     public bool IsPortOpened => _communicateService?.IsOpened ?? false;
+
+    public string ButtonContent => IsPortOpened ? "Close Port" : "Open Port";
 
     public string IsPortOpenedString => IsPortOpened ? "Opened" : "Closed";
 
@@ -46,7 +58,7 @@ public class SettingPageViewModel : INotifyPropertyChanged
         set => PropertyChanged.RaiseIfChanged(this, ref _selectedSerialPort, value, Equals, nameof(SelectedSerialPort));
     }
 
-    public ICommand OpenPortCommand { get; }
+    public ICommand OpenClosePortCommand { get; }
 
     public ProtocolOption SelectedProtocol
     {
@@ -68,12 +80,21 @@ public class SettingPageViewModel : INotifyPropertyChanged
 
     public SettingPageViewModel(CommunicateService communicateService)
     {
-        _communicateService = communicateService ?? throw new System.ArgumentNullException(nameof(communicateService));
-        _communicateService.PortOpenStateEventHandler += (_, _) => OnPropertyChanged(nameof(IsPortOpenedString));
+        _communicateService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
+        _userBehaviorLogger = userBehaviorLogger ?? NullLogger.Instance;
+
+        _userBehaviorLogger.LogInformation("ViewModelInitialized ViewModel={ViewModel}", nameof(MainFormParamViewModel));
+
+        _communicateService.PortOpenStateEventHandler += (_, _) =>
+        {
+            OnPropertyChanged(nameof(IsPortOpenedString));
+            OnPropertyChanged(nameof(ButtonContent));
+        };
+
         SerialPorts = SerialPortEnumerator.GetValidPortDescriptions().ToList();
         Protocols = Protocol.Protocols.AvailableProtocols.Select(p => new ProtocolOption(p.ProtocolName, p)).ToList();
         _selectedProtocol = Protocols.First();
-        OpenPortCommand = new RelayCommand(OpenPort);
+        OpenClosePortCommand = new RelayCommand(OpenClosePort);
 
         _selectedTheme = GetThemeTypeFromCurrentTheme();
     }
@@ -98,7 +119,7 @@ public class SettingPageViewModel : INotifyPropertyChanged
         ApplicationThemeManager.Apply(applicationTheme);
     }
 
-    private void OpenPort()
+    private void OpenClosePort()
     {
         if (SelectedSerialPort == null)
             return;
@@ -106,40 +127,90 @@ public class SettingPageViewModel : INotifyPropertyChanged
         if (SelectedProtocol?.Protocol == null)
             return;
 
-        StopMessagePolling();
-        Messages.Clear();
+        _userBehaviorLogger.LogInformation(
+            "UserOpenClosePortRequested ActionName={ActionName} PortName={PortName} ProtocolName={ProtocolName} IsPortOpened={IsPortOpened}",
+            nameof(OpenClosePort),
+            SelectedSerialPort.PortName,
+            SelectedProtocol.Name,
+            _communicateService.IsOpened);
 
-        _communicateService.StartService(SelectedSerialPort.PortName, SelectedProtocol.Protocol);
-           
-        StartMessagePolling();
+        StopMessagePolling();
+
+        try
+        {
+            if (_communicateService.IsOpened)
+            {
+                _communicateService.CloseService();
+                _userBehaviorLogger.LogInformation("UserPortClosed ActionName={ActionName} PortName={PortName}", nameof(OpenClosePort), SelectedSerialPort.PortName);
+            }
+            else
+            {
+                _communicateService.StartService(SelectedSerialPort.PortName, SelectedProtocol.Protocol);
+                Messages.Clear();
+                LastError = string.Empty;
+                StartMessagePolling();
+                _userBehaviorLogger.LogInformation(
+                    "UserPortOpened ActionName={ActionName} PortName={PortName} ProtocolName={ProtocolName}",
+                    nameof(OpenClosePort),
+                    SelectedSerialPort.PortName,
+                    SelectedProtocol.Name);
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            HandleCommunicationError(ex, nameof(OpenClosePort));
+        }
+        catch (ObjectDisposedException ex)
+        {
+            HandleCommunicationError(ex, nameof(OpenClosePort));
+        }
+        catch (InvalidOperationException ex)
+        {
+            HandleCommunicationError(ex, nameof(OpenClosePort));
+        }
     }
 
     private void StartMessagePolling()
     {
         _messagePollingCancellationTokenSource = new CancellationTokenSource();
         _messagePollingTask = PollMessageAsync(_messagePollingCancellationTokenSource.Token);
+        _userBehaviorLogger.LogDebug("MessagePollingStarted");
     }
 
     private async Task PollMessageAsync(CancellationToken cancellationToken)
     {
-        while (!cancellationToken.IsCancellationRequested)
+        try
         {
-            if (_communicateService.TryGetNextMessage(out var message))
+            while (!cancellationToken.IsCancellationRequested)
             {
-                var messageText = message.Deserialize();
-                if (Application.Current?.Dispatcher is { } dispatcher)
+                if (_communicateService.TryGetNextMessage(out var message))
                 {
-                    dispatcher.BeginInvoke(() => Messages.Add(messageText));
-                }
-                else
-                {
-                    Messages.Add(messageText);
+                    var messageText = message.Deserialize();
+                    if (Application.Current?.Dispatcher is { } dispatcher)
+                    {
+                        dispatcher.BeginInvoke(() => Messages.Add(messageText));
+                    }
+                    else
+                    {
+                        Messages.Add(messageText);
+                    }
+
+                    continue;
                 }
 
-                continue;
+                await Task.Delay(50, cancellationToken).ConfigureAwait(false);
             }
-
-            await Task.Delay(50, cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ObjectDisposedException ex)
+        {
+            HandleCommunicationError(ex, nameof(PollMessageAsync));
+        }
+        catch (InvalidOperationException ex)
+        {
+            HandleCommunicationError(ex, nameof(PollMessageAsync));
         }
     }
 
@@ -155,6 +226,26 @@ public class SettingPageViewModel : INotifyPropertyChanged
         }
 
         _messagePollingTask = null;
+        _userBehaviorLogger.LogDebug("MessagePollingStopped");
+    }
+
+    private void HandleCommunicationError(Exception exception, string actionName)
+    {
+        _userBehaviorLogger.LogError(
+            exception,
+            "UserCommunicationActionFailed ActionName={ActionName} ViewModel={ViewModel}",
+            actionName,
+            nameof(MainFormParamViewModel));
+
+        LastError = exception.Message;
+
+        if (Application.Current?.Dispatcher is { } dispatcher)
+        {
+            dispatcher.BeginInvoke(() => Messages.Add(exception.Message));
+            return;
+        }
+
+        Messages.Add(exception.Message);
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

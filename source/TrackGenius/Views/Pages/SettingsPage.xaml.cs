@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 
-namespace TrackGenius.UI.Views.Pages
+namespace TrackGenius.UI.Pages
 {
     public partial class SettingsPage : Page
     {
