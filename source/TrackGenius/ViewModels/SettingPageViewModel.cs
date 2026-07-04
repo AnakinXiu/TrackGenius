@@ -78,12 +78,12 @@ public class SettingPageViewModel : INotifyPropertyChanged
         }
     }
 
-    public SettingPageViewModel(CommunicateService communicateService)
+    public SettingPageViewModel(CommunicateService communicateService, ILogger userBehaviorLogger)
     {
         _communicateService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
         _userBehaviorLogger = userBehaviorLogger ?? NullLogger.Instance;
 
-        _userBehaviorLogger.LogInformation("ViewModelInitialized ViewModel={ViewModel}", nameof(MainFormParamViewModel));
+        _userBehaviorLogger.LogInformation("ViewModelInitialized ViewModel={ViewModel}", nameof(SettingPageViewModel));
 
         _communicateService.PortOpenStateEventHandler += (_, _) =>
         {
@@ -235,7 +235,7 @@ public class SettingPageViewModel : INotifyPropertyChanged
             exception,
             "UserCommunicationActionFailed ActionName={ActionName} ViewModel={ViewModel}",
             actionName,
-            nameof(MainFormParamViewModel));
+            nameof(SettingPageViewModel));
 
         LastError = exception.Message;
 
