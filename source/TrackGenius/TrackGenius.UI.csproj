@@ -20,9 +20,7 @@
     <None Remove="Resources\TraceGeniusLogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\TraceGeniusLogo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <Resource Include="Resources\TraceGeniusLogo.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />

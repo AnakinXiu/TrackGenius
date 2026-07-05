@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using System.Windows.Input;
 using Microsoft.Extensions.Logging;
 using TrackGenius.Communication;
@@ -43,6 +44,11 @@ namespace TrackGenius.UI
                     quickRacePage.DataContext = _viewModel.RacePageViewModel;
                     break;
             }
+        }
+
+        private void TogglePane_OnClick(object sender, RoutedEventArgs e)
+        {
+            RootNavigation.IsPaneOpen = !RootNavigation.IsPaneOpen;
         }
 
         private void StartRace_OnCanExecute(object sender, CanExecuteRoutedEventArgs e)
