@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using JetBrains.Annotations;
+using Serilog;
 using TrackGenius.Const;
 using TrackGenius.Model;
 
@@ -19,13 +20,15 @@ public class RaceDataItem : INotifyPropertyChanged
     [CanBeNull]
     private IDriver _driverInfo;
 
+    [CanBeNull]
+    private ICar _carInfo;
+
     private TimeSpan _bestLapTime;
 
     private readonly int _racerStartPosition = 0;
     private TimeSpan _gapTime;
     private TimeSpan _intervalTime;
     
-
     public string TransponderID { get; }
 
     public int RacerNumber
@@ -79,9 +82,18 @@ public class RaceDataItem : INotifyPropertyChanged
         TransponderID = transponderID;
     }
 
-    public RaceDataItem(string transponderID, int startPosition)
+    public RaceDataItem(IDriver driver, ICar car, int startPosition)
     {
-        TransponderID = transponderID;
+        if (!driver.Cars.Contains(car))
+        {
+            Log.Logger.Error("Driver and car information mismatched. Driver: {Driver}, Car: {Car}", driver, car);
+            throw new ArgumentException("Driver and car information mismatched.", nameof(car));
+        }
+
+        _driverInfo = driver;
+        _carInfo = car;
+
+        TransponderID = car.Transponder.RecoderNumber;
         _racerStartPosition = startPosition;
     }
 }
