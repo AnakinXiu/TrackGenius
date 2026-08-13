@@ -77,9 +77,10 @@ public class RaceDataItem : INotifyPropertyChanged
 
     public string Description { get; set; }
 
-    public RaceDataItem(string transponderID)
+    public RaceDataItem(string transponderID, int startPosition)
     {
         TransponderID = transponderID;
+        _racerStartPosition = startPosition;
     }
 
     public RaceDataItem(IDriver driver, ICar car, int startPosition)

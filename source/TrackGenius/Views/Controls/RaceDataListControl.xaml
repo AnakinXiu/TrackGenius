@@ -151,7 +151,7 @@
                                                 </TextBlock.Style>
                                             </TextBlock>
                                             <!-- dash (shown only when unchanged) -->
-                                            <TextBlock FontSize="12" Text="—">
+                                            <TextBlock FontSize="12" FontWeight="ExtraBlack" Text="—">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">
                                                         <Setter Property="Visibility" Value="Collapsed"/>
