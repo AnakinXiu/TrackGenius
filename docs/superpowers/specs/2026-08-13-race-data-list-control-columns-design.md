@@ -19,7 +19,7 @@ Turn `RaceDataListControl` from a fixed two-block card list into a columnar race
 | Decision | Choice | Rationale |
 |---|---|---|
 | Control type | **Composed `ItemsControl`/`ListView` with a free-form per-row template** (extend the current pattern), not `DataGrid` | `DataGrid` rows are rigid cell grids; a full-width element (the `ProgressBar`) beneath the cells per row is not natural. The current control already aligns header↔rows via `SharedSizeGroup`; generalizing it preserves row-layout flexibility. |
-| Column visibility persistence | **Persist across restarts** | User preference; stored in existing `Properties.Settings`. |
+| Column visibility persistence | **Persist across restarts** | User preference; stored as a JSON file in `%LocalAppData%\TrackGenius\` (no VS settings designer / App.config needed). |
 | Zero position-change display | **Dash (`—`)** | Explicit neutral marker. |
 | Sorting | **Position-only, live auto-sort; headers are not click-sortable** | Matches "ordered by position"; avoids conflicting sort states. |
 
@@ -130,31 +130,30 @@ On `ItemsSource` change, the control obtains `CollectionViewSource.GetDefaultVie
 
 ### 4.6 Persistence
 
-A single user-scoped setting in the existing `Properties.Settings`:
+A small JSON file in the user's local app-data folder, read/written via `System.Text.Json` (BCL — no new package, no VS settings designer, no App.config sections).
 
-- Name: `HiddenRaceDataColumns`
-- Type: `string` (comma-separated option `Key`s of hidden columns; empty = all visible)
-- Scope: User
+- Path: `%LocalAppData%\TrackGenius\raceDataColumns.json`
+- Format: `{ "hiddenColumns": ["Laps", "Notes"] }` (comma list of hidden option `Key`s; absent/empty file ⇒ all visible)
 
-Wiring without the Visual Studio settings designer (the generated `Settings` class is `partial` and currently empty):
+Pure, unit-testable helpers handle the JSON; a thin store handles file I/O:
 
-- In `App.config`: add a `<sectionGroup name="userSettings">` under `<configSections>` if absent, and declare the setting under `<userSettings>` (user scope) with an empty-string default.
-- Add a hand-written `partial class Settings` returning the value through the `ApplicationSettingsBase` indexer (`this["HiddenRaceDataColumns"]` as `string`).
+- `RaceDataColumnPreferences.ParseHiddenColumns(string json)` → `IReadOnlyList<string>` (tolerant of null/empty/corrupt → empty list).
+- `RaceDataColumnPreferences.SerializeHiddenColumns(IEnumerable<string> keys)` → JSON string.
+- `RaceDataColumnPreferencesStore` — owns the file path (default `%LocalAppData%\TrackGenius\...`, injectable for tests), `Load()` (missing/locked/corrupt ⇒ empty list, never throws to the UI) and `Save(IEnumerable<string> hiddenKeys)`.
 
-Load: on control initialization, parse the setting → set each option's `IsVisible` (`Key` present ⇒ `false`). Position is re-pinned visible regardless.
+Load: on control initialization, read hidden keys → set each option's `IsVisible` (`Key` present ⇒ `false`). Position is re-pinned visible regardless.
 
-Save: whenever an option's `IsVisible` changes, recompute the hidden-key string and call `Properties.Settings.Default.Save()`.
+Save: whenever an option's `IsVisible` changes, recompute the hidden-key set (`All.Where(o => !o.IsVisible).Select(o => o.Key)`) and `Save()`.
 
 ### 4.7 Files touched / added
 
 - **Modified**
   - `Views/Controls/RaceDataListControl.xaml` — new columnar header + row template, header `ContextMenu`, shared-size columns.
-  - `Views/Controls/RaceDataListControl.xaml.cs` — `ColumnSettings` property, build/live-sort on `ItemsSource` changed, context-menu data wiring, load/save settings.
-  - `App.config` — new user-scoped `HiddenRaceDataColumns` setting.
+  - `Views/Controls/RaceDataListControl.xaml.cs` — `ColumnSettings` property, build/live-sort on `ItemsSource` changed, context-menu data wiring, load/save via the preferences store.
 - **Added**
-  - `ViewModels/RaceDataColumnOption.cs`, `ViewModels/RaceDataColumnSettings.cs` (or a `Columns/` folder under the control).
+  - `ViewModels/RaceDataColumnOption.cs`, `ViewModels/RaceDataColumnSettings.cs` — the column model + hidden-key parse/apply helpers.
   - `Converters/RacerPositionChangeSignConverter.cs`, `Converters/AbsoluteValueConverter.cs` (under `TrackGenius.UI`).
-- **Possibly added** — a hand-written `Properties/Settings.cs` partial for the new setting (depending on designer availability).
+  - `Persistence/RaceDataColumnPreferences.cs` (pure JSON helpers) and `Persistence/RaceDataColumnPreferencesStore.cs` (file I/O).
 
 ## 5. Testing
 
@@ -162,7 +161,8 @@ No UI test harness exists in the solution, so testable logic is isolated into co
 
 - `RacerPositionChangeSignConverter`: negative ⇒ `Improved`, positive ⇒ `Worsened`, zero ⇒ `Unchanged`.
 - `AbsoluteValueConverter`: negative ⇒ positive magnitude, positive ⇒ unchanged, zero ⇒ zero.
-- (If feasible without UI) `RaceDataColumnSettings` load-from/parse of the hidden-keys string and the resulting `IsVisible` state, including Position-always-visible pinning.
+- `RaceDataColumnPreferences` JSON round-trip: `SerializeHiddenColumns` → `ParseHiddenColumns` stability; tolerance of null/empty/corrupt input.
+- `RaceDataColumnSettings.ApplyHiddenKeys` / `BuildHiddenKeysString`: hidden-key set ⇒ `IsVisible` state and back, including the Position-always-visible pinning.
 
 XAML stays declarative and is not unit-tested.
 
