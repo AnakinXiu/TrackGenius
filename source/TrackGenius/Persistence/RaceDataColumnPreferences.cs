@@ -24,7 +24,11 @@ public static class RaceDataColumnPreferences
             if (!document.RootElement.TryGetProperty("hiddenColumns", out var array))
                 return Array.Empty<string>();
 
+            if (array.ValueKind != JsonValueKind.Array)
+                return Array.Empty<string>();
+
             return array.EnumerateArray()
+                        .Where(e => e.ValueKind == JsonValueKind.String)
                         .Select(e => e.GetString() ?? string.Empty)
                         .Where(s => !string.IsNullOrWhiteSpace(s))
                         .ToList();

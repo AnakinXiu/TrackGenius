@@ -42,4 +42,18 @@ public class RaceDataColumnPreferencesTests
         var json = RaceDataColumnPreferences.SerializeHiddenColumns(Array.Empty<string>());
         Assert.That(RaceDataColumnPreferences.ParseHiddenColumns(json), Is.Empty);
     }
+
+    [Test]
+    public void GivenWrongTypedHiddenColumns_WhenParsed_ThenEmptyListReturned()
+    {
+        var json = "{\"hiddenColumns\":5}";
+        Assert.That(RaceDataColumnPreferences.ParseHiddenColumns(json), Is.Empty);
+    }
+
+    [Test]
+    public void GivenMixedTypeHiddenColumns_WhenParsed_ThenOnlyStringsReturned()
+    {
+        var json = "{\"hiddenColumns\":[\"a\",5]}";
+        CollectionAssert.AreEqual(new[] { "a" }, RaceDataColumnPreferences.ParseHiddenColumns(json));
+    }
 }
