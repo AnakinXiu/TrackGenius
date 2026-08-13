@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Windows;
 using NUnit.Framework;
 using TrackGenius.UI.Converters;
 
@@ -20,5 +21,10 @@ public class RacerPositionChangeSignConverterTests
     [Test]
     public void GivenNull_WhenConverted_ThenUnchangedReturned()
         => Assert.That(_converter.Convert(null, typeof(PositionChangeState), null, CultureInfo.InvariantCulture),
+                       Is.EqualTo(PositionChangeState.Unchanged));
+
+    [Test]
+    public void GivenUnsetValue_WhenConverted_ThenUnchangedReturned()
+        => Assert.That(_converter.Convert(DependencyProperty.UnsetValue, typeof(PositionChangeState), null, CultureInfo.InvariantCulture),
                        Is.EqualTo(PositionChangeState.Unchanged));
 }

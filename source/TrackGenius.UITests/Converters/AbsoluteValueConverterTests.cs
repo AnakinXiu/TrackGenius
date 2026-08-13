@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Windows;
 using NUnit.Framework;
 using TrackGenius.UI.Converters;
 
@@ -19,4 +20,9 @@ public class AbsoluteValueConverterTests
     [Test]
     public void GivenNull_WhenConverted_ThenZeroReturned()
         => Assert.That(_converter.Convert(null, typeof(int), null, CultureInfo.InvariantCulture), Is.EqualTo(0));
+
+    [Test]
+    public void GivenUnsetValue_WhenConverted_ThenZeroReturned()
+        => Assert.That(_converter.Convert(DependencyProperty.UnsetValue, typeof(int), null, CultureInfo.InvariantCulture),
+                       Is.EqualTo(0));
 }

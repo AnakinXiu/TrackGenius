@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
 namespace TrackGenius.UI.Converters;
@@ -8,6 +9,8 @@ public sealed class RacerPositionChangeSignConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
+        if (value == DependencyProperty.UnsetValue)
+            return PositionChangeState.Unchanged;
         if (value == null)
             return PositionChangeState.Unchanged;
 

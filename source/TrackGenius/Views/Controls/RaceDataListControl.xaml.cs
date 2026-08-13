@@ -37,7 +37,7 @@ namespace TrackGenius.UI.Views.Controls
 
         private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is not RaceDataListControl control)
+            if (d is not RaceDataListControl)
                 return;
             if (e.NewValue is not IEnumerable source)
                 return;
@@ -50,7 +50,7 @@ namespace TrackGenius.UI.Views.Controls
                     new SortDescription(nameof(RaceDataItem.RacerPosition), ListSortDirection.Ascending));
             }
 
-            if (view is ICollectionViewLiveShaping liveShaping)
+            if (view is ICollectionViewLiveShaping liveShaping && liveShaping.CanChangeLiveSorting)
             {
                 liveShaping.LiveSortingProperties.Add(nameof(RaceDataItem.RacerPosition));
                 liveShaping.IsLiveSorting = true;
