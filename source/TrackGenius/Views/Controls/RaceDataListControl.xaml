@@ -4,12 +4,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:TrackGenius.UI.Views.Controls"
+             xmlns:vm="clr-namespace:TrackGenius.UI.ViewModels"
+             xmlns:conv="clr-namespace:TrackGenius.UI.Converters"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d"
              d:DesignHeight="300"
-             d:DesignWidth="400">
-    <Grid Grid.IsSharedSizeScope="True">
-        <Border BorderThickness="1"
+             d:DesignWidth="700">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <conv:AbsoluteValueConverter x:Key="AbsValue" />
+        <conv:RacerPositionChangeSignConverter x:Key="PositionChangeSign" />
+        <conv:TimeSpanFormatConverter x:Key="TimeSpanFormat" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Border Grid.IsSharedSizeScope="True"
+                BorderThickness="1"
                 BorderBrush="Gray"
                 CornerRadius="5">
             <Grid>
@@ -18,24 +28,46 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Padding="12,8">
+                <!-- HEADER ROW -->
+                <Border x:Name="HeaderBorder" Grid.Row="0" Padding="12,8">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" SharedSizeGroup="PositionColumn"/>
-                            <ColumnDefinition Width="20" SharedSizeGroup="GapColumn"/>
-                            <ColumnDefinition Width="*" SharedSizeGroup="RacerColumn"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Position"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Col_CarNumber"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Driver"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Laps"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Gap"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Interval"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Col_LastLap"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Col_BestLap"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Transponder"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Notes"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" FontWeight="SemiBold" Text="Position" />
-                        <Border Grid.Column="1"
-                                Width="1"
-                                Margin="0,2"
-                                HorizontalAlignment="Center"
-                                Background="Gray" />
-                        <TextBlock Grid.Column="2" FontWeight="SemiBold" Text="Racer" />
+                        <TextBlock Grid.Column="0" FontWeight="SemiBold" Text="Position"/>
+                        <TextBlock Grid.Column="1" FontWeight="SemiBold" Text="Car #" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.CarNumber.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="2" FontWeight="SemiBold" Text="Driver" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Driver.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="3" FontWeight="SemiBold" Text="Laps" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Laps.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="4" FontWeight="SemiBold" Text="Gap" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Gap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="5" FontWeight="SemiBold" Text="Interval" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Interval.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="6" FontWeight="SemiBold" Text="Last Lap" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.LastLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="7" FontWeight="SemiBold" Text="Best Lap" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.BestLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="8" FontWeight="SemiBold" Text="Transponder" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Transponder.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="9" FontWeight="SemiBold" Text="Notes" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Notes.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                     </Grid>
                 </Border>
 
+                <!-- ROWS -->
                 <ui:ListView Grid.Row="1"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Stretch"
@@ -53,49 +85,110 @@
                     </ui:ListView.ItemContainerStyle>
 
                     <ui:ListView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate DataType="vm:RaceDataItem">
                             <Border Padding="12">
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="10" />
-                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="8"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" SharedSizeGroup="PositionColumn"/>
-                                        <ColumnDefinition Width="20" SharedSizeGroup="GapColumn"/>
-                                        <ColumnDefinition Width="*" SharedSizeGroup="RacerColumn"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Position"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Col_CarNumber"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Driver"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Laps"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Gap"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Interval"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Col_LastLap"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Col_BestLap"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Transponder"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Col_Notes"/>
+                                        <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
-                                        <TextBlock FontSize="20"
-                                                   FontWeight="SemiBold"
-                                                   Text="{Binding RacerPosition}" />
-                                        <TextBlock FontSize="12" Opacity="0.75" Text="Position" />
+                                    <!-- POSITION cell (always visible): number + change indicator -->
+                                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" MinWidth="70">
+                                        <TextBlock FontSize="20" FontWeight="SemiBold" Text="{Binding RacerPosition}"/>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <!-- improved: green up triangle -->
+                                            <TextBlock FontSize="12" Text="▲" Foreground="Green" Margin="0,0,2,0">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding RacerPositionChange, Converter={StaticResource PositionChangeSign}}" Value="Improved">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <!-- worsened: red down triangle -->
+                                            <TextBlock FontSize="12" Text="▼" Foreground="Red" Margin="0,0,2,0">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding RacerPositionChange, Converter={StaticResource PositionChangeSign}}" Value="Worsened">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <!-- absolute value (shown for improved/worsened) -->
+                                            <TextBlock FontSize="12" Text="{Binding RacerPositionChange, Converter={StaticResource AbsValue}}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding RacerPositionChange, Converter={StaticResource PositionChangeSign}}" Value="Unchanged">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <!-- dash (shown only when unchanged) -->
+                                            <TextBlock FontSize="12" Text="—">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding RacerPositionChange, Converter={StaticResource PositionChangeSign}}" Value="Unchanged">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </StackPanel>
                                     </StackPanel>
 
-                                    <Border Grid.Row="0"
-                                            Grid.RowSpan="2"
-                                            Grid.Column="1"
-                                            Width="1"
-                                            Margin="0,2"
-                                            HorizontalAlignment="Center"
-                                            Background="Gray" />
+                                    <!-- Data cells -->
+                                    <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding RacerNumber}"
+                                               Visibility="{Binding ColumnSettings.CarNumber.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding DriverName}"
+                                               Visibility="{Binding ColumnSettings.Driver.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding LapsCount}"
+                                               Visibility="{Binding ColumnSettings.Laps.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding GapTime, Converter={StaticResource TimeSpanFormat}}"
+                                               Visibility="{Binding ColumnSettings.Gap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="5" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding IntervalTime, Converter={StaticResource TimeSpanFormat}}"
+                                               Visibility="{Binding ColumnSettings.Interval.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="6" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding LastLapTime, Converter={StaticResource TimeSpanFormat}}"
+                                               Visibility="{Binding ColumnSettings.LastLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="7" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding BestLapTime, Converter={StaticResource TimeSpanFormat}}"
+                                               Visibility="{Binding ColumnSettings.BestLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="8" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding TransponderID}"
+                                               Visibility="{Binding ColumnSettings.Transponder.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="9" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding Description}"
+                                               Visibility="{Binding ColumnSettings.Notes.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
 
-                                    <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical">
-                                        <TextBlock FontSize="20"
-                                                   FontWeight="SemiBold"
-                                                   Text="{Binding RacerNumber}" />
-                                        <TextBlock FontSize="12" Opacity="0.75" Text="{Binding DriverName}" />
-                                    </StackPanel>
-
-                                    <ProgressBar Grid.Row="2"
-                                                 Grid.Column="0"
-                                                 Grid.ColumnSpan="3"
-                                                 Height="8"
-                                                 Minimum="0"
-                                                 Maximum="100"
-                                                 Value="{Binding LapsCount}" />
+                                    <!-- Full-width progress bar (composed layout preserved) -->
+                                    <ProgressBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="11" Height="6"
+                                                 Minimum="0" Maximum="100" Value="{Binding LapsCount}"/>
                                 </Grid>
                             </Border>
                         </DataTemplate>
