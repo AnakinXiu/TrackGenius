@@ -7,7 +7,7 @@ using TrackGenius.Model;
 
 namespace TrackGenius.UI.ViewModels;
 
-public class RaceDataItem : INotifyPropertyChanged
+public class RaceDataItemViewModel : INotifyPropertyChanged
 {
     private int _racerNumber;
     private int _racerPosition;
@@ -77,13 +77,13 @@ public class RaceDataItem : INotifyPropertyChanged
 
     public string Description { get; set; }
 
-    public RaceDataItem(string transponderID, int startPosition)
+    public RaceDataItemViewModel(string transponderID, int startPosition)
     {
         TransponderID = transponderID;
         _racerStartPosition = startPosition;
     }
 
-    public RaceDataItem(IDriver driver, ICar car, int startPosition)
+    public RaceDataItemViewModel(IDriver driver, ICar car, int startPosition)
     {
         if (!driver.Cars.Contains(car))
         {

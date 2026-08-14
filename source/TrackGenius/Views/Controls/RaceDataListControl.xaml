@@ -88,7 +88,7 @@
                     </ui:ListView.ItemContainerStyle>
 
                     <ui:ListView.ItemTemplate>
-                        <DataTemplate DataType="vm:RaceDataItem">
+                        <DataTemplate DataType="vm:RaceDataItemViewModel">
                             <Border Padding="16">
                                 <Grid>
                                     <Grid.RowDefinitions>

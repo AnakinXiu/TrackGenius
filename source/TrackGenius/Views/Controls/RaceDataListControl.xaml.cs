@@ -47,12 +47,12 @@ namespace TrackGenius.UI.Views.Controls
             {
                 view.SortDescriptions.Clear();
                 view.SortDescriptions.Add(
-                    new SortDescription(nameof(RaceDataItem.RacerPosition), ListSortDirection.Ascending));
+                    new SortDescription(nameof(RaceDataItemViewModel.RacerPosition), ListSortDirection.Ascending));
             }
 
             if (view is ICollectionViewLiveShaping liveShaping && liveShaping.CanChangeLiveSorting)
             {
-                liveShaping.LiveSortingProperties.Add(nameof(RaceDataItem.RacerPosition));
+                liveShaping.LiveSortingProperties.Add(nameof(RaceDataItemViewModel.RacerPosition));
                 liveShaping.IsLiveSorting = true;
             }
         }
