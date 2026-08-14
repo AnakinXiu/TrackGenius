@@ -33,6 +33,22 @@ public class BooleanToGridLengthConverterTests
     }
 
     [Test]
+    public void GivenTrueWithNumericParameter_WhenConverted_ThenParameterWeightedStarGridLengthReturned()
+    {
+        var result = (GridLength)_converter.Convert(true, typeof(GridLength), 8, CultureInfo.InvariantCulture);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.IsStar, Is.True);
+            Assert.That(result.Value, Is.EqualTo(8d));
+        });
+    }
+
+    [TestCase("11", ExpectedResult = 11d)]
+    [TestCase("3.5", ExpectedResult = 3.5d)]
+    public double GivenTrueWithStringParameter_WhenConverted_ThenParsedStarWeightReturned(string parameter)
+        => ((GridLength)_converter.Convert(true, typeof(GridLength), parameter, CultureInfo.InvariantCulture)).Value;
+
+    [Test]
     public void GivenNonBool_WhenConverted_ThenHiddenLengthReturned()
         => Assert.That(
             ((GridLength)_converter.Convert("not a bool", typeof(GridLength), null, CultureInfo.InvariantCulture)).Value,
