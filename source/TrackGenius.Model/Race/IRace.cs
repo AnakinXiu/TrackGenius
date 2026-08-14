@@ -18,7 +18,7 @@ namespace TrackGenius.Model
 
         int CountDownTime { get; set; }
 
-        ICollection<RaceStatus> RacersCollection { get; }
+        ICollection<RaceData> RacersCollection { get; }
 
         void UpdateRaceStatus(CarDetectMessage message);
     }

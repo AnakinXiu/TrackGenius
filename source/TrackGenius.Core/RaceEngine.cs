@@ -22,7 +22,7 @@ namespace TrackGenius.Core
             _messageConsumer.CarDetected += OnCarDetected;
         }
 
-        public void RaceStart(ICollection<RaceStatus> racers)
+        public void RaceStart(ICollection<RaceData> racers)
         {
             _race = new Race(new Guid(), RaceType.FreePractice, new RaceClass("World GT"), racers);
         }
