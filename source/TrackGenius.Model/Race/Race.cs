@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace TrackGenius.Model
 {
@@ -12,54 +13,37 @@ namespace TrackGenius.Model
 
         public Guid RaceID { get; }
 
-        public RaceType RaceType { get; private set; }
+        public RaceType RaceType { get; }
  
         public RaceClass RaceClass { get; }
-        public RaceTimer RaceTimer { get; private set; }
+
+        public RaceTimer RaceTimer { get; }
 
         public IRaceRanker RaceRanker { get; set; }
 
-        public int CountDownTime { get; set; }
+        public int CountDownTime => RaceTimer.CountDownTime;
 
-        public Race(Guid raceID, RaceType raceType, RaceClass raceClass, ICollection<RaceStatus> racersCollection)
-            : this(raceID, raceType, raceClass, racersCollection, new RaceTimer(10))
+        public Race(Guid raceID, RaceType raceType, RaceClass raceClass, ICollection<RaceData> racersCollection)
+            : this(raceID, raceType, raceClass, new RaceTimer(10), racersCollection)
         {
         }
 
-        public Race(Guid raceID, RaceType raceType, RaceClass raceClass, ICollection<RaceStatus> racersCollection, RaceTimer raceTimer)
+        public Race(Guid raceID, RaceType raceType, RaceClass raceClass, RaceTimer raceTimer,
+            [CanBeNull] ICollection<RaceData> racersCollection)
         {
             RaceID = raceID;
             RaceType = raceType;
             RaceClass = raceClass ?? throw new ArgumentNullException(nameof(raceClass));
-            RacersCollection = racersCollection ?? throw new ArgumentNullException(nameof(racersCollection));
+            RacersCollection = racersCollection ?? new List<RaceData>();
             RaceTimer = raceTimer ?? throw new ArgumentNullException(nameof(raceTimer));
         }
 
-        public ICollection<RaceStatus> RacersCollection { get; private set; }
+        public ICollection<RaceData> RacersCollection { get; private set; }
 
-        public void UpdateRaceStatus(CarDetectMessage message)
-        {
-            if (message == null)
-                throw new ArgumentNullException(nameof(message));
 
-            var racer = GetRacer(message.TransponderID);
-            if (racer == null)
-                return;
 
-            if (_lastDetectedMillisecondsByTransponder.TryGetValue(message.TransponderID, out var lastDetectedMilliseconds))
-            {
-                var interval = message.Milliseconds - lastDetectedMilliseconds;
-                if (interval <= 0 || interval < MinLapIntervalMilliseconds)
-                    return;
-            }
-
-            _lastDetectedMillisecondsByTransponder[message.TransponderID] = message.Milliseconds;
-
-            racer.LapsCount++;
-            racer.RacedTime = TimeSpan.FromMilliseconds(message.Milliseconds);
-        }
-
-        private RaceStatus GetRacer(string transponderID) => RacersCollection
+        [CanBeNull]
+        public RaceData GetRaceDataByTransponder(string transponderID) => RacersCollection
             .FirstOrDefault(racer => racer.Car.Transponder.RecoderNumber == transponderID);
     }
 }

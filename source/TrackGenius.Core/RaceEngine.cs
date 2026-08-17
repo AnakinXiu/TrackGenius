@@ -29,7 +29,34 @@ namespace TrackGenius.Core
 
         private void OnCarDetected(object sender, CarDetectMessage message)
         {
-            _race.UpdateRaceStatus(message);
+            UpdateRaceStatus(message);
+        }
+
+        private void UpdateRaceStatus(CarDetectMessage message)
+        {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
+            var racer = _race.GetRacer(message.TransponderID);
+            if (racer == null)
+            {
+                var raceData = new RaceData();
+                RacersCollection.Add(raceData);
+            }
+
+            if (_lastDetectedMillisecondsByTransponder.TryGetValue(message.TransponderID, out var lastDetectedMilliseconds))
+            {
+                var interval = message.Milliseconds - lastDetectedMilliseconds;
+                if (interval is <= 0 or < MinLapIntervalMilliseconds)
+                {
+                    // TODO: Should add log and show a message in the UI to indicate that the detection is ignored due to too short interval.
+                    return;
+                }
+            }
+
+            _lastDetectedMillisecondsByTransponder[message.TransponderID] = message.Milliseconds;
+
+            racer.RecordDetection(TimeSpan.FromMilliseconds(message.Milliseconds));
         }
     }
 }
