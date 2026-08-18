@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using JetBrains.Annotations;
+using TrackGenius.Communication;
 using TrackGenius.Core;
 using TrackGenius.Model;
 using TrackGenius.UI.Commands;
@@ -13,16 +14,28 @@ namespace TrackGenius.UI.ViewModels;
 public class RacePageViewModel : INotifyPropertyChanged
 {
     private readonly RaceEngineFactory _raceEngineFactory;
+    private readonly IRaceConnectionService _connectionService;
+    private RaceEngine _raceEngine;
     public event PropertyChangedEventHandler PropertyChanged;
 
     public ObservableCollection<RaceDataItemViewModel> RaceDataItems { get; set; } = new();
 
     public ICommand StartRaceCommand { get; set; }
 
-    public RacePageViewModel([NotNull]RaceEngineFactory raceEngineFactory)
+    public bool CanStartRace => _connectionService.CanStartRace;
+
+    public RacePageViewModel([NotNull]RaceEngineFactory raceEngineFactory, [NotNull]IRaceConnectionService connectionService)
     {
         _raceEngineFactory = raceEngineFactory ?? throw new ArgumentNullException(nameof(raceEngineFactory));
+        _connectionService = connectionService ?? throw new ArgumentNullException(nameof(connectionService));
         StartRaceCommand = new RelayCommand(StartRace);
+
+        _connectionService.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is nameof(IRaceConnectionService.IsPortOpen)
+                                  or nameof(IRaceConnectionService.CanStartRace))
+                OnPropertyChanged(nameof(CanStartRace));
+        };
 
         AddTestData();
     }
@@ -69,7 +82,18 @@ public class RacePageViewModel : INotifyPropertyChanged
 
     private void StartRace()
     {
-        using var raceEngine = _raceEngineFactory.CreateRaceEngine();
-        raceEngine.RaceStart(new List<RaceData>()); 
+        if (!CanStartRace)
+            return;
+
+        // Keep the engine alive for the race: disposing it immediately would
+        // unsubscribe its handlers before any detection could arrive.
+        _raceEngine?.Dispose();
+        _raceEngine = _raceEngineFactory.CreateRaceEngine();
+        _raceEngine.RaceStart(new List<RaceData>());
+    }
+
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

@@ -29,7 +29,8 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center">
             <Button Content="Start"
-                    Command="{Binding StartRaceCommand}"/>
+                    Command="{Binding StartRaceCommand}"
+                    IsEnabled="{Binding CanStartRace}"/>
         </StackPanel>
     </Grid>
 </Page>

@@ -113,8 +113,9 @@ namespace TrackGenius.UI
 
             var serialPortWrapper = new SerialPortWrapper(serialPortLogger);
             var communicateService = new CommunicateService(serialPortWrapper, serviceLogger);
+            var connectionService = new RaceConnectionService(communicateService);
 
-            return new MainForm(communicateService, userBehaviorLogger);
+            return new MainForm(communicateService, connectionService, userBehaviorLogger);
         }
 
         private static void ApplyAppearance()

@@ -20,17 +20,22 @@ namespace TrackGenius.UI
         private readonly ILogger _userBehaviorLogger;
         [NotNull]
         private readonly CommunicateService _comService;
+        [NotNull]
+        private readonly IRaceConnectionService _connectionService;
         private readonly MainWindowViewModel _viewModel;
 
-        public MainForm(CommunicateService communicateService, ILogger userBehaviorLogger)
+        public MainForm(CommunicateService communicateService, IRaceConnectionService connectionService, ILogger userBehaviorLogger)
         {
             InitializeComponent();
 
             _userBehaviorLogger = userBehaviorLogger ?? throw new ArgumentNullException(nameof(userBehaviorLogger));
             _comService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
+            _connectionService = connectionService ?? throw new ArgumentNullException(nameof(connectionService));
 
-            var raceEngineFactory = new RaceEngineFactory( _comService);
-            _viewModel = new MainWindowViewModel(new RacePageViewModel(raceEngineFactory), new SettingPageViewModel(_comService, _userBehaviorLogger));
+            var raceEngineFactory = new RaceEngineFactory(connectionService, _comService);
+            _viewModel = new MainWindowViewModel(
+                new RacePageViewModel(raceEngineFactory, connectionService),
+                new SettingPageViewModel(_comService, connectionService, _userBehaviorLogger));
 
             DataContext = _viewModel;
 
