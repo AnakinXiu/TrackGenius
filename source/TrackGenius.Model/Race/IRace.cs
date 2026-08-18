@@ -17,5 +17,9 @@ public interface IRace
 
     int CountDownTime { get; }
 
-    ICollection<RaceData> RacersCollection { get; }
+    ICollection<RaceData> RaceDataCollection { get; }
+
+    int MinLapIntervalMilliseconds { get; }
+
+    RaceData GetRaceDataByTransponder(string transponderID);
 }

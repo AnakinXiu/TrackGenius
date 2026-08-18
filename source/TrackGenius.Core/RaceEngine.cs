@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TrackGenius.Communication;
 using TrackGenius.Model;
 
 namespace TrackGenius.Core
 {
-    public class RaceEngine
+    public class RaceEngine :IDisposable
     {
-        private readonly CommunicateService _communicateService;
-
         private readonly IMessageConsumer _messageConsumer;
+        private readonly CommunicateService _communicateService;
 
         private IRace _race;
 
@@ -37,26 +37,29 @@ namespace TrackGenius.Core
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
-            var racer = _race.GetRacer(message.TransponderID);
-            if (racer == null)
+            var raceData = _race.GetRaceDataByTransponder(message.TransponderID);
+            if (raceData == null)
             {
-                var raceData = new RaceData();
-                RacersCollection.Add(raceData);
+                var anonymousDriver = AnonymousDriverCreator.CreateAnonymous(message.TransponderID);
+                raceData = new RaceData(anonymousDriver, anonymousDriver.Cars.First());
+                _race.RaceDataCollection.Add(raceData);
             }
 
-            if (_lastDetectedMillisecondsByTransponder.TryGetValue(message.TransponderID, out var lastDetectedMilliseconds))
+            var lastDetectedMilliseconds = raceData.GetLastDetectedTimeSpan().Milliseconds;
+            var interval = message.Milliseconds - lastDetectedMilliseconds;
+            if (interval <= 0 || interval < _race.MinLapIntervalMilliseconds)
             {
-                var interval = message.Milliseconds - lastDetectedMilliseconds;
-                if (interval is <= 0 or < MinLapIntervalMilliseconds)
-                {
-                    // TODO: Should add log and show a message in the UI to indicate that the detection is ignored due to too short interval.
-                    return;
-                }
+                // TODO: Should add log and show a message in the UI to indicate that the detection is ignored due to too short interval.
+                return;
             }
 
-            _lastDetectedMillisecondsByTransponder[message.TransponderID] = message.Milliseconds;
+            raceData.RecordDetection(TimeSpan.FromMilliseconds(message.Milliseconds));
+        }
 
-            racer.RecordDetection(TimeSpan.FromMilliseconds(message.Milliseconds));
+        public void Dispose()
+        {
+            _communicateService.MessageReceived -= _messageConsumer.ConsumeMessage;
+            _messageConsumer.CarDetected -= OnCarDetected;
         }
     }
 }

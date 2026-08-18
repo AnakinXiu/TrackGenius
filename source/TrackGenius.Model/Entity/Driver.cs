@@ -8,7 +8,7 @@ public class Driver : IDriver
 {
     public string DriverName { get; set; }
 
-    public Guid DriverID { get; } = Guid.NewGuid();
+    public Guid DriverID { get; }
 
     public string NickName { get; set; }
 
@@ -20,6 +20,7 @@ public class Driver : IDriver
 
     public Driver()
     {
+        DriverID = Guid.NewGuid();
         Cars = new List<ICar>();
     }
 }

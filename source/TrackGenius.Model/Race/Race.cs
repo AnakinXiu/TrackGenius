@@ -7,9 +7,7 @@ namespace TrackGenius.Model
 {
     public class Race : IRace
     {
-        private const int MinLapIntervalMilliseconds = 1500;
-
-        private readonly Dictionary<string, int> _lastDetectedMillisecondsByTransponder = new();
+        public int MinLapIntervalMilliseconds { get; set; } = 1500;
 
         public Guid RaceID { get; }
 
@@ -23,27 +21,24 @@ namespace TrackGenius.Model
 
         public int CountDownTime => RaceTimer.CountDownTime;
 
-        public Race(Guid raceID, RaceType raceType, RaceClass raceClass, ICollection<RaceData> racersCollection)
-            : this(raceID, raceType, raceClass, new RaceTimer(10), racersCollection)
-        {
-        }
+        public Race(Guid raceID, RaceType raceType, RaceClass raceClass, ICollection<RaceData> raceDataCollection)
+            : this(raceID, raceType, raceClass, new RaceTimer(10), raceDataCollection)
+        { }
 
         public Race(Guid raceID, RaceType raceType, RaceClass raceClass, RaceTimer raceTimer,
-            [CanBeNull] ICollection<RaceData> racersCollection)
+            [CanBeNull] ICollection<RaceData> raceDataCollection)
         {
             RaceID = raceID;
             RaceType = raceType;
             RaceClass = raceClass ?? throw new ArgumentNullException(nameof(raceClass));
-            RacersCollection = racersCollection ?? new List<RaceData>();
+            RaceDataCollection = raceDataCollection ?? new List<RaceData>();
             RaceTimer = raceTimer ?? throw new ArgumentNullException(nameof(raceTimer));
         }
 
-        public ICollection<RaceData> RacersCollection { get; private set; }
-
-
+        public ICollection<RaceData> RaceDataCollection { get; private set; }
 
         [CanBeNull]
-        public RaceData GetRaceDataByTransponder(string transponderID) => RacersCollection
-            .FirstOrDefault(racer => racer.Car.Transponder.RecoderNumber == transponderID);
+        public RaceData GetRaceDataByTransponder(string transponderID) 
+            => RaceDataCollection.FirstOrDefault(racer => racer.Car.Transponder.RecoderNumber == transponderID);
     }
 }
