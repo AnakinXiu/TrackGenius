@@ -2,6 +2,7 @@ using System;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using TrackGenius.Communication;
+using TrackGenius.Core;
 using TrackGenius.Protocol.Kyosho;
 using TrackGenius.Protocol.Robitronic;
 using TrackGenius.UITests.Communication;
