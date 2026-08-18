@@ -101,6 +101,29 @@ public class RaceConnectionServiceTests
         Assert.That(raised, Does.Contain(nameof(RaceConnectionService.CanStartRace)));
     }
 
+    [Test]
+    public void GivenOpenConnection_WhenPortClosesExternally_ThenStateClearedAndCannotStartRace()
+    {
+        var wrapper = new FakeSerialPortWrapper();
+        var communicateService = new CommunicateService(wrapper, NullLogger<CommunicateService>.Instance);
+        var service = new RaceConnectionService(communicateService);
+        service.Open("COM3", new RobitronicProtocol());
+
+        // Simulate an external close (e.g. device unplugged): the wrapper's state flips
+        // without going through RaceConnectionService.Close().
+        wrapper.ClosePort();
+        communicateService.RaisePortOpenStateChanged();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(service.IsPortOpen, Is.False);
+            Assert.That(service.CurrentProtocol, Is.Null);
+            Assert.That(service.CurrentProtocolName, Is.Empty);
+            Assert.That(service.PortName, Is.Empty);
+            Assert.That(service.CanStartRace, Is.False);
+        });
+    }
+
     private static RaceConnectionService CreateService() => CreateServiceWithWrapper().Service;
 
     private static (RaceConnectionService Service, FakeSerialPortWrapper Wrapper) CreateServiceWithWrapper()
