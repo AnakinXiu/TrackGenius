@@ -1,25 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
-using TrackGenius.Communication;
+using JetBrains.Annotations;
 using TrackGenius.Core;
+using TrackGenius.Model;
 using TrackGenius.UI.Commands;
 
 namespace TrackGenius.UI.ViewModels;
 
 public class RacePageViewModel : INotifyPropertyChanged
 {
-    private readonly CommunicateService _comService;
+    private readonly RaceEngineFactory _raceEngineFactory;
     public event PropertyChangedEventHandler PropertyChanged;
 
     public ObservableCollection<RaceDataItemViewModel> RaceDataItems { get; set; } = new();
 
     public ICommand StartRaceCommand { get; set; }
 
-    public RacePageViewModel(CommunicateService comService)
+    public RacePageViewModel([NotNull]RaceEngineFactory raceEngineFactory)
     {
-        _comService = comService;
+        _raceEngineFactory = raceEngineFactory ?? throw new ArgumentNullException(nameof(raceEngineFactory));
         StartRaceCommand = new RelayCommand(StartRace);
 
         AddTestData();
@@ -67,6 +69,7 @@ public class RacePageViewModel : INotifyPropertyChanged
 
     private void StartRace()
     {
-        var raceEngine = new RaceEngine(new RobitronicMessageConsumer(), _comService);
+        using var raceEngine = _raceEngineFactory.CreateRaceEngine();
+        raceEngine.RaceStart(new List<RaceData>()); 
     }
 }

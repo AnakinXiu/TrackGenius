@@ -1,8 +1,10 @@
 using System;
 using System.Windows;
 using System.Windows.Input;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using TrackGenius.Communication;
+using TrackGenius.Core;
 using TrackGenius.UI.Pages;
 using TrackGenius.UI.ViewModels;
 using Wpf.Ui.Controls;
@@ -14,16 +16,21 @@ namespace TrackGenius.UI
     /// </summary>
     public partial class MainForm : FluentWindow
     {
+        [NotNull]
+        private readonly ILogger _userBehaviorLogger;
+        [NotNull]
+        private readonly CommunicateService _comService;
         private readonly MainWindowViewModel _viewModel;
 
         public MainForm(CommunicateService communicateService, ILogger userBehaviorLogger)
         {
             InitializeComponent();
 
-            var comService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
-            ArgumentNullException.ThrowIfNull(userBehaviorLogger);
+            _userBehaviorLogger = userBehaviorLogger ?? throw new ArgumentNullException(nameof(userBehaviorLogger));
+            _comService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
 
-            _viewModel = new MainWindowViewModel(new RacePageViewModel(comService), new SettingPageViewModel(comService, userBehaviorLogger));
+            var raceEngineFactory = new RaceEngineFactory( _comService);
+            _viewModel = new MainWindowViewModel(new RacePageViewModel(raceEngineFactory), new SettingPageViewModel(_comService, _userBehaviorLogger));
 
             DataContext = _viewModel;
 
@@ -35,6 +42,7 @@ namespace TrackGenius.UI
         {
             // Pages are instantiated by the NavigationView via their parameterless ctor.
             // Inject the appropriate view-model on each navigation.
+
             switch (args.Page)
             {
                 case SettingsPage settingsPage:
