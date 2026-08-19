@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using TrackGenius.Communication;
 using TrackGenius.Model;
 
@@ -13,17 +14,17 @@ namespace TrackGenius.Core
 
         private IRace _race;
 
-        public RaceEngine(IMessageConsumer messageConsumer, CommunicateService communicateService)
+        public RaceEngine([NotNull] IMessageConsumer messageConsumer, [NotNull] CommunicateService communicateService)
         {
             _messageConsumer = messageConsumer ?? throw new ArgumentNullException(nameof(messageConsumer));
             _communicateService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
-
-            _communicateService.MessageReceived += _messageConsumer.ConsumeMessage;
-            _messageConsumer.CarDetected += OnCarDetected;
         }
 
         public void RaceStart(ICollection<RaceData> racers)
         {
+            _communicateService.MessageReceived += _messageConsumer.ConsumeMessage;
+            _messageConsumer.CarDetected += OnCarDetected;
+
             _race = new Race(new Guid(), RaceType.FreePractice, new RaceClass("World GT"), racers);
         }
 
