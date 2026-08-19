@@ -77,6 +77,20 @@ public class RacePageViewModelTests
         });
     }
 
+    [Test]
+    public void GivenCompletedRace_WhenRaceRestarted_ThenRaceDataItemsClearedForNewRace()
+    {
+        _connection.Open("COM3", new RobitronicProtocol());
+        _viewModel.StartRaceCommand.Execute(null);
+        _communicateService.MessageReceived?.Invoke(
+            _communicateService, MakeDetectedMessage(transponder: 100, milliseconds: 3_600_000));
+        Assert.That(_viewModel.RaceDataItems, Has.Count.EqualTo(1));
+
+        _viewModel.StartRaceCommand.Execute(null);
+
+        Assert.That(_viewModel.RaceDataItems, Is.Empty);
+    }
+
     private static DetectedMessage MakeDetectedMessage(long transponder, int milliseconds)
     {
         var data = new byte[13];

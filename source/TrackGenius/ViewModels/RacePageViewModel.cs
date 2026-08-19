@@ -103,6 +103,10 @@ public class RacePageViewModel : INotifyPropertyChanged
         if (!CanStartRace)
             return;
 
+        // Stale rows from a previous race must not leak into the new one:
+        // ApplyStandings sizes new positions from RaceDataItems.Count.
+        RaceDataItems.Clear();
+
         try
         {
             if (_raceEngine != null)

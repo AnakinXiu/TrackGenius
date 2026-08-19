@@ -120,6 +120,24 @@ public class RaceEngineTests
     }
 
     [Test]
+    public void GivenNewRacerFirstDetectionSuppressed_WhenStandingsRaised_ThenZeroLapEntryEmitted()
+    {
+        _engine.RaceStart(new List<RaceData>());
+
+        SendDetection(transponder: 300, milliseconds: 1_000);   // < 1500 → suppressed, but racer was added
+
+        Assert.That(_received.Count, Is.EqualTo(1));
+        var entry = _received[0].Single();
+        Assert.Multiple(() =>
+        {
+            Assert.That(entry.RaceData.Car.Transponder.RecoderNumber, Is.EqualTo("300"));
+            Assert.That(entry.RaceData.LapsCount, Is.EqualTo(0));
+            Assert.That(entry.Position, Is.EqualTo(1));
+            Assert.That(entry.Gap, Is.EqualTo("-"));
+        });
+    }
+
+    [Test]
     public void GivenTwoRacersDetected_WhenStandingsRaised_ThenOrderAndGapComputed()
     {
         _engine.RaceStart(new List<RaceData>());
