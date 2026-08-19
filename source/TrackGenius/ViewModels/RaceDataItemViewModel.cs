@@ -26,8 +26,8 @@ public class RaceDataItemViewModel : INotifyPropertyChanged
     private TimeSpan _bestLapTime;
 
     private readonly int _racerStartPosition = 0;
-    private TimeSpan _gapTime;
-    private TimeSpan _intervalTime;
+    private string _gap;
+    private string _interval;
     
     public string TransponderID { get; }
 
@@ -63,16 +63,16 @@ public class RaceDataItemViewModel : INotifyPropertyChanged
         set => PropertyChanged.RaiseIfChanged(this, ref _bestLapTime, value, nameof(BestLapTime));
     }
 
-    public TimeSpan GapTime
+    public string Gap
     {
-        get => _gapTime;
-        set => PropertyChanged.RaiseIfChanged(this, ref _gapTime, value, nameof(GapTime));
+        get => _gap;
+        set => PropertyChanged.RaiseIfChanged(this, ref _gap, value, nameof(Gap));
     }
 
-    public TimeSpan IntervalTime
+    public string Interval
     {
-        get => _intervalTime;
-        set => PropertyChanged.RaiseIfChanged(this, ref _intervalTime, value, nameof(IntervalTime));
+        get => _interval;
+        set => PropertyChanged.RaiseIfChanged(this, ref _interval, value, nameof(Interval));
     }
 
     public string Description { get; set; }
