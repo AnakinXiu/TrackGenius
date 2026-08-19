@@ -21,5 +21,9 @@ public interface IRace
 
     int MinLapIntervalMilliseconds { get; }
 
+    RaceOrderRule OrderRule { get; set; }
+
+    IRaceOrderCalculator OrderCalculator { get; }
+
     RaceData GetRaceDataByTransponder(string transponderID);
 }

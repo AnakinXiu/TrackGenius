@@ -9,6 +9,20 @@ namespace TrackGenius.Model
     {
         public int MinLapIntervalMilliseconds { get; set; } = 1500;
 
+        private RaceOrderRule _orderRule = RaceOrderRule.LapsThenRaceTime;
+
+        public RaceOrderRule OrderRule
+        {
+            get => _orderRule;
+            set
+            {
+                _orderRule = value;
+                OrderCalculator = CreateCalculatorFor(value);
+            }
+        }
+
+        public IRaceOrderCalculator OrderCalculator { get; private set; }
+
         public Guid RaceID { get; }
 
         public RaceType RaceType { get; }
@@ -33,12 +47,17 @@ namespace TrackGenius.Model
             RaceClass = raceClass ?? throw new ArgumentNullException(nameof(raceClass));
             RaceDataCollection = raceDataCollection ?? new List<RaceData>();
             RaceTimer = raceTimer ?? throw new ArgumentNullException(nameof(raceTimer));
+            OrderCalculator = CreateCalculatorFor(_orderRule);
         }
 
         public ICollection<RaceData> RaceDataCollection { get; private set; }
 
         [CanBeNull]
-        public RaceData GetRaceDataByTransponder(string transponderID) 
+        public RaceData GetRaceDataByTransponder(string transponderID)
             => RaceDataCollection.FirstOrDefault(racer => racer.Car.Transponder.RecoderNumber == transponderID);
+
+        // Future rules switch here; today the default calculator serves the only rule.
+        private static IRaceOrderCalculator CreateCalculatorFor(RaceOrderRule rule)
+            => new LapsRaceTimeOrderCalculator();
     }
 }
