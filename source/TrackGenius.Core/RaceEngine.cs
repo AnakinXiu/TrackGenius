@@ -29,6 +29,10 @@ namespace TrackGenius.Core
 
         private void OnCarDetected(object sender, CarDetectMessage message)
         {
+            // A detection can arrive after construction but before RaceStart assigns _race.
+            if (_race == null)
+                return;
+
             UpdateRaceStatus(message);
         }
 

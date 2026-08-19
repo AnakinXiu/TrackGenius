@@ -80,16 +80,41 @@ public class RacePageViewModel : INotifyPropertyChanged
             RaceDataItems.Add(item);
     }
 
+    private string _lastError;
+
+    /// <summary>Last race start failure message; empty when the last start succeeded (not yet bound in XAML).</summary>
+    public string LastError
+    {
+        get => _lastError;
+        private set
+        {
+            if (_lastError == value)
+                return;
+            _lastError = value;
+            OnPropertyChanged(nameof(LastError));
+        }
+    }
+
     private void StartRace()
     {
         if (!CanStartRace)
             return;
 
-        // Keep the engine alive for the race: disposing it immediately would
-        // unsubscribe its handlers before any detection could arrive.
-        _raceEngine?.Dispose();
-        _raceEngine = _raceEngineFactory.CreateRaceEngine();
-        _raceEngine.RaceStart(new List<RaceData>());
+        try
+        {
+            // Keep the engine alive for the race: disposing it immediately would
+            // unsubscribe its handlers before any detection could arrive.
+            _raceEngine?.Dispose();
+            _raceEngine = _raceEngineFactory.CreateRaceEngine();
+            _raceEngine.RaceStart(new List<RaceData>());
+            LastError = string.Empty;
+        }
+        catch (NotSupportedException ex)
+        {
+            // e.g. a protocol without a message consumer is selected.
+            _raceEngine = null;
+            LastError = ex.Message;
+        }
     }
 
     protected virtual void OnPropertyChanged(string propertyName)

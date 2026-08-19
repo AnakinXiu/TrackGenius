@@ -124,6 +124,44 @@ public class RaceConnectionServiceTests
         });
     }
 
+    [Test]
+    public void GivenOpenConnection_WhenReopenFails_ThenStateClearedProtocolUnsetAndCannotStartRace()
+    {
+        var wrapper = new FakeSerialPortWrapper();
+        var communicateService = new CommunicateService(wrapper, NullLogger<CommunicateService>.Instance);
+        var service = new RaceConnectionService(communicateService);
+        service.Open("COM3", new RobitronicProtocol());
+
+        wrapper.FailOnOpen = true;
+        Assert.Throws<InvalidOperationException>(() => service.Open("COM4", new RobitronicProtocol()));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(service.IsPortOpen, Is.False);
+            Assert.That(service.CurrentProtocol, Is.Null);
+            Assert.That(service.CurrentProtocolName, Is.Empty);
+            Assert.That(service.PortName, Is.Empty);
+            Assert.That(service.CanStartRace, Is.False);
+        });
+    }
+
+    [Test]
+    public void GivenOpenConnection_WhenReopenFails_ThenPropertyChangedStillRaised()
+    {
+        var wrapper = new FakeSerialPortWrapper();
+        var communicateService = new CommunicateService(wrapper, NullLogger<CommunicateService>.Instance);
+        var service = new RaceConnectionService(communicateService);
+        service.Open("COM3", new RobitronicProtocol());
+        var raised = new List<string>();
+        service.PropertyChanged += (_, e) => raised.Add(e.PropertyName);
+
+        wrapper.FailOnOpen = true;
+        Assert.Throws<InvalidOperationException>(() => service.Open("COM4", new RobitronicProtocol()));
+
+        Assert.That(raised, Does.Contain(nameof(RaceConnectionService.IsPortOpen)));
+        Assert.That(raised, Does.Contain(nameof(RaceConnectionService.CanStartRace)));
+    }
+
     private static RaceConnectionService CreateService() => CreateServiceWithWrapper().Service;
 
     private static (RaceConnectionService Service, FakeSerialPortWrapper Wrapper) CreateServiceWithWrapper()

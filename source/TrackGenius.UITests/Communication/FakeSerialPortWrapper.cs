@@ -21,7 +21,11 @@ public sealed class FakeSerialPortWrapper : ISerialPortWrapper
     public void OpenPort(string portName, int baud, int data, Parity parity, StopBits stopBits)
     {
         if (FailOnOpen)
+        {
+            // Mirror the real wrapper: a failed reopen has already closed the old port.
+            IsOpened = false;
             throw new InvalidOperationException("Simulated port open failure.");
+        }
 
         LastOpenedPortName = portName;
         IsOpened = true;

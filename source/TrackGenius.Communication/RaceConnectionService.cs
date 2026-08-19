@@ -35,7 +35,19 @@ public class RaceConnectionService : IRaceConnectionService
         if (protocol == null)
             throw new ArgumentNullException(nameof(protocol));
 
-        _communicateService.StartService(portName, protocol);
+        try
+        {
+            _communicateService.StartService(portName, protocol);
+        }
+        catch
+        {
+            // StartService may have closed a previously open port before failing:
+            // reconcile our state with the (now closed) service before rethrowing.
+            CurrentProtocol = null;
+            PortName = string.Empty;
+            RaisePropertiesChanged();
+            throw;
+        }
 
         // StartService throws on failure; reaching here means the port opened with this protocol.
         CurrentProtocol = protocol;
@@ -45,7 +57,17 @@ public class RaceConnectionService : IRaceConnectionService
 
     public void Close()
     {
-        _communicateService.CloseService();
+        try
+        {
+            _communicateService.CloseService();
+        }
+        catch
+        {
+            CurrentProtocol = null;
+            PortName = string.Empty;
+            RaisePropertiesChanged();
+            throw;
+        }
 
         CurrentProtocol = null;
         PortName = string.Empty;
