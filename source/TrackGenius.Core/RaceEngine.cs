@@ -14,6 +14,8 @@ namespace TrackGenius.Core
 
         private IRace _race;
 
+        public event EventHandler<IReadOnlyList<RaceStandingsEntry>> RaceDataChanged;
+
         public RaceEngine([NotNull] IMessageConsumer messageConsumer, [NotNull] CommunicateService communicateService)
         {
             _messageConsumer = messageConsumer ?? throw new ArgumentNullException(nameof(messageConsumer));
@@ -42,12 +44,14 @@ namespace TrackGenius.Core
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
+            var changed = false;
             var raceData = _race.GetRaceDataByTransponder(message.TransponderID);
             if (raceData == null)
             {
                 var anonymousDriver = AnonymousDriverCreator.CreateAnonymous(message.TransponderID);
                 raceData = new RaceData(anonymousDriver, anonymousDriver.Cars.First());
                 _race.RaceDataCollection.Add(raceData);
+                changed = true;
             }
 
             var lastDetectedMilliseconds = raceData.GetLastDetectedTimeSpan().Milliseconds;
@@ -55,11 +59,17 @@ namespace TrackGenius.Core
             if (interval <= 0 || interval < _race.MinLapIntervalMilliseconds)
             {
                 // TODO: Should add log and show a message in the UI to indicate that the detection is ignored due to too short interval.
+                if (changed)
+                    RaiseRaceDataChanged();   // the racer was added even though this pass was suppressed
                 return;
             }
 
             raceData.RecordDetection(TimeSpan.FromMilliseconds(message.Milliseconds));
+            RaiseRaceDataChanged();
         }
+
+        private void RaiseRaceDataChanged()
+            => RaceDataChanged?.Invoke(this, _race.OrderCalculator.Calculate(_race.RaceDataCollection));
 
         public void Dispose()
         {
