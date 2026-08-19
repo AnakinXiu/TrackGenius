@@ -22,7 +22,7 @@ engine's race data collection drives the page's `RaceDataItems`.
 
 | Decision | Choice |
 |---|---|
-| Test data in `AddTestData()` | Keep always; real detections append alongside |
+| Test data in `AddTestData()` | **Revised 2026-08-19 (execution):** call stays disabled (commented out); race page starts empty until real detections arrive. Rows/initializers retained in source, updated to string `Gap`/`Interval`, so they can be re-enabled for layout work. |
 | Notification mechanism | Event raised by `RaceEngine` |
 | Thread marshaling (serial thread → UI thread) | In the ViewModel (Core stays thread-agnostic) |
 | Position/gap/interval computation | Model layer (engine uses it; ViewModel only maps) |
