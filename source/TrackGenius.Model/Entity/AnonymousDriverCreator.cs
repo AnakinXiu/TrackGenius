@@ -13,7 +13,8 @@ public static class AnonymousDriverCreator
                 new Car
                 {
                     CarName = transponderID,
-                    CarColor = Color.CadetBlue   //TODO: Change to a random color
+                    CarColor = Color.CadetBlue,   //TODO: Change to a random color
+                    Transponder = new Transponder { RecoderNumber = transponderID }
                 }
             }
         };
