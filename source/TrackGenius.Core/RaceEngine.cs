@@ -44,14 +44,14 @@ namespace TrackGenius.Core
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
-            var changed = false;
+            var newCarDetected = false;
             var raceData = _race.GetRaceDataByTransponder(message.TransponderID);
             if (raceData == null)
             {
                 var anonymousDriver = AnonymousDriverCreator.CreateAnonymous(message.TransponderID);
                 raceData = new RaceData(anonymousDriver, anonymousDriver.Cars.First());
                 _race.RaceDataCollection.Add(raceData);
-                changed = true;
+                newCarDetected = true;
             }
 
             var lastDetectedMilliseconds = raceData.GetLastDetectedTimeSpan().Milliseconds;
@@ -59,7 +59,7 @@ namespace TrackGenius.Core
             if (interval <= 0 || interval < _race.MinLapIntervalMilliseconds)
             {
                 // TODO: Should add log and show a message in the UI to indicate that the detection is ignored due to too short interval.
-                if (changed)
+                if (newCarDetected)
                     RaiseRaceDataChanged();   // the racer was added even though this pass was suppressed
                 return;
             }
