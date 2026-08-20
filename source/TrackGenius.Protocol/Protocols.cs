@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TrackGenius.Protocol.Interfaces;
+using TrackGenius.Protocol.Kyosho;
 using TrackGenius.Protocol.Robitronic;
 
 namespace TrackGenius.Protocol;

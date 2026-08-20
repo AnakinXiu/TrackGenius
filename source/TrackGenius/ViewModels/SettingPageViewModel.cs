@@ -19,12 +19,13 @@ using Wpf.Ui.Appearance;
 
 namespace TrackGenius.UI.ViewModels;
 
-public class MainFormParamViewModel : INotifyPropertyChanged
+public class SettingPageViewModel : INotifyPropertyChanged
 {
     public sealed record ProtocolOption(string Name, IProtocol Protocol);
 
     private ISerialPortDescription _selectedSerialPort;
     private readonly CommunicateService _communicateService;
+    private readonly IRaceConnectionService _connectionService;
     private readonly ILogger _userBehaviorLogger;
     private CancellationTokenSource _messagePollingCancellationTokenSource;
     private Task _messagePollingTask;
@@ -46,7 +47,7 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         private set => PropertyChanged.RaiseIfChanged(this, ref _lastError, value, Equals, nameof(LastError));
     }
 
-    public bool IsPortOpened => _communicateService?.IsOpened ?? false;
+    public bool IsPortOpened => _connectionService.IsPortOpen;
 
     public string ButtonContent => IsPortOpened ? "Close Port" : "Open Port";
 
@@ -78,17 +79,23 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         }
     }
 
-    public MainFormParamViewModel(CommunicateService communicateService, ILogger userBehaviorLogger = null)
+    public SettingPageViewModel(CommunicateService communicateService, IRaceConnectionService connectionService, ILogger userBehaviorLogger)
     {
         _communicateService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
+        _connectionService = connectionService ?? throw new ArgumentNullException(nameof(connectionService));
         _userBehaviorLogger = userBehaviorLogger ?? NullLogger.Instance;
 
-        _userBehaviorLogger.LogInformation("ViewModelInitialized ViewModel={ViewModel}", nameof(MainFormParamViewModel));
+        _userBehaviorLogger.LogInformation("ViewModelInitialized ViewModel={ViewModel}", nameof(SettingPageViewModel));
 
-        _communicateService.PortOpenStateEventHandler += (_, _) =>
+        _connectionService.PropertyChanged += (_, e) =>
         {
-            OnPropertyChanged(nameof(IsPortOpenedString));
-            OnPropertyChanged(nameof(ButtonContent));
+            if (e.PropertyName is nameof(IRaceConnectionService.IsPortOpen)
+                                  or nameof(IRaceConnectionService.CanStartRace))
+            {
+                OnPropertyChanged(nameof(IsPortOpened));
+                OnPropertyChanged(nameof(IsPortOpenedString));
+                OnPropertyChanged(nameof(ButtonContent));
+            }
         };
 
         SerialPorts = SerialPortEnumerator.GetValidPortDescriptions().ToList();
@@ -140,12 +147,12 @@ public class MainFormParamViewModel : INotifyPropertyChanged
         {
             if (_communicateService.IsOpened)
             {
-                _communicateService.CloseService();
+                _connectionService.Close();
                 _userBehaviorLogger.LogInformation("UserPortClosed ActionName={ActionName} PortName={PortName}", nameof(OpenClosePort), SelectedSerialPort.PortName);
             }
             else
             {
-                _communicateService.StartService(SelectedSerialPort.PortName, SelectedProtocol.Protocol);
+                _connectionService.Open(SelectedSerialPort.PortName, SelectedProtocol.Protocol);
                 Messages.Clear();
                 LastError = string.Empty;
                 StartMessagePolling();
@@ -235,7 +242,7 @@ public class MainFormParamViewModel : INotifyPropertyChanged
             exception,
             "UserCommunicationActionFailed ActionName={ActionName} ViewModel={ViewModel}",
             actionName,
-            nameof(MainFormParamViewModel));
+            nameof(SettingPageViewModel));
 
         LastError = exception.Message;
 

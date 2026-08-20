@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace TrackGenius.Model
+namespace TrackGenius.Model;
+
+public interface IDriver
 {
-    public interface IDriver
-    {
-        Guid DriverID { get; }
+    Guid DriverID { get; }
 
-        string DriverName { get; set; }
+    string DriverName { get; set; }
 
-        string NickName { get; set; }
+    string NickName { get; set; }
 
-        Guid ClubID { get; set; }
+    Guid ClubID { get; set; }
 
-        Bitmap Photo { get; set; }
+    Bitmap Photo { get; set; }
 
-        ICollection<ICar> Cars { get; }
-    }
+    ICollection<ICar> Cars { get; }
 }

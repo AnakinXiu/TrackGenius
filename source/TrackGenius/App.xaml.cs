@@ -4,12 +4,11 @@ using System.Windows.Threading;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using TrackGenius.Communication;
-using TrackGenius.Logging;
-using TrackGenius.UI;
+using TrackGenius.UI.Logging;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
-namespace TrackGenius
+namespace TrackGenius.UI
 {
     /// <summary>
     /// App.xaml 的交互逻辑
@@ -114,8 +113,9 @@ namespace TrackGenius
 
             var serialPortWrapper = new SerialPortWrapper(serialPortLogger);
             var communicateService = new CommunicateService(serialPortWrapper, serviceLogger);
+            var connectionService = new RaceConnectionService(communicateService);
 
-            return new MainForm(communicateService, userBehaviorLogger);
+            return new MainForm(communicateService, connectionService, userBehaviorLogger);
         }
 
         private static void ApplyAppearance()

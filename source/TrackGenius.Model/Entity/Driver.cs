@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace TrackGenius.Model
+namespace TrackGenius.Model;
+
+public class Driver : IDriver
 {
-    public class Driver : IDriver
+    public string DriverName { get; set; }
+
+    public Guid DriverID { get; }
+
+    public string NickName { get; set; }
+
+    public Guid ClubID { get; set; }
+
+    public Bitmap Photo { get; set; }
+
+    public ICollection<ICar> Cars { get; }
+
+    public Driver()
     {
-        public string DriverName { get; set; }
-
-        public Guid DriverID { get; } = Guid.NewGuid();
-
-        public string NickName { get; set; }
-
-        public Guid ClubID{ get; set; }
-
-        public Bitmap Photo { get; set; }
-
-        public ICollection<ICar> Cars { get; }
-
-        public Driver()
-        {
-            Cars = new List<ICar>();
-        }
+        DriverID = Guid.NewGuid();
+        Cars = new List<ICar>();
     }
 }

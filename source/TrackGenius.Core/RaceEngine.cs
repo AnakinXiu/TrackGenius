@@ -1,35 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 using TrackGenius.Communication;
 using TrackGenius.Model;
 
 namespace TrackGenius.Core
 {
-    public class RaceEngine
+    public class RaceEngine :IDisposable
     {
-        private readonly CommunicateService _communicateService;
-
         private readonly IMessageConsumer _messageConsumer;
+        private readonly CommunicateService _communicateService;
 
         private IRace _race;
 
-        public RaceEngine(IMessageConsumer messageConsumer, CommunicateService communicateService)
+        public event EventHandler<IReadOnlyList<RaceStandingsEntry>> RaceDataChanged;
+
+        public RaceEngine([NotNull] IMessageConsumer messageConsumer, [NotNull] CommunicateService communicateService)
         {
             _messageConsumer = messageConsumer ?? throw new ArgumentNullException(nameof(messageConsumer));
             _communicateService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
-
-            _communicateService.MessageReceived += _messageConsumer.ConsumeMessage;
-            _messageConsumer.CarDetected += OnCarDetected;
         }
 
-        public void RaceStart(ICollection<RaceStatus> racers)
+        public void RaceStart(ICollection<RaceData> racers)
         {
+            _communicateService.MessageReceived += _messageConsumer.ConsumeMessage;
+            _messageConsumer.CarDetected += OnCarDetected;
+
             _race = new Race(new Guid(), RaceType.FreePractice, new RaceClass("World GT"), racers);
         }
 
         private void OnCarDetected(object sender, CarDetectMessage message)
         {
-            _race.UpdateRaceStatus(message);
+            // A detection can arrive after construction but before RaceStart assigns _race.
+            if (_race == null)
+                return;
+
+            UpdateRaceStatus(message);
+        }
+
+        private void UpdateRaceStatus(CarDetectMessage message)
+        {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
+            var newCarDetected = false;
+            var raceData = _race.GetRaceDataByTransponder(message.TransponderID);
+            if (raceData == null)
+            {
+                var anonymousDriver = AnonymousDriverCreator.CreateAnonymous(message.TransponderID);
+                raceData = new RaceData(anonymousDriver, anonymousDriver.Cars.First());
+                _race.RaceDataCollection.Add(raceData);
+                newCarDetected = true;
+            }
+
+            var lastDetectedMilliseconds = raceData.GetLastDetectedTimeSpan().Milliseconds;
+            var interval = message.Milliseconds - lastDetectedMilliseconds;
+            if (interval <= 0 || interval < _race.MinLapIntervalMilliseconds)
+            {
+                // TODO: Should add log and show a message in the UI to indicate that the detection is ignored due to too short interval.
+                if (newCarDetected)
+                    RaiseRaceDataChanged();   // the racer was added even though this pass was suppressed
+                return;
+            }
+
+            raceData.RecordDetection(TimeSpan.FromMilliseconds(message.Milliseconds));
+            RaiseRaceDataChanged();
+        }
+
+        private void RaiseRaceDataChanged()
+            => RaceDataChanged?.Invoke(this, _race.OrderCalculator.Calculate(_race.RaceDataCollection));
+
+        public void Dispose()
+        {
+            _communicateService.MessageReceived -= _messageConsumer.ConsumeMessage;
+            _messageConsumer.CarDetected -= OnCarDetected;
         }
     }
 }

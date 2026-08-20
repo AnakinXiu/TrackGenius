@@ -8,11 +8,11 @@ public class MainWindowViewModel
     public RacePageViewModel RacePageViewModel { get; set; }
 
     [NotNull]
-    public MainFormParamViewModel MainFormParamViewModel { get; set; }
+    public SettingPageViewModel SettingPageViewModel { get; set; }
 
-    public MainWindowViewModel([NotNull] RacePageViewModel racePageViewModel, [NotNull] MainFormParamViewModel mainFormParamViewModel)
+    public MainWindowViewModel([NotNull] RacePageViewModel racePageViewModel, [NotNull] SettingPageViewModel settingPageViewModel)
     {
         RacePageViewModel = racePageViewModel;
-        MainFormParamViewModel = mainFormParamViewModel;
+        SettingPageViewModel = settingPageViewModel;
     }
 }

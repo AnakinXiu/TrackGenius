@@ -1,12 +1,12 @@
-﻿<ui:FluentWindow x:Class="TrackGenius.UI.MainForm"
+<ui:FluentWindow x:Class="TrackGenius.UI.MainForm"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-                 xmlns:pages="clr-namespace:TrackGenius.UI.Views.Pages"
                  xmlns:viewModel="clr-namespace:TrackGenius.UI.ViewModels"
                  xmlns:commands="clr-namespace:TrackGenius.UI.Commands"
+                 xmlns:pages="clr-namespace:TrackGenius.UI.Pages"
                  mc:Ignorable="d"
                  Title="Track Genius"
                  Height="450" Width="800"
@@ -29,16 +29,21 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ui:TitleBar Grid.Row="0" >
+        <ui:TitleBar Grid.Row="0" HorizontalAlignment="Stretch"
+                     Height="30">
 
             <ui:TitleBar.CenterContent>
-                <StackPanel Orientation="Horizontal" Margin="8">
+                <StackPanel Margin="20, 0, 0, 0" 
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center">
+                    
                     <TextBlock Text="Track Genius"
-                               VerticalAlignment="Center" />
+                               VerticalAlignment="Center" 
+                               HorizontalAlignment="Center"/>
                 </StackPanel>
             </ui:TitleBar.CenterContent>
 
-            <ui:TitleBar.TrailingContent>
+            <ui:TitleBar.TrailingContent >
                 <TextBlock Text="v1.0.0"
                            VerticalAlignment="Center"
                            Margin="0, 0, 10, 0" />
@@ -51,7 +56,32 @@
                            PaneDisplayMode="Left"
                            OpenPaneLength="200"
                            IsBackButtonVisible="Collapsed"
-                           IsPaneToggleVisible="True">
+                           IsPaneToggleVisible="False">
+            <ui:NavigationView.PaneHeader>
+                <StackPanel HorizontalAlignment="Stretch">
+                    
+                    <Grid Height="44"
+                          HorizontalAlignment="Stretch"
+                          ClipToBounds="True">
+                        <Image Source="/Resources/TraceGeniusLogo.png"
+                               Width="{Binding ElementName=RootNavigation, Path=OpenPaneLength}"
+                               Height="44"
+                               HorizontalAlignment="Left"
+                               Stretch="Fill" />
+                    </Grid>
+
+                    <Button Width="36"
+                            Height="36"
+                            Margin="3,8,0,8"
+                            HorizontalAlignment="Left"
+                            Click="TogglePane_OnClick"
+                            BorderThickness="0"
+                            Padding="0"
+                            Background="Transparent"
+                            Content="&#9776;" />
+                </StackPanel>
+            </ui:NavigationView.PaneHeader>
+
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="Quick Race"
                                        TargetPageType="{x:Type pages:QuickRacePage}">
@@ -99,3 +129,4 @@
         </StatusBar>
     </Grid>
 </ui:FluentWindow>
+
