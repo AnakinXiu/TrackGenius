@@ -32,6 +32,8 @@ public class ThemePreferencesStoreTests
     [TestCase("{\"somethingElse\":42}")]
     [TestCase("{\"theme\":5}")]
     [TestCase("{\"theme\":\"Neon\"}")]
+    [TestCase("5")]
+    [TestCase("[1,2]")]
     public void GivenInvalidJson_WhenParsed_ThenSystemThemeReturned(string json)
         => Assert.That(ThemePreferences.Parse(json), Is.EqualTo(ThemeType.System));
 

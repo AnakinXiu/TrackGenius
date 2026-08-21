@@ -22,6 +22,9 @@ public static class ThemePreferences
         try
         {
             using var document = JsonDocument.Parse(json);
+            if (document.RootElement.ValueKind != JsonValueKind.Object)
+                return ThemeType.System;
+
             if (!document.RootElement.TryGetProperty("theme", out var value)
                 || value.ValueKind != JsonValueKind.String)
                 return ThemeType.System;
