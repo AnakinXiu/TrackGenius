@@ -40,7 +40,7 @@ public class RacePageViewModel : INotifyPropertyChanged
                 OnPropertyChanged(nameof(CanStartRace));
         };
 
-        // AddTestData();
+        AddTestData();
     }
 
     private void AddTestData()
