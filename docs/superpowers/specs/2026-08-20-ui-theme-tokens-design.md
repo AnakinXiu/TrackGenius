@@ -66,8 +66,8 @@ XAML surfaces
 | `RaceAccentBrush` | `#10B981` | `#10B981` | START button, positive deltas, active selection |
 | `RaceAccentHoverBrush` | `#059669` | `#059669` | Accent hover state |
 | `RaceAccentSecondaryBrush` | `#8B5CF6` | `#8B5CF6` | Best-lap highlight |
-| `RaceWarningBrush` | `#F59E0B` | `#F59E0B` | ARM-style actions, warnings |
-| `RaceDangerBrush` | `#EF4444` | `#EF4444` | STOP-style actions, negative deltas |
+| `RaceAlertBrush` | `#F59E0B` | `#F59E0B` | ARM-style actions, warnings |
+| `RaceStopBrush` | `#EF4444` | `#EF4444` | STOP-style actions, negative deltas |
 | `RaceSuccessBrush` | `#10B981` | `#10B981` | Status dots, connected state |
 | `RaceBackgroundBrush` | `#F8F9FA` | `#121212` | Page/nav backgrounds |
 | `RaceCardBackgroundBrush` | `#FFFFFF` | `#1E1E1E` | Leaderboard rows, panels |
@@ -87,7 +87,7 @@ editing values in exactly these two files.
   white foreground, hover `RaceAccentHoverBrush`, corner radius 8, padding
   16,10. Based on WPF-UI's button style so Fluent states (pressed, disabled,
   focus) survive.
-- `RaceDangerButtonStyle` — same shape, `RaceDangerBrush`.
+- `RaceStopButtonStyle` — same shape, `RaceStopBrush`.
 - `RaceCardBorder` style for `Border` — `CornerRadius` 8,
   `BorderBrush={DynamicResource RaceBorderBrush}`, thickness 1,
   background `RaceCardBackgroundBrush`.
@@ -105,7 +105,7 @@ editing values in exactly these two files.
 - **`RaceDataListControl`**: outer `Border` → `RaceCardBorder`; header row
   text → `RaceHeaderTextStyle`; row `Border` → card background, 8px radius,
   hover trigger → `RaceRowHoverBrush`; ▲ triangle `RaceAccentBrush`, ▼
-  `RaceDangerBrush` (replacing `Green`/`Red` literals); Best Lap cell →
+  `RaceStopBrush` (replacing `Green`/`Red` literals); Best Lap cell →
   `RaceBestLapTextStyle`; `ProgressBar` → themed fill/track.
 - **`QuickRacePage`**: Start `Button` → `ui:Button` with
   `RacePrimaryButtonStyle`. No structural changes.
