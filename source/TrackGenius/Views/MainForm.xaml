@@ -118,10 +118,12 @@
                                     FontSize="26"/>
                     <ui:TextBlock Grid.Column="1" Grid.Row="0"
                                   Text="Com 5"
+                                  Foreground="{DynamicResource RaceTextSecondaryBrush}"
                                   VerticalAlignment="Center"
                                   HorizontalAlignment="Center"/>
                     <ui:TextBlock Grid.Column="1" Grid.Row="1"
                                   Text="Serial Port Status"
+                                  Foreground="{DynamicResource RaceTextMutedBrush}"
                                   VerticalAlignment="Center"
                                   HorizontalAlignment="Center"/>
                 </Grid>
