@@ -15,7 +15,7 @@ using TrackGenius.Communication.interfaces;
 using TrackGenius.Const;
 using TrackGenius.Protocol.Interfaces;
 using TrackGenius.UI.Commands;
-using Wpf.Ui.Appearance;
+using TrackGenius.UI.Theme;
 
 namespace TrackGenius.UI.ViewModels;
 
@@ -103,28 +103,11 @@ public class SettingPageViewModel : INotifyPropertyChanged
         _selectedProtocol = Protocols.First();
         OpenClosePortCommand = new RelayCommand(OpenClosePort);
 
-        _selectedTheme = GetThemeTypeFromCurrentTheme();
-    }
-
-    private static ThemeType GetThemeTypeFromCurrentTheme()
-    {
-        return ApplicationThemeManager.GetAppTheme() switch
-        {
-            ApplicationTheme.Dark => ThemeType.Dark,
-            _ => ThemeType.Light,
-        };
+        _selectedTheme = ThemeManager.PreferencesStore.Load();
     }
 
     private static void ApplyTheme(ThemeType theme)
-    {
-        var applicationTheme = theme switch
-        {
-            ThemeType.Dark => ApplicationTheme.Dark,
-            _ => ApplicationTheme.Light,
-        };
-
-        ApplicationThemeManager.Apply(applicationTheme);
-    }
+        => ThemeManager.Apply(theme);
 
     private void OpenClosePort()
     {

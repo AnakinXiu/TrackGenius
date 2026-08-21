@@ -5,7 +5,8 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using TrackGenius.Communication;
 using TrackGenius.UI.Logging;
-using Wpf.Ui.Appearance;
+using TrackGenius.UI.Theme;
+using TrackGenius.UI.ViewModels;
 using Wpf.Ui.Controls;
 
 namespace TrackGenius.UI
@@ -15,11 +16,6 @@ namespace TrackGenius.UI
     /// </summary>
     public partial class App : Application
     {
-        // Default appearance settings. These can be persisted to user settings later
-        // and re-applied at startup to honour the user's preference.
-        private const ApplicationTheme DefaultTheme = ApplicationTheme.Unknown; // System-follow
-        private const WindowBackdropType DefaultBackdrop = WindowBackdropType.Mica;
-
         private MainForm _mainForm;
         private LoggingContext _loggingContext;
         private ILogger<App> _logger;
@@ -36,10 +32,12 @@ namespace TrackGenius.UI
             this.DispatcherUnhandledException +=
                 new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
 
-            ApplyAppearance();
-
             _mainForm = CreateMainWindow();
             MainWindow = _mainForm;
+
+            // Apply the persisted theme before first render: palette + Fluent theme + green accent.
+            ThemeManager.Apply(ThemeManager.PreferencesStore.Load());
+
             _mainForm.Show();
         }
 
@@ -116,17 +114,6 @@ namespace TrackGenius.UI
             var connectionService = new RaceConnectionService(communicateService);
 
             return new MainForm(communicateService, connectionService, userBehaviorLogger);
-        }
-
-        private static void ApplyAppearance()
-        {
-            // Apply the configured theme. ApplicationTheme.Unknown means "follow the system theme".
-            ApplicationThemeManager.Apply(DefaultTheme, DefaultBackdrop, updateAccent: true);
-
-            if (DefaultTheme == ApplicationTheme.Unknown)
-            {
-                SystemThemeWatcher.Watch(null, DefaultBackdrop, updateAccents: true);
-            }
         }
     }
 }
