@@ -182,4 +182,42 @@ public class LapsRaceTimeOrderCalculatorTests
             Assert.That(result[0].LastLapTime, Is.EqualTo(TimeSpan.FromMilliseconds(62_000)));
         });
     }
+
+    [Test]
+    public void GivenConstantLapPace_WhenDetectionsRecorded_ThenEveryLapTimeEqualsThePace()
+    {
+        // Crossings every 20s: every lap time must be exactly 20s at any lap count.
+        var raceData = new RaceData(AnonymousDriverCreator.CreateAnonymous("100"),
+            AnonymousDriverCreator.CreateAnonymous("100").Cars.First());
+        for (var lap = 1; lap <= 6; lap++)
+            raceData.RecordDetection(TimeSpan.FromSeconds(20 * lap));
+
+        Assert.That(raceData.LapRecords.Select(l => l.LapTime),
+            Is.All.EqualTo(TimeSpan.FromSeconds(20)));
+    }
+
+    [Test]
+    public void GivenVaryingLapPace_WhenDetectionsRecorded_ThenLapTimesAreCrossingDeltas()
+    {
+        // Crossings at 20s, 45s, 70s, 75s → laps 20s, 25s, 25s, 5s.
+        var raceData = new RaceData(AnonymousDriverCreator.CreateAnonymous("100"),
+            AnonymousDriverCreator.CreateAnonymous("100").Cars.First());
+        foreach (var crossing in new[] { 20, 45, 70, 75 })
+            raceData.RecordDetection(TimeSpan.FromSeconds(crossing));
+
+        var expected = new[] { 20, 25, 25, 5 }.Select(s => TimeSpan.FromSeconds(s)).ToList();
+        Assert.That(raceData.LapRecords.Select(l => l.LapTime).ToList(), Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void GivenRecordedDetections_WhenGetLastDetectedTimeSpanCalled_ThenReturnsAbsoluteTimeOfLastDetection()
+    {
+        // Crossings at 20s, 45s: the last detection happened at absolute 45s.
+        var raceData = new RaceData(AnonymousDriverCreator.CreateAnonymous("100"),
+            AnonymousDriverCreator.CreateAnonymous("100").Cars.First());
+        raceData.RecordDetection(TimeSpan.FromSeconds(20));
+        raceData.RecordDetection(TimeSpan.FromSeconds(45));
+
+        Assert.That(raceData.GetLastDetectedTimeSpan(), Is.EqualTo(TimeSpan.FromSeconds(45)));
+    }
 }
