@@ -27,7 +27,7 @@
 - New Model file: file-scoped `namespace TrackGenius.Model;`. Tests: file-scoped `TrackGenius.UITests.…`, NUnit, `Given…_When…_Then…` names.
 - Never commit `CLAUDE.md`; stage explicit paths only, never `git add -A`. Commit trailer `Co-Authored-By: Claude <noreply@anthropic.com>`.
 - If `MSB3021`/`MSB3027` (app running locks output): `taskkill //IM TrackGenius.UI.exe //F`, retry, else BLOCKED.
-- Tasks 1–3 must not launch the GUI. Task 4 (verification) launches it.
+- No task launches the GUI app. Visual verification is the user's manual responsibility (user policy since 2026-08-26); automated verification is unit tests only.
 
 ---
 
@@ -695,39 +695,13 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 ---
 
-## Task 4: Visual verification
-
-**Files:** (temp only, not committed) `%TEMP%\tg-shots\metrics.png`, reuse `shot-window.ps1` if present (else recreate from Task 5 of the 2026-08-20 theme plan).
-
-- [ ] **Step 1: Launch with analysis columns shown**
-
-Temporarily flip the defaults is NOT wanted — instead set the persisted hidden-keys file so the new columns show: delete/rename `%LOCALAPPDATA%\TrackGenius\raceDataColumns.json`, then edit is unnecessary — simplest: run the app, enable the five columns via the column-settings UI if reachable; if no UI toggle exists for columns (check `QuickRacePage`/settings — the current app may not expose a column picker), then temporarily change the five `isVisible: false` to `true` in a scratch edit, launch, screenshot, and REVERT the scratch edit without committing.
-
-- [ ] **Step 2: Screenshot + verify**
-
-Launch (`dotnet run --project source/TrackGenius/TrackGenius.UI.csproj`), start a race with the Robitronic loopback or leave empty (empty grid still shows headers when columns enabled — headers alone verify column presence/labels; values need laps, so if no hardware/simulator available, verify values via the Task 3 VM test instead and screenshot only for header layout). Capture via `shot-window.ps1 -ProcId <pid>`. Check: five headers visible with correct labels, sensible widths, no layout breakage (Transponder/Notes shifted right correctly), Progress bar spans full width.
-
-- [ ] **Step 3: Revert any scratch edits, restore `raceDataColumns.json` backup if renamed, final gates**
-
-```bash
-dotnet build source/TrackGenius.sln
-dotnet test source/TrackGenius.UITests/TrackGenius.UITests.csproj
-git status --short   # must be clean (no scratch edits left)
-```
-
-- [ ] **Step 4: Report with screenshot path**
-
-Return status + screenshot path for the controller/user review. Do not commit scratch artifacts.
-
----
-
 ## Final verification (after all tasks)
 
 - [ ] `dotnet build source/TrackGenius.sln` — 0 errors.
 - [ ] `dotnet test source/TrackGenius.UITests/TrackGenius.UITests.csproj` — all pass (121 expected; gate on green, not the count).
 - [ ] `dotnet test source/TrackGenius.ProtocolTests/TrackGenius.ProtocolTests.csproj` — still exactly the 2 pre-existing failures.
 - [ ] `git log --oneline` — three feature commits since `bdb9555`, clean tree.
-- [ ] Screenshot reviewed; headers present; scratch edits reverted.
+- [ ] Visual result handed to the user for manual verification (no AI screenshot verification — user policy since 2026-08-26).
 
 ## Out of scope (do not do)
 
