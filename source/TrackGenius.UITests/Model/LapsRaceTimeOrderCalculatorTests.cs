@@ -220,4 +220,72 @@ public class LapsRaceTimeOrderCalculatorTests
 
         Assert.That(raceData.GetLastDetectedTimeSpan(), Is.EqualTo(TimeSpan.FromSeconds(45)));
     }
+
+    [Test]
+    public void GivenEnoughLaps_WhenCalculate_ThenAnalysisFieldsFormatted()
+    {
+        // Laps 20.0..20.9s (cumulative crossings, whole-millisecond ticks):
+        // fastest 5 = 20.0..20.4 -> avg 20.2; all 10 -> avg 20.45;
+        // 3-lap windows grow strictly, best = laps 1-3 = 60.3s (avg 20.1);
+        // mu = 20.45, population sigma of the 0.1..0.9 spread; consistency per formula.
+        var raceData = new RaceData(AnonymousDriverCreator.CreateAnonymous("100"),
+            AnonymousDriverCreator.CreateAnonymous("100").Cars.First());
+        var crossing = TimeSpan.Zero;
+        for (var tenth = 0; tenth < 10; tenth++)
+        {
+            crossing += TimeSpan.FromMilliseconds(20000 + tenth * 100);
+            raceData.RecordDetection(crossing);
+        }
+
+        var entry = _calculator.Calculate(new List<RaceData> { raceData })[0];
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(entry.Top5Average, Is.EqualTo("0:20.200"));
+            Assert.That(entry.Top10Average, Is.EqualTo("0:20.450"));
+            Assert.That(entry.Top3Consecutive, Is.EqualTo("1:00.300 (20.100)"));
+            Assert.That(entry.StdDeviation, Is.EqualTo("0.287"));
+            Assert.That(entry.Consistency, Is.EqualTo("98.6"));
+        });
+    }
+
+    [Test]
+    public void GivenTwoLaps_WhenCalculate_ThenTopNAveragesDashButSigmaPresent()
+    {
+        // Laps 20.0s and 20.4s (crossings at 20.0s / 40.4s).
+        var raceData = new RaceData(AnonymousDriverCreator.CreateAnonymous("100"),
+            AnonymousDriverCreator.CreateAnonymous("100").Cars.First());
+        raceData.RecordDetection(TimeSpan.FromMilliseconds(20000));
+        raceData.RecordDetection(TimeSpan.FromMilliseconds(40400));
+
+        var entry = _calculator.Calculate(new List<RaceData> { raceData })[0];
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(entry.Top5Average, Is.EqualTo("-"));
+            Assert.That(entry.Top10Average, Is.EqualTo("-"));
+            Assert.That(entry.Top3Consecutive, Is.EqualTo("-"));
+            Assert.That(entry.StdDeviation, Is.EqualTo("0.200"));
+            Assert.That(entry.Consistency, Is.EqualTo("99.0"));
+        });
+    }
+
+    [Test]
+    public void GivenSingleLap_WhenCalculate_ThenAllAnalysisFieldsDash()
+    {
+        var raceData = new RaceData(AnonymousDriverCreator.CreateAnonymous("100"),
+            AnonymousDriverCreator.CreateAnonymous("100").Cars.First());
+        raceData.RecordDetection(TimeSpan.FromMilliseconds(20000));
+
+        var entry = _calculator.Calculate(new List<RaceData> { raceData })[0];
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(entry.Top5Average, Is.EqualTo("-"));
+            Assert.That(entry.Top10Average, Is.EqualTo("-"));
+            Assert.That(entry.Top3Consecutive, Is.EqualTo("-"));
+            Assert.That(entry.StdDeviation, Is.EqualTo("-"));
+            Assert.That(entry.Consistency, Is.EqualTo("-"));
+        });
+    }
 }
