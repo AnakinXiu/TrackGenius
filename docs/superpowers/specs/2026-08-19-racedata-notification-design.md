@@ -92,14 +92,18 @@ accepted detection.
 
 Produced by the calculator as pre-formatted strings (invariant culture):
 
-- **Gap** = racer-in-front's `RacedTime` − current racer's `RacedTime`.
-- **Interval** = same definition, but against the **leader**.
+- **Gap** = leader's `RacedTime` − current racer's `RacedTime`.
+- **Interval** = same definition, but against the **racer in front**.
+  *(Corrected 2026-08-26: the original spec text had these two references
+  swapped; standard timing convention is Gap-to-leader,
+  Interval-to-car-ahead. Implementation and tests now follow the corrected
+  definitions.)*
 - **Equal lap counts** → time difference formatted `m:ss.fff` (e.g. `"0:02.100"`).
 - **Different lap counts** → the lap-count difference, signed:
   `"+1 Lap"`, `"+3 Laps"` (singular/plural by count).
 - **Leader** → both `Gap` and `Interval` are `"-"`.
 - The rule is purely mechanical — no special cases: compare lap counts with
-  the reference racer (front racer for Gap, leader for Interval); equal →
+  the reference racer (leader for Gap, front racer for Interval); equal →
   time difference, different → lap difference. Two zero-lap racers compare
   as equal, so their time difference is `0:00.000` (both `RacedTime`s are
   zero); a zero-lap racer against anyone with laps shows laps.

@@ -118,10 +118,54 @@ public class LapsRaceTimeOrderCalculatorTests
             Assert.That(result[0].RaceData, Is.SameAs(leader));
             Assert.That(result[1].RaceData, Is.SameAs(peer1));   // zero-lap racers keep insertion order
             Assert.That(result[2].RaceData, Is.SameAs(peer2));
-            Assert.That(result[1].Gap, Is.EqualTo("+1 Lap"));        // vs front racer (leader, 1 lap)
-            Assert.That(result[1].Interval, Is.EqualTo("+1 Lap"));   // vs leader
-            Assert.That(result[2].Gap, Is.EqualTo("0:00.000"));     // vs front racer (peer1, equal 0 laps)
-            Assert.That(result[2].Interval, Is.EqualTo("+1 Lap"));   // vs leader
+            Assert.That(result[1].Gap, Is.EqualTo("+1 Lap"));        // to leader (1 lap)
+            Assert.That(result[1].Interval, Is.EqualTo("+1 Lap"));   // to car ahead (the leader)
+            Assert.That(result[2].Gap, Is.EqualTo("+1 Lap"));   // to leader (1 lap)
+            Assert.That(result[2].Interval, Is.EqualTo("0:00.000"));   // to car ahead (peer1, equal 0 laps)
+        });
+    }
+
+    [Test]
+    public void GivenThreeRacersDifferentTimes_WhenCalculate_ThenGapIsToLeaderAndIntervalIsToCarAhead()
+    {
+        // Leader 60s, P2 62s, P3 65s — one lap each.
+        // Gap (to leader):     P2 = 2s, P3 = 5s.
+        // Interval (to ahead): P2 = 2s, P3 = 3s.
+        var leader = Racer("100", 60_000);
+        var second = Racer("200", 62_000);
+        var third = Racer("300", 65_000);
+
+        var result = Calculate(third, second, leader);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result[0].Gap, Is.EqualTo("-"));
+            Assert.That(result[0].Interval, Is.EqualTo("-"));
+            Assert.That(result[1].Gap, Is.EqualTo("0:02.000"));
+            Assert.That(result[1].Interval, Is.EqualTo("0:02.000"));
+            Assert.That(result[2].Gap, Is.EqualTo("0:05.000"));   // vs leader, not vs P2
+            Assert.That(result[2].Interval, Is.EqualTo("0:03.000"));   // vs P2, not vs leader
+        });
+    }
+
+    [Test]
+    public void GivenZeroLapRacers_WhenCalculate_ThenGapToLeaderAndIntervalToCarAhead()
+    {
+        // Leader 1 lap; two zero-lap peers.
+        // Gap (to leader): both "+1 Lap".
+        // Interval: P2 vs leader (ahead is the leader) = "+1 Lap"; P3 vs P2 (equal 0 laps) = "0:00.000".
+        var leader = Racer("100", 60_000);
+        var peer1 = Racer("200");
+        var peer2 = Racer("300");
+
+        var result = Calculate(leader, peer1, peer2);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result[1].Gap, Is.EqualTo("+1 Lap"));
+            Assert.That(result[1].Interval, Is.EqualTo("+1 Lap"));   // ahead of P2 is the leader
+            Assert.That(result[2].Gap, Is.EqualTo("+1 Lap"));   // to leader
+            Assert.That(result[2].Interval, Is.EqualTo("0:00.000"));   // to P2, equal laps
         });
     }
 

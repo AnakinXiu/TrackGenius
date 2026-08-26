@@ -34,8 +34,8 @@ public sealed class LapsRaceTimeOrderCalculator : IRaceOrderCalculator
                 Position: index + 1,
                 BestLapTime: BestLap(racer),
                 LastLapTime: LastLap(racer),
-                Gap: DescribeDifference(index == 0 ? null : ordered[index - 1], racer),
-                Interval: DescribeDifference(index == 0 ? null : ordered[0], racer)));
+                Gap: DescribeDifference(index == 0 ? null : ordered[0], racer),
+                Interval: DescribeDifference(index == 0 ? null : ordered[index - 1], racer)));
         }
 
         return entries;
