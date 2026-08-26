@@ -1,13 +1,10 @@
 ﻿using System;
 
-namespace TrackGenius.Model
+namespace TrackGenius.Model;
+
+public interface IRaceClub
 {
-    interface IRaceClub
-    {
-        Guid ClubID { get; set; }
+    Guid ClubID { get; set; }
 
-        string ClubName { get; set; }
-
-
-    }
+    string ClubName { get; set; }
 }

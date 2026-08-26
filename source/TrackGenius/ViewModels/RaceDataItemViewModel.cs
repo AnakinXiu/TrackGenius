@@ -15,8 +15,6 @@ public class RaceDataItemViewModel : INotifyPropertyChanged
     private TimeSpan _lastLapTime;
     public event PropertyChangedEventHandler PropertyChanged;
 
-    public string DriverName => _driverInfo?.DriverName ?? TransponderID;
-
     [CanBeNull]
     private IDriver _driverInfo;
 
@@ -33,7 +31,12 @@ public class RaceDataItemViewModel : INotifyPropertyChanged
     private string _top3Consecutive;
     private string _stdDeviation;
     private string _consistency;
-    
+
+    /// <summary>Cached composite driver board VM (name + flag / transponder code).</summary>
+    public RaceDataDriverViewModel Driver { get; }
+
+    public string DriverName => _driverInfo?.DriverName ?? TransponderID;
+
     public string TransponderID { get; }
 
     public int RacerNumber
@@ -116,6 +119,9 @@ public class RaceDataItemViewModel : INotifyPropertyChanged
     {
         TransponderID = transponderID;
         _racerStartPosition = startPosition;
+
+        // Anonymous driver: the transponder ID is the identity; club unknown yet.
+        Driver = new RaceDataDriverViewModel(null, null, transponderID);
     }
 
     public RaceDataItemViewModel(IDriver driver, ICar car, int startPosition)
@@ -131,5 +137,7 @@ public class RaceDataItemViewModel : INotifyPropertyChanged
 
         TransponderID = car.Transponder.RecoderNumber;
         _racerStartPosition = startPosition;
+
+        Driver = new RaceDataDriverViewModel(driver, null, TransponderID);
     }
 }
