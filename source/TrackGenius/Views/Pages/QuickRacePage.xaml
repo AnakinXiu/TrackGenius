@@ -5,6 +5,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:controls="clr-namespace:TrackGenius.UI.Views.Controls"
       xmlns:viewModels="clr-namespace:TrackGenius.UI.ViewModels"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
       Title="Quick Race"
       d:DesignHeight="450" d:DesignWidth="800"
@@ -28,9 +29,11 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center">
-            <Button Content="Start"
-                    Command="{Binding StartRaceCommand}"
-                    IsEnabled="{Binding CanStartRace}"/>
+            <ui:Button Content="Start"
+                       Appearance="Primary"
+                       Style="{StaticResource RacePrimaryButtonStyle}"
+                       Command="{Binding StartRaceCommand}"
+                       IsEnabled="{Binding CanStartRace}"/>
         </StackPanel>
     </Grid>
 </Page>

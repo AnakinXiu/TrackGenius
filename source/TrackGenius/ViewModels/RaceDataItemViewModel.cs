@@ -28,6 +28,11 @@ public class RaceDataItemViewModel : INotifyPropertyChanged
     private readonly int _racerStartPosition = 0;
     private string _gap;
     private string _interval;
+    private string _top5Average;
+    private string _top10Average;
+    private string _top3Consecutive;
+    private string _stdDeviation;
+    private string _consistency;
     
     public string TransponderID { get; }
 
@@ -73,6 +78,36 @@ public class RaceDataItemViewModel : INotifyPropertyChanged
     {
         get => _interval;
         set => PropertyChanged.RaiseIfChanged(this, ref _interval, value, nameof(Interval));
+    }
+
+    public string Top5Average
+    {
+        get => _top5Average;
+        set => PropertyChanged.RaiseIfChanged(this, ref _top5Average, value, nameof(Top5Average));
+    }
+
+    public string Top10Average
+    {
+        get => _top10Average;
+        set => PropertyChanged.RaiseIfChanged(this, ref _top10Average, value, nameof(Top10Average));
+    }
+
+    public string Top3Consecutive
+    {
+        get => _top3Consecutive;
+        set => PropertyChanged.RaiseIfChanged(this, ref _top3Consecutive, value, nameof(Top3Consecutive));
+    }
+
+    public string StdDeviation
+    {
+        get => _stdDeviation;
+        set => PropertyChanged.RaiseIfChanged(this, ref _stdDeviation, value, nameof(StdDeviation));
+    }
+
+    public string Consistency
+    {
+        get => _consistency;
+        set => PropertyChanged.RaiseIfChanged(this, ref _consistency, value, nameof(Consistency));
     }
 
     public string Description { get; set; }

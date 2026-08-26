@@ -4,6 +4,11 @@ using System.IO;
 
 namespace TrackGenius.UI.Persistence;
 
+/// <summary>
+/// Reads/writes the race-data column preference file. Load methods return <c>null</c>
+/// when the file is missing or unreadable (nothing to apply — keep constructor defaults);
+/// an empty list means "file present, list empty".
+/// </summary>
 public sealed class RaceDataColumnPreferencesStore
 {
     public string FilePath { get; }
@@ -18,24 +23,41 @@ public sealed class RaceDataColumnPreferencesStore
         try
         {
             if (!File.Exists(FilePath))
-                return Array.Empty<string>();
+                return null;
 
             return RaceDataColumnPreferences.ParseHiddenColumns(File.ReadAllText(FilePath));
         }
         catch
         {
-            // Missing/locked/corrupt file → start fresh; never surface to the UI.
-            return Array.Empty<string>();
+            return null;
+        }
+    }
+
+    public IReadOnlyList<string> LoadShown()
+    {
+        try
+        {
+            if (!File.Exists(FilePath))
+                return null;
+
+            return RaceDataColumnPreferences.ParseShownColumns(File.ReadAllText(FilePath));
+        }
+        catch
+        {
+            return null;
         }
     }
 
     public void Save(IEnumerable<string> hiddenKeys)
+        => Save(hiddenKeys, Array.Empty<string>());
+
+    public void Save(IEnumerable<string> hiddenKeys, IEnumerable<string> shownKeys)
     {
         var directory = Path.GetDirectoryName(FilePath);
         if (!string.IsNullOrEmpty(directory))
             Directory.CreateDirectory(directory);
 
-        File.WriteAllText(FilePath, RaceDataColumnPreferences.SerializeHiddenColumns(hiddenKeys));
+        File.WriteAllText(FilePath, RaceDataColumnPreferences.SerializeColumns(hiddenKeys, shownKeys));
     }
 
     private static string DefaultFilePath()

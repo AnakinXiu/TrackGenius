@@ -1,0 +1,23 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <!-- Identifies this dictionary as the active palette for ThemeManager.SwapPalette. -->
+    <sys:String x:Key="RacePaletteMarker">Light</sys:String>
+
+    <!-- Accent family: identical in both themes (per design images). -->
+    <SolidColorBrush x:Key="RaceAccentBrush" Color="#10B981" />
+    <SolidColorBrush x:Key="RaceAccentHoverBrush" Color="#059669" />
+    <SolidColorBrush x:Key="RaceAccentSecondaryBrush" Color="#8B5CF6" />
+    <SolidColorBrush x:Key="RaceAlertBrush" Color="#F59E0B" />
+    <SolidColorBrush x:Key="RaceStopBrush" Color="#EF4444" />
+    <SolidColorBrush x:Key="RaceSuccessBrush" Color="#10B981" />
+
+    <!-- Surfaces: differ per theme. -->
+    <SolidColorBrush x:Key="RaceBackgroundBrush" Color="#F8F9FA" />
+    <SolidColorBrush x:Key="RaceCardBackgroundBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="RaceBorderBrush" Color="#E5E7EB" />
+    <SolidColorBrush x:Key="RaceTextPrimaryBrush" Color="#111827" />
+    <SolidColorBrush x:Key="RaceTextSecondaryBrush" Color="#374151" />
+    <SolidColorBrush x:Key="RaceTextMutedBrush" Color="#6B7280" />
+    <SolidColorBrush x:Key="RaceRowHoverBrush" Color="#F3F4F6" />
+</ResourceDictionary>

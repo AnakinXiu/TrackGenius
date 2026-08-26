@@ -14,6 +14,25 @@ public static class RaceDataColumnPreferences
     };
 
     public static IReadOnlyList<string> ParseHiddenColumns(string json)
+        => ParseArray(json, "hiddenColumns");
+
+    public static IReadOnlyList<string> ParseShownColumns(string json)
+        => ParseArray(json, "shownColumns");
+
+    public static string SerializeHiddenColumns(IEnumerable<string> keys)
+        => SerializeColumns(keys, Array.Empty<string>());
+
+    public static string SerializeColumns(IEnumerable<string> hiddenKeys, IEnumerable<string> shownKeys)
+    {
+        var payload = new Payload
+        {
+            HiddenColumns = (hiddenKeys ?? Enumerable.Empty<string>()).ToList(),
+            ShownColumns = (shownKeys ?? Enumerable.Empty<string>()).ToList(),
+        };
+        return JsonSerializer.Serialize(payload, Options);
+    }
+
+    private static IReadOnlyList<string> ParseArray(string json, string propertyName)
     {
         if (string.IsNullOrWhiteSpace(json))
             return Array.Empty<string>();
@@ -21,7 +40,7 @@ public static class RaceDataColumnPreferences
         try
         {
             using var document = JsonDocument.Parse(json);
-            if (!document.RootElement.TryGetProperty("hiddenColumns", out var array))
+            if (!document.RootElement.TryGetProperty(propertyName, out var array))
                 return Array.Empty<string>();
 
             if (array.ValueKind != JsonValueKind.Array)
@@ -39,17 +58,9 @@ public static class RaceDataColumnPreferences
         }
     }
 
-    public static string SerializeHiddenColumns(IEnumerable<string> keys)
-    {
-        var payload = new Payload
-        {
-            HiddenColumns = (keys ?? Enumerable.Empty<string>()).ToList(),
-        };
-        return JsonSerializer.Serialize(payload, Options);
-    }
-
     private sealed class Payload
     {
         public List<string> HiddenColumns { get; set; } = new();
+        public List<string> ShownColumns { get; set; } = new();
     }
 }
