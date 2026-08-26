@@ -97,13 +97,53 @@ public class RaceDataColumnSettingsTests
         settings.Consistency.IsVisible = true;
 
         var roundTripped = new RaceDataColumnSettings();
-        roundTripped.ApplyHiddenKeys(settings.GetHiddenKeys());
+        roundTripped.ApplyColumnOverrides(settings.GetHiddenKeys(), settings.GetShownKeys());
 
         Assert.Multiple(() =>
         {
             Assert.That(roundTripped.Top5Average.IsVisible, Is.True);
             Assert.That(roundTripped.Consistency.IsVisible, Is.True);
             Assert.That(roundTripped.Top10Average.IsVisible, Is.False);
+        });
+    }
+
+    [Test]
+    public void GivenOverrides_WhenApplied_ThenShownWinsOverHiddenAndDefaultsKept()
+    {
+        var settings = new RaceDataColumnSettings();
+
+        settings.ApplyColumnOverrides(new[] { "Laps", "Consistency" }, new[] { "Consistency", "Top5Average" });
+
+        Assert.Multiple(() =>
+        {
+            // Hidden override wins over the visible default.
+            Assert.That(settings.Laps.IsVisible, Is.False);
+            // Shown override wins over both the hidden list and the hidden default.
+            Assert.That(settings.Consistency.IsVisible, Is.True);
+            Assert.That(settings.Top5Average.IsVisible, Is.True);
+            // No override → constructor default kept (hidden analysis column stays hidden,
+            // visible column stays visible).
+            Assert.That(settings.Top10Average.IsVisible, Is.False);
+            Assert.That(settings.Position.IsVisible, Is.True);
+        });
+    }
+
+    [Test]
+    public void GivenVisibleByDefaultColumns_WhenGetShownKeysCalled_ThenOnlyDeviationsFromDefaultReturned()
+    {
+        var settings = new RaceDataColumnSettings();
+        settings.Consistency.IsVisible = true;
+        settings.Laps.IsVisible = false;
+
+        Assert.Multiple(() =>
+        {
+            // Only keys shown against their default belong in the shown list.
+            CollectionAssert.AreEquivalent(new[] { "Consistency" }, settings.GetShownKeys());
+            // Hidden semantics are unchanged: every invisible column, whether the user hid it
+            // or it defaults hidden (the remaining analysis columns).
+            CollectionAssert.AreEquivalent(
+                new[] { "Laps", "Top5Average", "Top10Average", "Top3Consecutive", "StdDeviation" },
+                settings.GetHiddenKeys());
         });
     }
 }

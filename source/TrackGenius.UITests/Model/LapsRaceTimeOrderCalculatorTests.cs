@@ -245,7 +245,7 @@ public class LapsRaceTimeOrderCalculatorTests
             Assert.That(entry.Top10Average, Is.EqualTo("0:20.450"));
             Assert.That(entry.Top3Consecutive, Is.EqualTo("1:00.300 (20.100)"));
             Assert.That(entry.StdDeviation, Is.EqualTo("0.287"));
-            Assert.That(entry.Consistency, Is.EqualTo("98.6"));
+            Assert.That(entry.Consistency, Is.EqualTo("98.6%"));
         });
     }
 
@@ -266,7 +266,7 @@ public class LapsRaceTimeOrderCalculatorTests
             Assert.That(entry.Top10Average, Is.EqualTo("-"));
             Assert.That(entry.Top3Consecutive, Is.EqualTo("-"));
             Assert.That(entry.StdDeviation, Is.EqualTo("0.200"));
-            Assert.That(entry.Consistency, Is.EqualTo("99.0"));
+            Assert.That(entry.Consistency, Is.EqualTo("99.0%"));
         });
     }
 

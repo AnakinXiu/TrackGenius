@@ -14,6 +14,9 @@ public sealed class RaceDataColumnOption : INotifyPropertyChanged
 
     public bool CanHide { get; }
 
+    /// <summary>Constructor visibility — the baseline a user deviation is measured against.</summary>
+    public bool DefaultIsVisible { get; }
+
     public bool IsVisible
     {
         get => _isVisible;
@@ -34,6 +37,7 @@ public sealed class RaceDataColumnOption : INotifyPropertyChanged
         Key = key ?? throw new System.ArgumentNullException(nameof(key));
         Label = label ?? throw new System.ArgumentNullException(nameof(label));
         CanHide = canHide;
+        DefaultIsVisible = isVisible;
         _isVisible = isVisible;
     }
 }

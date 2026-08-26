@@ -53,12 +53,27 @@ public sealed class RaceDataColumnSettings : INotifyPropertyChanged
     }
 
     public void ApplyHiddenKeys(IEnumerable<string> hiddenKeys)
+        => ApplyColumnOverrides(hiddenKeys, System.Array.Empty<string>());
+
+    public void ApplyColumnOverrides(IEnumerable<string> hiddenKeys, IEnumerable<string> shownKeys)
     {
-        var set = hiddenKeys as ISet<string> ?? new HashSet<string>(hiddenKeys ?? System.Array.Empty<string>(), System.StringComparer.Ordinal);
+        var hidden = hiddenKeys as ISet<string> ?? new HashSet<string>(hiddenKeys ?? System.Array.Empty<string>(), System.StringComparer.Ordinal);
+        var shown = shownKeys as ISet<string> ?? new HashSet<string>(shownKeys ?? System.Array.Empty<string>(), System.StringComparer.Ordinal);
         foreach (var option in All)
-            option.IsVisible = !(option.CanHide && set.Contains(option.Key));
+        {
+            if (shown.Contains(option.Key))
+                option.IsVisible = true;
+            else if (hidden.Contains(option.Key))
+                option.IsVisible = false;
+            // else: keep the constructor default
+        }
     }
 
     public IEnumerable<string> GetHiddenKeys()
         => All.Where(o => !o.IsVisible).Select(o => o.Key);
+
+    // Only deviations from the default belong in the persisted shown list — otherwise
+    // every visible-by-default column would be written on each save.
+    public IEnumerable<string> GetShownKeys()
+        => All.Where(o => o.IsVisible && !o.DefaultIsVisible).Select(o => o.Key);
 }

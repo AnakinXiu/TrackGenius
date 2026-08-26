@@ -12,7 +12,6 @@ namespace TrackGenius.Model;
 public sealed class LapsRaceTimeOrderCalculator : IRaceOrderCalculator
 {
     private const string TimeFormat = @"m\:ss\.fff";
-    private const string LapTimeFormat = @"m\:ss\.fff";
 
     public RaceOrderRule Rule => RaceOrderRule.LapsThenRaceTime;
 
@@ -73,7 +72,7 @@ public sealed class LapsRaceTimeOrderCalculator : IRaceOrderCalculator
             : raceData.LapRecords[^1].LapTime;
 
     private static string FormatTime(TimeSpan? value)
-        => value?.ToString(LapTimeFormat, CultureInfo.InvariantCulture) ?? "-";
+        => value?.ToString(TimeFormat, CultureInfo.InvariantCulture) ?? "-";
 
     // "{window sum m:ss.fff} ({average ss.fff})"
     private static string FormatTop3(TimeSpan? windowSum)
@@ -82,12 +81,14 @@ public sealed class LapsRaceTimeOrderCalculator : IRaceOrderCalculator
             : string.Format(
                 CultureInfo.InvariantCulture,
                 "{0} ({1})",
-                windowSum.Value.ToString(LapTimeFormat, CultureInfo.InvariantCulture),
+                windowSum.Value.ToString(TimeFormat, CultureInfo.InvariantCulture),
                 (windowSum.Value / 3).ToString(@"ss\.fff", CultureInfo.InvariantCulture));
 
     private static string FormatSigma(double? sigma)
         => sigma?.ToString("0.000", CultureInfo.InvariantCulture) ?? "-";
 
+    // Literal "%" — the "0.0%" format specifier would multiply by 100 on top of the
+    // already-percent value LapAnalysisCalculator.Consistency returns.
     private static string FormatConsistency(double? consistency)
-        => consistency?.ToString("0.0", CultureInfo.InvariantCulture) ?? "-";
+        => consistency is null ? "-" : consistency.Value.ToString("0.0", CultureInfo.InvariantCulture) + "%";
 }

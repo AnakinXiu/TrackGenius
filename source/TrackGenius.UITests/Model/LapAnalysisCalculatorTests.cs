@@ -108,7 +108,8 @@ public class LapAnalysisCalculatorTests
     [Test]
     public void GivenExtremeSpread_WhenConsistency_ThenClampedAtZero()
     {
-        // μ = 10, σ = 30 → 1 − 3 = −2 → clamped to 0.
+        // Laps 40, 40, -20, 0: μ = 15, Σd² = 2700, σ = √675 ≈ 25.98
+        // → 1 − 25.98/15 = −0.732 → clamped to 0.
         Assert.That(LapAnalysisCalculator.Consistency(Laps(40, 40, -20, 0)), Is.EqualTo(0).Within(0.0001));
     }
 }

@@ -110,8 +110,8 @@ public class RacePageViewModelTests
             Assert.That(row.Top5Average, Is.EqualTo("0:20.200"));
             Assert.That(row.Top10Average, Is.EqualTo("-"));
             Assert.That(row.Top3Consecutive, Is.EqualTo("1:00.300 (20.100)"));
-            Assert.That(row.StdDeviation, Is.Not.EqualTo("-"));
-            Assert.That(row.Consistency, Is.Not.EqualTo("-"));
+            Assert.That(row.StdDeviation, Is.EqualTo("0.141"));
+            Assert.That(row.Consistency, Is.EqualTo("99.3%"));
         });
     }
 

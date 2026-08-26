@@ -81,7 +81,13 @@ namespace TrackGenius.UI.Views.Controls
 
         private void LoadColumnPreferences()
         {
-            ColumnSettings.ApplyHiddenKeys(_preferencesStore.Load());
+            // null = no preference file yet → keep constructor defaults (analysis columns stay hidden).
+            // The subscription below must stay unconditional: the save handler is what creates
+            // the file, so skipping it on a missing file would make preferences permanently
+            // non-persistent (nothing would ever write the first save).
+            var hidden = _preferencesStore.Load();
+            if (hidden is not null)
+                ColumnSettings.ApplyColumnOverrides(hidden, _preferencesStore.LoadShown() ?? Array.Empty<string>());
 
             // Subscribe AFTER applying, so the initial load does not trigger a save.
             foreach (var option in ColumnSettings.All)
@@ -98,7 +104,7 @@ namespace TrackGenius.UI.Views.Controls
         {
             try
             {
-                _preferencesStore.Save(ColumnSettings.GetHiddenKeys());
+                _preferencesStore.Save(ColumnSettings.GetHiddenKeys(), ColumnSettings.GetShownKeys());
             }
             catch
             {
