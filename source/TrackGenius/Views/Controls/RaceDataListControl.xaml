@@ -42,6 +42,11 @@
                             <ColumnDefinition Width="{Binding ColumnSettings.Interval.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=8, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                             <ColumnDefinition Width="{Binding ColumnSettings.LastLap.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=8, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                             <ColumnDefinition Width="{Binding ColumnSettings.BestLap.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=8, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                            <ColumnDefinition Width="{Binding ColumnSettings.Top5Average.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=7, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                            <ColumnDefinition Width="{Binding ColumnSettings.Top10Average.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=7, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                            <ColumnDefinition Width="{Binding ColumnSettings.Top3Consecutive.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=12, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                            <ColumnDefinition Width="{Binding ColumnSettings.StdDeviation.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=6, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                            <ColumnDefinition Width="{Binding ColumnSettings.Consistency.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=8, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                             <ColumnDefinition Width="{Binding ColumnSettings.Transponder.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=11, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                             <ColumnDefinition Width="{Binding ColumnSettings.Notes.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=5, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         </Grid.ColumnDefinitions>
@@ -61,9 +66,19 @@
                                    Visibility="{Binding ColumnSettings.LastLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="7" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Best Lap" Margin="12,0,0,0"
                                    Visibility="{Binding ColumnSettings.BestLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
-                        <TextBlock Grid.Column="8" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Transponder" Margin="12,0,0,0"
+                        <TextBlock Grid.Column="8" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Top 5" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Top5Average.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="9" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Top 10" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Top10Average.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="10" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Top 3 Consec" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Top3Consecutive.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="11" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Std Dev" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.StdDeviation.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="12" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Consistency" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Consistency.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <TextBlock Grid.Column="13" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Transponder" Margin="12,0,0,0"
                                    Visibility="{Binding ColumnSettings.Transponder.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
-                        <TextBlock Grid.Column="9" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Notes" Margin="12,0,0,0"
+                        <TextBlock Grid.Column="14" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Notes" Margin="12,0,0,0"
                                    Visibility="{Binding ColumnSettings.Notes.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                     </Grid>
                 </Border>
@@ -103,6 +118,11 @@
                                         <ColumnDefinition Width="{Binding ColumnSettings.Interval.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=8, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                                         <ColumnDefinition Width="{Binding ColumnSettings.LastLap.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=8, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                                         <ColumnDefinition Width="{Binding ColumnSettings.BestLap.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=8, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                        <ColumnDefinition Width="{Binding ColumnSettings.Top5Average.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=7, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                        <ColumnDefinition Width="{Binding ColumnSettings.Top10Average.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=7, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                        <ColumnDefinition Width="{Binding ColumnSettings.Top3Consecutive.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=12, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                        <ColumnDefinition Width="{Binding ColumnSettings.StdDeviation.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=6, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                        <ColumnDefinition Width="{Binding ColumnSettings.Consistency.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=8, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                                         <ColumnDefinition Width="{Binding ColumnSettings.Transponder.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=11, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                                         <ColumnDefinition Width="{Binding ColumnSettings.Notes.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=5, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                                     </Grid.ColumnDefinitions>
@@ -181,13 +201,23 @@
                                                Visibility="{Binding ColumnSettings.LastLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                                     <TextBlock Grid.Row="0" Grid.Column="7" FontSize="16" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding BestLapTime, Converter={StaticResource TimeSpanFormat}}" Style="{StaticResource RaceBestLapTextStyle}"
                                                Visibility="{Binding ColumnSettings.BestLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="8" FontSize="16" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding TransponderID}"
+                                    <TextBlock Grid.Row="0" Grid.Column="8" FontSize="16" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding Top5Average}"
+                                               Visibility="{Binding ColumnSettings.Top5Average.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="9" FontSize="16" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding Top10Average}"
+                                               Visibility="{Binding ColumnSettings.Top10Average.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="10" FontSize="16" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding Top3Consecutive}"
+                                               Visibility="{Binding ColumnSettings.Top3Consecutive.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="11" FontSize="16" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding StdDeviation}"
+                                               Visibility="{Binding ColumnSettings.StdDeviation.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="12" FontSize="16" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding Consistency}"
+                                               Visibility="{Binding ColumnSettings.Consistency.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="13" FontSize="16" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding TransponderID}"
                                                Visibility="{Binding ColumnSettings.Transponder.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="9" FontSize="16" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding Description}"
+                                    <TextBlock Grid.Row="0" Grid.Column="14" FontSize="16" VerticalAlignment="Center" Margin="12,0,0,0" Text="{Binding Description}"
                                                Visibility="{Binding ColumnSettings.Notes.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
 
                                     <!-- Full-width progress bar (composed layout preserved) -->
-                                    <ProgressBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="10" Height="6"
+                                    <ProgressBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="15" Height="6"
                                                  Minimum="0" Maximum="100" Value="{Binding LapsCount}"
                                                  Style="{StaticResource RaceProgressBarStyle}"/>
                                 </Grid>

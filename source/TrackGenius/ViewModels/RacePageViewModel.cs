@@ -159,6 +159,11 @@ public class RacePageViewModel : INotifyPropertyChanged
             item.BestLapTime = entry.BestLapTime;
             item.Gap = entry.Gap;
             item.Interval = entry.Interval;
+            item.Top5Average = entry.Top5Average;
+            item.Top10Average = entry.Top10Average;
+            item.Top3Consecutive = entry.Top3Consecutive;
+            item.StdDeviation = entry.StdDeviation;
+            item.Consistency = entry.Consistency;
         }
     }
 

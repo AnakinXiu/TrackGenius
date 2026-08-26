@@ -91,6 +91,30 @@ public class RacePageViewModelTests
         Assert.That(_viewModel.RaceDataItems, Is.Empty);
     }
 
+    [Test]
+    public void GivenStartedRace_WhenEnoughLapsDetected_ThenAnalysisFieldsDisplayed()
+    {
+        _connection.Open("COM3", new RobitronicProtocol());
+        _viewModel.StartRaceCommand.Execute(null);
+
+        // 5 laps of one transponder: laps are 20.0, 20.1, 20.2, 20.3, 20.4 s
+        // (lap 1 = crossing - 0; later laps = crossing deltas; all deltas >= 1500 ms pass suppression).
+        int[] crossingsMs = { 20_000, 40_100, 60_300, 80_600, 101_000 };
+        foreach (var ms in crossingsMs)
+            _communicateService.MessageReceived?.Invoke(
+                _communicateService, MakeDetectedMessage(transponder: 100, milliseconds: ms));
+
+        var row = _viewModel.RaceDataItems.Single(item => item.TransponderID == "100");
+        Assert.Multiple(() =>
+        {
+            Assert.That(row.Top5Average, Is.EqualTo("0:20.200"));
+            Assert.That(row.Top10Average, Is.EqualTo("-"));
+            Assert.That(row.Top3Consecutive, Is.EqualTo("1:00.300 (20.100)"));
+            Assert.That(row.StdDeviation, Is.Not.EqualTo("-"));
+            Assert.That(row.Consistency, Is.Not.EqualTo("-"));
+        });
+    }
+
     private static DetectedMessage MakeDetectedMessage(long transponder, int milliseconds)
     {
         var data = new byte[13];

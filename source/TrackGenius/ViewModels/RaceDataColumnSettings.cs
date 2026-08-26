@@ -14,6 +14,11 @@ public sealed class RaceDataColumnSettings : INotifyPropertyChanged
     public RaceDataColumnOption Interval { get; }
     public RaceDataColumnOption LastLap { get; }
     public RaceDataColumnOption BestLap { get; }
+    public RaceDataColumnOption Top5Average { get; }
+    public RaceDataColumnOption Top10Average { get; }
+    public RaceDataColumnOption Top3Consecutive { get; }
+    public RaceDataColumnOption StdDeviation { get; }
+    public RaceDataColumnOption Consistency { get; }
     public RaceDataColumnOption Transponder { get; }
     public RaceDataColumnOption Notes { get; }
 
@@ -31,12 +36,19 @@ public sealed class RaceDataColumnSettings : INotifyPropertyChanged
         Interval = new RaceDataColumnOption("Interval", "Interval", canHide: true);
         LastLap = new RaceDataColumnOption("LastLap", "Last Lap", canHide: true);
         BestLap = new RaceDataColumnOption("BestLap", "Best Lap", canHide: true);
+        Top5Average = new RaceDataColumnOption("Top5Average", "Top 5", canHide: true, isVisible: false);
+        Top10Average = new RaceDataColumnOption("Top10Average", "Top 10", canHide: true, isVisible: false);
+        Top3Consecutive = new RaceDataColumnOption("Top3Consecutive", "Top 3 Consec", canHide: true, isVisible: false);
+        StdDeviation = new RaceDataColumnOption("StdDeviation", "Std Dev", canHide: true, isVisible: false);
+        Consistency = new RaceDataColumnOption("Consistency", "Consistency", canHide: true, isVisible: false);
         Transponder = new RaceDataColumnOption("Transponder", "Transponder", canHide: true);
         Notes = new RaceDataColumnOption("Notes", "Notes", canHide: true);
 
         All = new List<RaceDataColumnOption>
         {
-            Position, CarNumber, Driver, Laps, Gap, Interval, LastLap, BestLap, Transponder, Notes
+            Position, CarNumber, Driver, Laps, Gap, Interval, LastLap, BestLap,
+            Top5Average, Top10Average, Top3Consecutive, StdDeviation, Consistency,
+            Transponder, Notes
         };
     }
 
