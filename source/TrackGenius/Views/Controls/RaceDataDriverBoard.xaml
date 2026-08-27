@@ -12,7 +12,8 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </UserControl.Resources>
 
-    <!-- Two-line driver board: flag + name on top, transponder code beneath. -->
+    <!-- Two-line driver board mirroring the row grid: name on the main level (24pt),
+         transponder code on the secondary level (12pt). -->
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <Image Width="24" Height="24"
@@ -27,17 +28,14 @@
                        TextTrimming="CharacterEllipsis"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" 
-                    Margin="0,2,0,0"
+        <StackPanel Orientation="Horizontal"
                     Visibility="{Binding ShowTransponderCode, Converter={StaticResource BoolToVis}}">
-            <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                <ui:SymbolIcon Symbol="AccessTime20"/>
-                <TextBlock Text="{Binding TransponderCode}"
-                       FontSize="10"
+            <ui:SymbolIcon Symbol="AccessTime20" FontSize="12"/>
+            <TextBlock Text="{Binding TransponderCode}"
+                       FontSize="12"
                        Opacity="0.7"
                        Padding="6,0,0,0"
                        VerticalAlignment="Center"/>
-            </StackPanel>
         </StackPanel>
     </StackPanel>
 </UserControl>
