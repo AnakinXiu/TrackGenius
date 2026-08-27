@@ -244,7 +244,7 @@
                                     <TextBlock Grid.Row="0" Grid.Column="6" FontSize="24" Margin="12,0,0,0" Text="{Binding LastLapTime, Converter={StaticResource TimeSpanFormat}}"
                                                Visibility="{Binding ColumnSettings.LastLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                                     <!-- BEST LAP cell: race-best gets a rounded border + timer badge; personal best plain -->
-                                    <Border Grid.Row="0" Grid.Column="7" Margin="12,0,0,0" Padding="6, 0,0,0"
+                                    <Border Grid.Row="0" Grid.Column="7" Margin="12,0,0,0" Padding="6,0,0,0"
                                             VerticalAlignment="Top"
                                             HorizontalAlignment="Left"
                                             Visibility="{Binding ColumnSettings.BestLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}">
@@ -255,10 +255,10 @@
                                                 <Setter Property="Background" Value="Transparent"/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsRaceBestLap}" Value="True">
-                                                        <Setter Property="BorderThickness" Value="1.5"/>
+                                                        <Setter Property="BorderThickness" Value="2"/>
                                                         <Setter Property="CornerRadius" Value="6"/>
                                                         <Setter Property="BorderBrush" Value="{DynamicResource RaceBestTimeBrush}"/>
-                                                        <Setter Property="Padding" Value="8,2,4,2"/>
+                                                        <Setter Property="Padding" Value="8,0,0,0"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -268,6 +268,7 @@
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                                                         <Setter Property="Foreground" Value="{DynamicResource RacePersonalBestTimeBrush}"/>
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsRaceBestLap}" Value="True">
                                                                 <Setter Property="Foreground" Value="{DynamicResource RaceBestTimeBrush}"/>
@@ -278,7 +279,7 @@
                                                 </TextBlock.Style>
                                             </TextBlock>
                                             <!-- Timer badge: only for the race-best lap, inside the rounded border -->
-                                            <Border Margin="6,0,0,0" CornerRadius="0,6,6,0" Padding="6"
+                                            <Border Margin="6,0,0,0" CornerRadius="0,4,4,0" Padding="7"
                                                     VerticalAlignment="Center"
                                                     Background="{DynamicResource RaceBestTimeBrush}"
                                                     Visibility="{Binding IsRaceBestLap, Converter={StaticResource BoolToVis}}">
