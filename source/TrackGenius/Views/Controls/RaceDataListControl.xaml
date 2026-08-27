@@ -51,29 +51,68 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="POS"/>
+                        <!-- Header column dividers (right edge of each column, except the last) -->
+                        <Rectangle Grid.Column="0" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"/>
                         <TextBlock Grid.Column="1" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Car #" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.CarNumber.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <Rectangle Grid.Column="1" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"
                                    Visibility="{Binding ColumnSettings.CarNumber.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="2" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Driver" Margin="12,0,0,0"
                                    Visibility="{Binding ColumnSettings.Driver.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <Rectangle Grid.Column="2" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"
+                                   Visibility="{Binding ColumnSettings.Driver.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="3" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Laps" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Laps.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <Rectangle Grid.Column="3" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"
                                    Visibility="{Binding ColumnSettings.Laps.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="4" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Gap" Margin="12,0,0,0"
                                    Visibility="{Binding ColumnSettings.Gap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <Rectangle Grid.Column="4" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"
+                                   Visibility="{Binding ColumnSettings.Gap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="5" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Interval" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Interval.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <Rectangle Grid.Column="5" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"
                                    Visibility="{Binding ColumnSettings.Interval.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="6" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Last Lap" Margin="12,0,0,0"
                                    Visibility="{Binding ColumnSettings.LastLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <Rectangle Grid.Column="6" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"
+                                   Visibility="{Binding ColumnSettings.LastLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="7" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Best Lap" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.BestLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <Rectangle Grid.Column="7" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"
                                    Visibility="{Binding ColumnSettings.BestLap.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="8" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Top 5" Margin="12,0,0,0"
                                    Visibility="{Binding ColumnSettings.Top5Average.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <Rectangle Grid.Column="8" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"
+                                   Visibility="{Binding ColumnSettings.Top5Average.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="9" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Top 10" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Top10Average.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <Rectangle Grid.Column="9" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"
                                    Visibility="{Binding ColumnSettings.Top10Average.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="10" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Top 3 Consec" Margin="12,0,0,0"
                                    Visibility="{Binding ColumnSettings.Top3Consecutive.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <Rectangle Grid.Column="10" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"
+                                   Visibility="{Binding ColumnSettings.Top3Consecutive.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="11" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Std Dev" Margin="12,0,0,0"
                                    Visibility="{Binding ColumnSettings.StdDeviation.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <Rectangle Grid.Column="11" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"
+                                   Visibility="{Binding ColumnSettings.StdDeviation.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="12" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Consistency" Margin="12,0,0,0"
+                                   Visibility="{Binding ColumnSettings.Consistency.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                        <Rectangle Grid.Column="12" Width="1" HorizontalAlignment="Right"
+                                   Fill="{DynamicResource RaceBorderBrush}"
                                    Visibility="{Binding ColumnSettings.Consistency.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                         <TextBlock Grid.Column="13" FontSize="16" FontWeight="SemiBold" Style="{StaticResource RaceHeaderTextStyle}" Text="Notes" Margin="12,0,0,0"
                                    Visibility="{Binding ColumnSettings.Notes.IsVisible, Converter={StaticResource BoolToVis}, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
@@ -93,17 +132,17 @@
                     <ui:ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                            <Setter Property="Margin" Value="0,0,0,8" />
+                            <Setter Property="Margin" Value="0,0,0,4" />
                         </Style>
                     </ui:ListView.ItemContainerStyle>
 
                     <ui:ListView.ItemTemplate>
                         <DataTemplate DataType="vm:RaceDataItemViewModel">
-                            <Border Padding="16" Style="{StaticResource RaceRowBorderStyle}">
+                            <Border Padding="10,4" Style="{StaticResource RaceRowBorderStyle}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="8"/>
+                                        <RowDefinition Height="4"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
@@ -122,6 +161,10 @@
                                         <ColumnDefinition Width="{Binding ColumnSettings.Consistency.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=5, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                                         <ColumnDefinition Width="{Binding ColumnSettings.Notes.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=5, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                                     </Grid.ColumnDefinitions>
+
+                                    <!-- Vertical divider highlighting the position column (spans content + progress rows) -->
+                                    <Rectangle Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Width="1" HorizontalAlignment="Right"
+                                               Fill="{DynamicResource RaceBorderBrush}"/>
 
                                     <!-- POSITION cell (always visible): number + change indicator -->
                                     <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
