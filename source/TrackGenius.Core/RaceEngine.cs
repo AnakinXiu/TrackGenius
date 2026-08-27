@@ -16,7 +16,7 @@ namespace TrackGenius.Core
         private RaceTimer _raceTimer;
 
         public TimeSpan RaceTime => _raceTimer?.Elapsed ?? TimeSpan.Zero;
-        public TimeSpan RemainTime => _raceTimer?.Remaining ?? TimeSpan.Zero;
+        public TimeSpan RemainTime => _race.TotalRaceTime - RaceTime;
 
         public event EventHandler<IReadOnlyList<RaceStandingsEntry>> RaceDataChanged;
 

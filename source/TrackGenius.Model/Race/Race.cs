@@ -35,6 +35,8 @@ public class Race : IRace
 
     public int CountDownTime { get; set; }
 
+    public TimeSpan TotalRaceTime { get; set; } = TimeSpan.FromMinutes(5);
+
     public Race(Guid raceID, RaceType raceType, RaceClass raceClass, ICollection<RaceData> raceDataCollection)
         : this(raceID, raceType, raceClass, 10, raceDataCollection)
     {

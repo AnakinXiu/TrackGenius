@@ -19,10 +19,6 @@ namespace TrackGenius.Model
 
         public TimeSpan Elapsed => _stopwatch.Elapsed;
 
-        public TimeSpan Remaining => TimeSpan.FromSeconds(CountDownTime) - _stopwatch.Elapsed;
-
-        public TimeSpan GetRaceTime() => _stopwatch.Elapsed - TimeSpan.FromSeconds(CountDownTime);
-
         public void Start()
         {
             _stopwatch.Restart();

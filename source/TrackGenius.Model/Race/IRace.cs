@@ -24,6 +24,7 @@ public interface IRace
     RaceOrderRule OrderRule { get; set; }
 
     IRaceOrderCalculator OrderCalculator { get; }
+    TimeSpan TotalRaceTime { get; set; }
 
     RaceData GetRaceDataByTransponder(string transponderID);
 }

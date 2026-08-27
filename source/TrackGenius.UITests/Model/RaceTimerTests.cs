@@ -32,17 +32,7 @@ public class RaceTimerTests
         {
             Assert.That(timer.IsStarted, Is.False);
             Assert.That(timer.Elapsed, Is.EqualTo(TimeSpan.Zero));
-            Assert.That(timer.Remaining, Is.EqualTo(TimeSpan.FromSeconds(10)));
         });
-    }
-
-    [Test]
-    public void GivenExpiredCountdown_WhenRemainingRead_ThenNegativeAllowed()
-    {
-        var timer = new RaceTimer(0);
-        timer.Start();
-
-        Assert.That(timer.Remaining, Is.LessThanOrEqualTo(TimeSpan.Zero));
     }
 
     [Test]

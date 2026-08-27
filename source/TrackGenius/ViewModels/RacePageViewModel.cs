@@ -41,9 +41,9 @@ public class RacePageViewModel : INotifyPropertyChanged
 
     public string RaceName => CurrentRace?.RaceName ?? string.Empty;
 
-    public string RaceTime => _raceEngine?.RaceTime.ToString(@"m\:ss\.fff") ?? string.Empty;
+    public string RaceTime => _raceEngine?.RaceTime.ToString(@"m\:ss") ?? string.Empty;
 
-    public string RemainTime => _raceEngine?.RemainTime.ToString(@"m\:ss\.fff") ?? string.Empty;
+    public string RemainTime => _raceEngine?.RemainTime.ToString(@"m\:ss") ?? string.Empty;
 
     public string CurrentTime => DateTime.Now.ToLongTimeString();
 
