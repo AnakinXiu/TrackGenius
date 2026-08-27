@@ -6,5 +6,8 @@ namespace TrackGenius.Model;
 /// </summary>
 public enum RaceOrderRule
 {
-    LapsThenRaceTime
+    LapsThenRaceTime,
+    FastestLap,
+    Top3Consecutive,
+    Custom
 }

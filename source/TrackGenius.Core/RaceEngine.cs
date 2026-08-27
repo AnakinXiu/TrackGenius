@@ -7,12 +7,16 @@ using TrackGenius.Model;
 
 namespace TrackGenius.Core
 {
-    public class RaceEngine :IDisposable
+    public class RaceEngine : IDisposable
     {
         private readonly IMessageConsumer _messageConsumer;
         private readonly CommunicateService _communicateService;
 
         private IRace _race;
+        private RaceTimer _raceTimer;
+
+        public TimeSpan RaceTime => _raceTimer?.Elapsed ?? TimeSpan.Zero;
+        public TimeSpan RemainTime => _raceTimer?.Remaining ?? TimeSpan.Zero;
 
         public event EventHandler<IReadOnlyList<RaceStandingsEntry>> RaceDataChanged;
 
@@ -22,12 +26,20 @@ namespace TrackGenius.Core
             _communicateService = communicateService ?? throw new ArgumentNullException(nameof(communicateService));
         }
 
-        public void RaceStart(ICollection<RaceData> racers)
+        public void RaceStart(IRace race)
         {
             _communicateService.MessageReceived += _messageConsumer.ConsumeMessage;
             _messageConsumer.CarDetected += OnCarDetected;
 
-            _race = new Race(new Guid(), RaceType.FreePractice, new RaceClass("World GT"), racers);
+            _race = race;
+            _raceTimer = new RaceTimer(_race.CountDownTime);
+            _raceTimer.Start();
+        }
+
+        public void RaceStart(ICollection<RaceData> racers)
+        {
+            // Subscription lives only in the IRace overload to avoid double-subscribing handlers.
+            RaceStart(new Race(Guid.NewGuid(), RaceType.FreePractice, new RaceClass("World GT"), 10, racers));
         }
 
         private void OnCarDetected(object sender, CarDetectMessage message)
@@ -60,7 +72,7 @@ namespace TrackGenius.Core
             {
                 // TODO: Should add log and show a message in the UI to indicate that the detection is ignored due to too short interval.
                 if (newCarDetected)
-                    RaiseRaceDataChanged();   // the racer was added even though this pass was suppressed
+                    RaiseRaceDataChanged(); // the racer was added even though this pass was suppressed
                 return;
             }
 

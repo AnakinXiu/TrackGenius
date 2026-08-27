@@ -7,11 +7,11 @@ public interface IRace
 {
     Guid RaceID { get; }
 
+    string RaceName { get; }
+
     RaceType RaceType { get; }
 
     RaceClass RaceClass { get; }
-
-    RaceTimer RaceTimer { get; }
 
     IRaceRanker RaceRanker { get; set; }
 
