@@ -6,7 +6,7 @@
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:viewModels="clr-namespace:TrackGenius.UI.ViewModels"
              mc:Ignorable="d"
-             d:DesignHeight="60" d:DesignWidth="220">
+             d:DesignHeight="55" d:DesignWidth="220">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />

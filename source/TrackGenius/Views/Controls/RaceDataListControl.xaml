@@ -34,7 +34,7 @@
                 <Border x:Name="HeaderBorder" Grid.Row="0" Padding="16,10">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{Binding ColumnSettings.Position.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=3, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                            <ColumnDefinition Width="{Binding ColumnSettings.Position.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=2, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                             <ColumnDefinition Width="{Binding ColumnSettings.CarNumber.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=3, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                             <ColumnDefinition Width="{Binding ColumnSettings.Driver.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=8, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                             <ColumnDefinition Width="{Binding ColumnSettings.Laps.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=4, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
@@ -107,7 +107,7 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="{Binding ColumnSettings.Position.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=3, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
+                                        <ColumnDefinition Width="{Binding ColumnSettings.Position.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=2, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                                         <ColumnDefinition Width="{Binding ColumnSettings.CarNumber.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=3, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                                         <ColumnDefinition Width="{Binding ColumnSettings.Driver.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=8, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
                                         <ColumnDefinition Width="{Binding ColumnSettings.Laps.IsVisible, Converter={StaticResource BoolToGridLength}, ConverterParameter=4, RelativeSource={RelativeSource AncestorType=local:RaceDataListControl}}"/>
