@@ -17,4 +17,5 @@ public sealed record RaceStandingsEntry(
     string Top10Average,
     string Top3Consecutive,
     string StdDeviation,
-    string Consistency);
+    string Consistency,
+    bool IsRaceBestLap);

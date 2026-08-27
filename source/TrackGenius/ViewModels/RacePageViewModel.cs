@@ -51,7 +51,7 @@ public class RacePageViewModel : INotifyPropertyChanged
             {
                 RacerNumber = 88, RacerPosition = 1, LapsCount = 12,
                 BestLapTime = TimeSpan.FromSeconds(18.234), LastLapTime = TimeSpan.FromSeconds(19.012),
-                Gap = "-", Interval = "-", Description = "Leader"
+                Gap = "-", Interval = "-", Description = "Leader", IsRaceBestLap = true
             },
             new RaceDataItemViewModel("48825", 2)
             {
@@ -157,6 +157,7 @@ public class RacePageViewModel : INotifyPropertyChanged
             item.LapsCount = entry.RaceData.LapsCount;
             item.LastLapTime = entry.LastLapTime;
             item.BestLapTime = entry.BestLapTime;
+            item.IsRaceBestLap = entry.IsRaceBestLap;
             item.Gap = entry.Gap;
             item.Interval = entry.Interval;
             item.Top5Average = entry.Top5Average;

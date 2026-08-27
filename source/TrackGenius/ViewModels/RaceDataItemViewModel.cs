@@ -71,6 +71,15 @@ public class RaceDataItemViewModel : INotifyPropertyChanged
         set => PropertyChanged.RaiseIfChanged(this, ref _bestLapTime, value, nameof(BestLapTime));
     }
 
+    private bool _isRaceBestLap;
+
+    /// <summary>True when this driver's best lap is the fastest best lap in the current race.</summary>
+    public bool IsRaceBestLap
+    {
+        get => _isRaceBestLap;
+        set => PropertyChanged.RaiseIfChanged(this, ref _isRaceBestLap, value, nameof(IsRaceBestLap));
+    }
+
     public string Gap
     {
         get => _gap;

@@ -16,7 +16,8 @@ public class RaceStandingsEntryTests
             BestLapTime: TimeSpan.FromSeconds(18.2), LastLapTime: TimeSpan.FromSeconds(19.1),
             Gap: "0:02.100", Interval: "0:04.200",
             Top5Average: "0:18.300", Top10Average: "0:18.600",
-            Top3Consecutive: "0:55.200 (18.400)", StdDeviation: "0.150", Consistency: "99.2");
+            Top3Consecutive: "0:55.200 (18.400)", StdDeviation: "0.150", Consistency: "99.2",
+            IsRaceBestLap: false);
 
         Assert.Multiple(() =>
         {
@@ -31,6 +32,7 @@ public class RaceStandingsEntryTests
             Assert.That(entry.Top3Consecutive, Is.EqualTo("0:55.200 (18.400)"));
             Assert.That(entry.StdDeviation, Is.EqualTo("0.150"));
             Assert.That(entry.Consistency, Is.EqualTo("99.2"));
+            Assert.That(entry.IsRaceBestLap, Is.False);
         });
     }
 }

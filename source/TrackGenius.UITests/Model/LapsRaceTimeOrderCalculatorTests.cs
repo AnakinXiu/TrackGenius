@@ -222,6 +222,33 @@ public class LapsRaceTimeOrderCalculatorTests
     }
 
     [Test]
+    public void GivenRacersWithDifferentBestLaps_WhenCalculate_ThenOnlyFastestBestLapIsRaceBest()
+    {
+        // A: laps 20.0, 21.0 -> best 20.0 (race best). B: laps 20.5, 20.6 -> best 20.5.
+        var fastBest = Racer("100", 20_000, 41_000);
+        var slowBest = Racer("200", 20_500, 41_100);
+
+        var result = Calculate(slowBest, fastBest);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Single(e => ReferenceEquals(e.RaceData, fastBest)).IsRaceBestLap, Is.True);
+            Assert.That(result.Single(e => ReferenceEquals(e.RaceData, slowBest)).IsRaceBestLap, Is.False);
+        });
+    }
+
+    [Test]
+    public void GivenRacersWithoutLaps_WhenCalculate_ThenNoRaceBestFlag()
+    {
+        var peer1 = Racer("200");
+        var peer2 = Racer("300");
+
+        var result = Calculate(peer1, peer2);
+
+        Assert.That(result.All(e => !e.IsRaceBestLap), Is.True);
+    }
+
+    [Test]
     public void GivenEnoughLaps_WhenCalculate_ThenAnalysisFieldsFormatted()
     {
         // Laps 20.0..20.9s (cumulative crossings, whole-millisecond ticks):

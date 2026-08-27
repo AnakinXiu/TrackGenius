@@ -31,6 +31,7 @@ public static class ThemeManager
         "RaceStopBrush",
         "RaceSuccessBrush",
         "RaceBestTimeBrush",
+        "RacePersonalBestTimeBrush",
         "RaceBackgroundBrush",
         "RaceCardBackgroundBrush",
         "RaceBorderBrush",

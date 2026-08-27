@@ -14,7 +14,7 @@
 
     <!-- Race condition colors -->
     <SolidColorBrush x:Key="RaceBestTimeBrush" Color="#8B5CF6" />
-    <SolidColorBrush x:Key="PersonalBestTimeBrush" Color="#059669" />
+    <SolidColorBrush x:Key="RacePersonalBestTimeBrush" Color="#059669" />
 
 
     <!-- Surfaces: differ per theme. -->
