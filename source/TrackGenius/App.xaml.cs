@@ -4,6 +4,7 @@ using System.Windows.Threading;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using TrackGenius.Communication;
+using TrackGenius.Speech;
 using TrackGenius.UI.Logging;
 using TrackGenius.UI.Theme;
 using TrackGenius.UI.ViewModels;
@@ -113,7 +114,20 @@ namespace TrackGenius.UI
             var communicateService = new CommunicateService(serialPortWrapper, serviceLogger);
             var connectionService = new RaceConnectionService(communicateService);
 
-            return new MainForm(communicateService, connectionService, userBehaviorLogger);
+            // Speech pipeline (interface phase): composed but disabled — no real TTS backend yet.
+            var speechAnnouncer = new RaceAnnouncer(
+                new AnnouncementScheduler(),
+                new SpeechTemplateRenderer(),
+                new AnnouncementPolicy(TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(15), 20),
+                new SpeechQueue(20, _loggingContext.LoggerFactory.CreateLogger<SpeechQueue>()),
+                new TrackGenius.Speech.Fakes.FakeTtsEngine(),
+                new TrackGenius.Speech.Fakes.FakeAudioPlayer(),
+                _loggingContext.LoggerFactory.CreateLogger<RaceAnnouncer>())
+            {
+                Enabled = false,
+            };
+
+            return new MainForm(communicateService, connectionService, userBehaviorLogger, speechAnnouncer);
         }
     }
 }

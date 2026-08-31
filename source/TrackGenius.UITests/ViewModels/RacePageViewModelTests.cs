@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using TrackGenius.Communication;
 using TrackGenius.Core;
+using TrackGenius.Speech;
+using TrackGenius.Speech.Fakes;
 using TrackGenius.Protocol.Robitronic;
 using TrackGenius.UI.ViewModels;
 using TrackGenius.UITests.Communication;
@@ -24,7 +26,18 @@ public class RacePageViewModelTests
             new FakeSerialPortWrapper(), NullLogger<CommunicateService>.Instance);
         _connection = new RaceConnectionService(_communicateService);
         _viewModel = new RacePageViewModel(
-            new RaceEngineFactory(_connection, _communicateService), _connection);
+            new RaceEngineFactory(_connection, _communicateService), _connection,
+            new RaceAnnouncer(
+                new AnnouncementScheduler(),
+                new SpeechTemplateRenderer(),
+                new AnnouncementPolicy(System.TimeSpan.FromSeconds(3), System.TimeSpan.FromSeconds(15), 20),
+                new SpeechQueue(20, NullLogger<SpeechQueue>.Instance),
+                new FakeTtsEngine(),
+                new FakeAudioPlayer(),
+                NullLogger<RaceAnnouncer>.Instance)
+            {
+                Enabled = false,
+            });
     }
 
     [TearDown]

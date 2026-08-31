@@ -41,5 +41,6 @@
     <ProjectReference Include="..\TrackGenius.Core\TrackGenius.Core.csproj" />
     <ProjectReference Include="..\TrackGenius.Model\TrackGenius.Model.csproj" />
     <ProjectReference Include="..\TrackGenius.Protocol\TrackGenius.Protocol.csproj" />
+    <ProjectReference Include="..\TrackGenius.Speech\TrackGenius.Speech.csproj" />
   </ItemGroup>
 </Project>

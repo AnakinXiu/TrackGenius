@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using TrackGenius.Communication;
 using TrackGenius.Core;
 using TrackGenius.Model;
+using TrackGenius.Speech;
 using TrackGenius.UI.Commands;
 
 namespace TrackGenius.UI.ViewModels;
@@ -17,6 +18,7 @@ public class RacePageViewModel : INotifyPropertyChanged
 {
     private readonly RaceEngineFactory _raceEngineFactory;
     private readonly IRaceConnectionService _connectionService;
+    private readonly RaceAnnouncer _speechAnnouncer;
     private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
     private readonly DispatcherTimer _clockTimer;
     private RaceEngine _raceEngine;
@@ -47,10 +49,13 @@ public class RacePageViewModel : INotifyPropertyChanged
 
     public string CurrentTime => DateTime.Now.ToLongTimeString();
 
-    public RacePageViewModel([NotNull]RaceEngineFactory raceEngineFactory, [NotNull]IRaceConnectionService connectionService)
+    public RacePageViewModel([NotNull] RaceEngineFactory raceEngineFactory,
+        [NotNull] IRaceConnectionService connectionService,
+        [NotNull] RaceAnnouncer speechAnnouncer)
     {
         _raceEngineFactory = raceEngineFactory ?? throw new ArgumentNullException(nameof(raceEngineFactory));
         _connectionService = connectionService ?? throw new ArgumentNullException(nameof(connectionService));
+        _speechAnnouncer = speechAnnouncer ?? throw new ArgumentNullException(nameof(speechAnnouncer));
         StartRaceCommand = new RelayCommand(StartRace);
 
         // One clock for the board: ticks the three time properties every second.
@@ -69,7 +74,7 @@ public class RacePageViewModel : INotifyPropertyChanged
         _connectionService.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName is nameof(IRaceConnectionService.IsPortOpen)
-                                  or nameof(IRaceConnectionService.CanStartRace))
+                or nameof(IRaceConnectionService.CanStartRace))
                 OnPropertyChanged(nameof(CanStartRace));
         };
 
@@ -114,11 +119,13 @@ public class RacePageViewModel : INotifyPropertyChanged
                 // Keep the engine alive for the race: disposing it immediately would
                 // unsubscribe its handlers before any detection could arrive.
                 _raceEngine.RaceDataChanged -= OnRaceDataChanged;
+                _speechAnnouncer.Detach(_raceEngine);
                 _raceEngine.Dispose();
             }
 
             _raceEngine = _raceEngineFactory.CreateRaceEngine();
             _raceEngine.RaceDataChanged += OnRaceDataChanged;
+            _speechAnnouncer.Attach(_raceEngine);
 
             var race = new Race(Guid.NewGuid(), RaceType.FreePractice, new RaceClass("World GT"), 10, new List<RaceData>())
             {
