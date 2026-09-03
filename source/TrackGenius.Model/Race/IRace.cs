@@ -7,11 +7,11 @@ public interface IRace
 {
     Guid RaceID { get; }
 
+    string RaceName { get; }
+
     RaceType RaceType { get; }
 
     RaceClass RaceClass { get; }
-
-    RaceTimer RaceTimer { get; }
 
     IRaceRanker RaceRanker { get; set; }
 
@@ -24,6 +24,7 @@ public interface IRace
     RaceOrderRule OrderRule { get; set; }
 
     IRaceOrderCalculator OrderCalculator { get; }
+    TimeSpan TotalRaceTime { get; set; }
 
     RaceData GetRaceDataByTransponder(string transponderID);
 }

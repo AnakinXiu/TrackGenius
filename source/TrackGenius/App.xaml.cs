@@ -1,9 +1,14 @@
 ﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using TrackGenius.Communication;
+using TrackGenius.Speech;
+using TrackGenius.Speech.Audio;
+using TrackGenius.Speech.Piper;
 using TrackGenius.UI.Logging;
 using TrackGenius.UI.Theme;
 using TrackGenius.UI.ViewModels;
@@ -29,7 +34,7 @@ namespace TrackGenius.UI
             base.OnStartup(e);
 
             //注册Application_Error
-            this.DispatcherUnhandledException +=
+            DispatcherUnhandledException +=
                 new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
 
             _mainForm = CreateMainWindow();
@@ -113,7 +118,51 @@ namespace TrackGenius.UI
             var communicateService = new CommunicateService(serialPortWrapper, serviceLogger);
             var connectionService = new RaceConnectionService(communicateService);
 
-            return new MainForm(communicateService, connectionService, userBehaviorLogger);
+            // Speech pipeline: start on fakes (silent), swap to Piper once bootstrapped.
+            var speechLogger = _loggingContext.LoggerFactory.CreateLogger<RaceAnnouncer>();
+            var speechAnnouncer = new RaceAnnouncer(
+                new AnnouncementScheduler(),
+                new SpeechTemplateRenderer(),
+                new AnnouncementPolicy(TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(15), 20),
+                new SpeechQueue(20, _loggingContext.LoggerFactory.CreateLogger<SpeechQueue>()),
+                new Speech.Fakes.FakeTtsEngine(),
+                new Speech.Fakes.FakeAudioPlayer(),
+                speechLogger)
+            {
+                Enabled = false,
+            };
+
+            // Bootstrap off the UI thread: first run downloads piper + the amy voice model
+            // (~63 MB) under %LOCALAPPDATA%\TrackGenius; later runs are instant. Any failure
+            // leaves the announcer on the silent fakes — racing never loses to speech.
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    var piperRoot = Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "TrackGenius");
+                    var bootstrap = new PiperBootstrap(piperRoot,
+                        _loggingContext.LoggerFactory.CreateLogger<PiperBootstrap>());
+                    var setup = await bootstrap.EnsureReadyAsync().ConfigureAwait(false);
+
+                    var piperTts = await PiperTtsEngine.FromSetupAsync(setup,
+                        _loggingContext.LoggerFactory.CreateLogger<PiperTtsEngine>()).ConfigureAwait(false);
+                    var player = new SoundPlayerAudioPlayer();
+
+                    // SwapBackend arms the worker when enabled, so no race needs to be
+                    // running for the backend to become live.
+                    speechAnnouncer.SwapBackend(piperTts, player, enabled: true);
+                    speechLogger.LogInformation("SpeechBackendReady ExecutablePath={ExecutablePath}", setup.ExecutablePath);
+                }
+                catch (Exception ex)
+                {
+                    speechLogger.LogError(ex, "SpeechBootstrapFailed");
+                    // Stay on fakes, disabled — racing continues without voice.
+                }
+            });
+
+            return new MainForm(communicateService, connectionService, userBehaviorLogger, speechAnnouncer);
         }
     }
 }

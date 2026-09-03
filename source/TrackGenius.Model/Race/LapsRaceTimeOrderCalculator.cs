@@ -25,15 +25,28 @@ public sealed class LapsRaceTimeOrderCalculator : IRaceOrderCalculator
             .ThenBy(racer => racer.RacedTime)
             .ToList();
 
+        // The race's fastest best lap among drivers who have completed one; null when nobody has a lap yet.
+        TimeSpan? raceBestLap = null;
+        foreach (var racer in ordered)
+        {
+            if (racer.LapRecords.Count == 0)
+                continue;
+
+            var best = BestLap(racer);
+            if (raceBestLap is null || best < raceBestLap)
+                raceBestLap = best;
+        }
+
         var entries = new List<RaceStandingsEntry>(ordered.Count);
         for (var index = 0; index < ordered.Count; index++)
         {
             var racer = ordered[index];
             var laps = racer.LapRecords.Select(record => record.LapTime).ToList();
+            var bestLap = BestLap(racer);
             entries.Add(new RaceStandingsEntry(
                 RaceData: racer,
                 Position: index + 1,
-                BestLapTime: BestLap(racer),
+                BestLapTime: bestLap,
                 LastLapTime: LastLap(racer),
                 Gap: DescribeDifference(index == 0 ? null : ordered[0], racer),
                 Interval: DescribeDifference(index == 0 ? null : ordered[index - 1], racer),
@@ -41,7 +54,8 @@ public sealed class LapsRaceTimeOrderCalculator : IRaceOrderCalculator
                 Top10Average: FormatTime(LapAnalysisCalculator.TopAverage(laps, 10)),
                 Top3Consecutive: FormatTop3(LapAnalysisCalculator.Top3Consecutive(laps)),
                 StdDeviation: FormatSigma(LapAnalysisCalculator.StdDeviation(laps)),
-                Consistency: FormatConsistency(LapAnalysisCalculator.Consistency(laps))));
+                Consistency: FormatConsistency(LapAnalysisCalculator.Consistency(laps)),
+                IsRaceBestLap: raceBestLap is not null && bestLap == raceBestLap));
         }
 
         return entries;

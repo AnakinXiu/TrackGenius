@@ -11,7 +11,6 @@
       d:DesignHeight="450" d:DesignWidth="800"
       ScrollViewer.CanContentScroll="False"
       d:DataContext="{d:DesignInstance Type=viewModels:RacePageViewModel}">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -20,7 +19,58 @@
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
 
-        <controls:RaceDataListControl Grid.Row="0"
+        <Grid Grid.Row="0" Name="RaceTimeBoard" MinHeight="48">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                       HorizontalAlignment="Left"
+                       Padding="24, 0, 0,0"
+                       Text="{Binding RaceName}"
+                       FontSize="20" FontWeight="SemiBold"
+                       Foreground="{DynamicResource RaceTextPrimaryBrush}"
+                       VerticalAlignment="Center"
+                       TextTrimming="CharacterEllipsis"/>
+
+            <TextBlock Grid.Column="1" Grid.Row="0"
+                           Text="{Binding RaceTime}" FontSize="20"
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource RaceTextPrimaryBrush}"/>
+            <TextBlock Grid.Column="1" Grid.Row="1"
+                       Text="RACE TIME" FontSize="10"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource RaceTextMutedBrush}"/>
+
+            <TextBlock Grid.Column="2" Grid.Row="0"
+                       Text="{Binding RemainTime}" FontSize="20"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource RaceTextPrimaryBrush}"/>
+            <TextBlock Grid.Column="2" Grid.Row="1"
+                           Text="REMAINING" FontSize="10"
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource RaceTextMutedBrush}"/>
+
+            <TextBlock  Grid.Column="3" Grid.Row="0"
+                        Text="{Binding CurrentTime}"
+                        FontSize="20"
+                        Foreground="{DynamicResource RaceTextPrimaryBrush}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"/>
+            <TextBlock  Grid.Column="3" Grid.Row="1"
+                        HorizontalAlignment="Center"
+                        Text="CURRENT TIME" FontSize="10"
+                        Foreground="{DynamicResource RaceTextMutedBrush}"/>
+        </Grid>
+
+        <controls:RaceDataListControl Grid.Row="1"
                                       Grid.RowSpan="2"
                                       Margin="15"
                                       ItemsSource="{Binding RaceDataItems}" />

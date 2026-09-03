@@ -17,7 +17,7 @@ namespace TrackGenius.Model
 
         public bool IsStarted { get; private set; }
 
-        public TimeSpan GetRaceTime() => _stopwatch.Elapsed - TimeSpan.FromSeconds(CountDownTime);
+        public TimeSpan Elapsed => _stopwatch.Elapsed;
 
         public void Start()
         {

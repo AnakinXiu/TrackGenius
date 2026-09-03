@@ -12,7 +12,7 @@ public class RaceDataColumnSettingsTests
     {
         var settings = new RaceDataColumnSettings();
 
-        Assert.That(settings.All, Has.Count.EqualTo(15));
+        Assert.That(settings.All, Has.Count.EqualTo(14));
         Assert.That(settings.All[0], Is.SameAs(settings.Position));
         Assert.That(settings.Position.CanHide, Is.False);
         Assert.That(settings.All.Skip(1), Has.All.Property("CanHide").EqualTo(true));
@@ -80,7 +80,7 @@ public class RaceDataColumnSettingsTests
     {
         var settings = new RaceDataColumnSettings();
         settings.Laps.IsVisible = false;
-        settings.Transponder.IsVisible = false;
+        settings.Notes.IsVisible = false;
         var hidden = settings.GetHiddenKeys().ToArray();
 
         var roundTripped = new RaceDataColumnSettings();

@@ -12,6 +12,11 @@
     <SolidColorBrush x:Key="RaceStopBrush" Color="#EF4444" />
     <SolidColorBrush x:Key="RaceSuccessBrush" Color="#10B981" />
 
+    <!-- Race condition colors -->
+    <SolidColorBrush x:Key="RaceBestTimeBrush" Color="#8B5CF6" />
+    <SolidColorBrush x:Key="RacePersonalBestTimeBrush" Color="#059669" />
+
+
     <!-- Surfaces: differ per theme. -->
     <SolidColorBrush x:Key="RaceBackgroundBrush" Color="#F8F9FA" />
     <SolidColorBrush x:Key="RaceCardBackgroundBrush" Color="#FFFFFF" />

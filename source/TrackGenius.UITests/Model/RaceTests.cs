@@ -9,7 +9,7 @@ namespace TrackGenius.UITests.Model;
 public class RaceTests
 {
     private static Race CreateRace()
-        => new(new Guid(), RaceType.FreePractice, new RaceClass("World GT"), new List<RaceData>());
+        => new(Guid.Empty, RaceType.FreePractice, new RaceClass("World GT"), new List<RaceData>());
 
     [Test]
     public void GivenNewRace_WhenPropertiesRead_ThenDefaultRuleAndCalculator()

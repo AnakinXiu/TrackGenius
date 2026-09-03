@@ -154,4 +154,30 @@ public class RaceEngineTests
             Assert.That(standings[1].Interval, Is.EqualTo("0:01.000"));
         });
     }
+
+    [Test]
+    public void GivenRaceStartWithRace_WhenCalled_ThenTimerRunsAndDetectionStillRaises()
+    {
+        var race = new TrackGenius.Model.Race(Guid.Empty, TrackGenius.Model.RaceType.FreePractice,
+            new TrackGenius.Model.RaceClass("World GT"), 10, new List<RaceData>());
+
+        _engine.RaceStart(race);
+        System.Threading.Thread.Sleep(30);
+
+        // A RUNNING stopwatch makes Remaining strictly below the 10s countdown;
+        // a never-started timer would leave it exactly 10s.
+        Assert.That(_engine.RemainTime, Is.LessThan(TimeSpan.FromSeconds(10)));
+
+        SendDetection(transponder: 100, milliseconds: 3_600_000);
+        Assert.That(_received.Count, Is.GreaterThanOrEqualTo(1));
+    }
+
+    [Test]
+    public void GivenLegacyRaceStart_WhenCalled_ThenTimerAlsoRuns()
+    {
+        _engine.RaceStart(new List<RaceData>());
+        System.Threading.Thread.Sleep(30);
+
+        Assert.That(_engine.RemainTime, Is.LessThan(TimeSpan.FromSeconds(10)));
+    }
 }

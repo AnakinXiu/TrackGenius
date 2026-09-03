@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using TrackGenius.Communication;
 using TrackGenius.Core;
+using TrackGenius.Speech;
 using TrackGenius.UI.Pages;
 using TrackGenius.UI.ViewModels;
 using Wpf.Ui.Controls;
@@ -24,7 +25,10 @@ namespace TrackGenius.UI
         private readonly IRaceConnectionService _connectionService;
         private readonly MainWindowViewModel _viewModel;
 
-        public MainForm(CommunicateService communicateService, IRaceConnectionService connectionService, ILogger userBehaviorLogger)
+        public MainForm(CommunicateService communicateService,
+            IRaceConnectionService connectionService,
+            ILogger userBehaviorLogger,
+            RaceAnnouncer speechAnnouncer)
         {
             InitializeComponent();
 
@@ -34,7 +38,7 @@ namespace TrackGenius.UI
 
             var raceEngineFactory = new RaceEngineFactory(connectionService, _comService);
             _viewModel = new MainWindowViewModel(
-                new RacePageViewModel(raceEngineFactory, connectionService),
+                new RacePageViewModel(raceEngineFactory, connectionService, speechAnnouncer),
                 new SettingPageViewModel(_comService, connectionService, _userBehaviorLogger));
 
             DataContext = _viewModel;
