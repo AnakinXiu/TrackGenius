@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TrackGenius.Core;
@@ -21,6 +22,12 @@ public sealed class RaceAnnouncer : IDisposable
     private readonly object _gate = new();
     private IReadOnlyList<RaceStandingsEntry>? _lastSnapshot;
 
+    private readonly object _workerGate = new();
+    private CancellationTokenSource? _workerCts;
+    private Task? _workerLoop;
+    private volatile ITtsEngine _activeTtsEngine;   // swap target of SwapBackend; starts as the ctor value
+    private volatile IAudioPlayer _activeAudioPlayer;
+
     public bool Enabled { get; set; }
 
     public RaceAnnouncer(AnnouncementScheduler scheduler, ISpeechTemplateRenderer renderer,
@@ -34,11 +41,22 @@ public sealed class RaceAnnouncer : IDisposable
         _ttsEngine = ttsEngine;
         _audioPlayer = audioPlayer;
         _logger = logger;
+        _activeTtsEngine = ttsEngine;
+        _activeAudioPlayer = audioPlayer;
     }
 
-    public void Attach(RaceEngine engine) => engine.RaceDataChanged += HandleStandings;
+    public void Attach(RaceEngine engine)
+    {
+        engine.RaceDataChanged += HandleStandings;
+        if (Enabled)
+            _ = StartWorkerAsync();
+    }
 
-    public void Detach(RaceEngine engine) => engine.RaceDataChanged -= HandleStandings;
+    public void Detach(RaceEngine engine)
+    {
+        _ = StopWorkerAsync();
+        engine.RaceDataChanged -= HandleStandings;
+    }
 
     /// <summary>Engine event handler: derive facts, render, gate, queue. Cheap and synchronous in v1.</summary>
     public void HandleStandings(object? sender, IReadOnlyList<RaceStandingsEntry> entries)
@@ -102,8 +120,87 @@ public sealed class RaceAnnouncer : IDisposable
         }
     }
 
+    /// <summary>Arms the background worker loop; idempotent. Attach starts it when Enabled.</summary>
+    internal async Task StartWorkerAsync()
+    {
+        lock (_workerGate)
+        {
+            if (_workerLoop is not null)
+                return;
+            _workerCts = new CancellationTokenSource();
+            var token = _workerCts.Token;
+            _workerLoop = Task.Run(() => WorkerLoopAsync(token));
+        }
+        // Give the loop a beat to arm; it polls every 200ms so no startup signal is needed.
+        await Task.CompletedTask;
+    }
+
+    /// <summary>Cancels the worker and awaits loop exit; idempotent and no-throw on cancellation.</summary>
+    internal async Task StopWorkerAsync()
+    {
+        Task? loop;
+        lock (_workerGate)
+        {
+            _workerCts?.Cancel();
+            loop = _workerLoop;
+            _workerLoop = null;
+            // The CTS is intentionally not disposed: the loop may still be racing a Task.Delay(token)
+            // against its token, and a dispose here surfaces as ObjectDisposedException noise.
+        }
+        if (loop is not null)
+        {
+            try { await loop.ConfigureAwait(false); }
+            catch (OperationCanceledException) { }
+        }
+    }
+
+    /// <summary>
+    /// Hot-swaps the synthesis/playback backend; takes effect for subsequent messages.
+    /// When <paramref name="enabled"/> is true the worker loop is also armed (idempotent), so a
+    /// backend swapped in before any race attached still speaks once messages are queued.
+    /// </summary>
+    public void SwapBackend(ITtsEngine ttsEngine, IAudioPlayer audioPlayer, bool enabled)
+    {
+        _activeTtsEngine = ttsEngine ?? throw new ArgumentNullException(nameof(ttsEngine));
+        _activeAudioPlayer = audioPlayer ?? throw new ArgumentNullException(nameof(audioPlayer));
+        Enabled = enabled;
+        if (enabled)
+            _ = StartWorkerAsync();
+    }
+
+    private async Task WorkerLoopAsync(CancellationToken token)
+    {
+        while (!token.IsCancellationRequested)
+        {
+            try
+            {
+                var message = await _queue.DequeueAsync(token).ConfigureAwait(false);
+                if (message is null)
+                {
+                    await Task.Delay(200, token).ConfigureAwait(false);
+                    continue;
+                }
+
+                var clip = await _activeTtsEngine.SynthesizeAsync(
+                    new SpeechContent(message.Text, message.Ssml, message.Language, message.VoiceId),
+                    token).ConfigureAwait(false);
+                await _activeAudioPlayer.PlayAsync(clip, token).ConfigureAwait(false);
+                _logger.LogInformation("SpeechMessageSpoken MessageId={MessageId} Category={Category}", message.Id, message.Category);
+            }
+            catch (OperationCanceledException)
+            {
+                break;
+            }
+            catch (Exception ex)
+            {
+                // One bad message must never kill the loop.
+                _logger.LogError(ex, "SpeechMessageFailed Stage={Stage}", "WorkerLoop");
+            }
+        }
+    }
+
     public void Dispose()
     {
-        // v1: nothing background to stop; the queue drains explicitly. Reserved for a future worker.
+        StopWorkerAsync().GetAwaiter().GetResult();
     }
 }
