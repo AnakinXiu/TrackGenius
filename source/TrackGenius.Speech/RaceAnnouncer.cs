@@ -12,6 +12,10 @@ namespace TrackGenius.Speech;
 /// <summary>Subscribes to standings snapshots and drives the announcement pipeline off-thread.</summary>
 public sealed class RaceAnnouncer : IDisposable
 {
+    /// <summary>Immutable engine+player pair; one volatile read hands the worker a consistent backend.</summary>
+    private sealed record SpeechBackend(ITtsEngine Engine, IAudioPlayer Player);
+
+
     private readonly AnnouncementScheduler _scheduler;
     private readonly ISpeechTemplateRenderer _renderer;
     private readonly IAnnouncementPolicy _policy;
@@ -25,8 +29,10 @@ public sealed class RaceAnnouncer : IDisposable
     private readonly object _workerGate = new();
     private CancellationTokenSource? _workerCts;
     private Task? _workerLoop;
-    private volatile ITtsEngine _activeTtsEngine;   // swap target of SwapBackend; starts as the ctor value
-    private volatile IAudioPlayer _activeAudioPlayer;
+
+    /// <summary>The engine+player pair the worker uses, swapped atomically as one reference so a
+    /// mid-message SwapBackend can never mix the old engine's clip with the new player.</summary>
+    private volatile SpeechBackend _backend;
 
     public bool Enabled { get; set; }
 
@@ -41,8 +47,7 @@ public sealed class RaceAnnouncer : IDisposable
         _ttsEngine = ttsEngine;
         _audioPlayer = audioPlayer;
         _logger = logger;
-        _activeTtsEngine = ttsEngine;
-        _activeAudioPlayer = audioPlayer;
+        _backend = new SpeechBackend(ttsEngine, audioPlayer);
     }
 
     public void Attach(RaceEngine engine)
@@ -155,14 +160,18 @@ public sealed class RaceAnnouncer : IDisposable
     }
 
     /// <summary>
-    /// Hot-swaps the synthesis/playback backend; takes effect for subsequent messages.
+    /// Hot-swaps the synthesis/playback backend as one atomic pair; an in-flight message
+    /// completes on the pair it started with, subsequent messages use the new pair.
     /// When <paramref name="enabled"/> is true the worker loop is also armed (idempotent), so a
     /// backend swapped in before any race attached still speaks once messages are queued.
     /// </summary>
     public void SwapBackend(ITtsEngine ttsEngine, IAudioPlayer audioPlayer, bool enabled)
     {
-        _activeTtsEngine = ttsEngine ?? throw new ArgumentNullException(nameof(ttsEngine));
-        _activeAudioPlayer = audioPlayer ?? throw new ArgumentNullException(nameof(audioPlayer));
+        if (ttsEngine is null)
+            throw new ArgumentNullException(nameof(ttsEngine));
+        if (audioPlayer is null)
+            throw new ArgumentNullException(nameof(audioPlayer));
+        _backend = new SpeechBackend(ttsEngine, audioPlayer);
         Enabled = enabled;
         if (enabled)
             _ = StartWorkerAsync();
@@ -181,10 +190,13 @@ public sealed class RaceAnnouncer : IDisposable
                     continue;
                 }
 
-                var clip = await _activeTtsEngine.SynthesizeAsync(
+                // Single read of the immutable pair: a concurrent SwapBackend cannot
+                // mix the old engine's clip into the new player for this message.
+                var backend = _backend;
+                var clip = await backend.Engine.SynthesizeAsync(
                     new SpeechContent(message.Text, message.Ssml, message.Language, message.VoiceId),
                     token).ConfigureAwait(false);
-                await _activeAudioPlayer.PlayAsync(clip, token).ConfigureAwait(false);
+                await backend.Player.PlayAsync(clip, token).ConfigureAwait(false);
                 _logger.LogInformation("SpeechMessageSpoken MessageId={MessageId} Category={Category}", message.Id, message.Category);
             }
             catch (OperationCanceledException)

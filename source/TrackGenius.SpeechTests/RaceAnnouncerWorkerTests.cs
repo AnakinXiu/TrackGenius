@@ -13,7 +13,8 @@ namespace TrackGenius.SpeechTests;
 [TestFixture]
 public class RaceAnnouncerWorkerTests
 {
-    /// <summary>TTS fake that signals when a synthesis happens and records texts.</summary>
+    /// <summary>TTS fake that signals when a synthesis happens and records texts.
+    /// The clip's Format field carries the message text so RecordingPlayer can attribute plays.</summary>
     private sealed class SignalingTts : ITtsEngine
     {
         private readonly List<string> _texts = new();
@@ -25,7 +26,7 @@ public class RaceAnnouncerWorkerTests
         {
             lock (_texts) _texts.Add(content.Text);
             FirstSynthesis.TrySetResult(true);
-            return Task.FromResult(new AudioClip(Array.Empty<byte>(), "wav"));
+            return Task.FromResult(new AudioClip(Array.Empty<byte>(), content.Text));
         }
     }
 
@@ -132,6 +133,94 @@ public class RaceAnnouncerWorkerTests
             await disabledAnnouncer.StopWorkerAsync();
             disabledAnnouncer.Dispose();
         }
+    }
+
+    [Test]
+    public async Task GivenSwapLandsBetweenSynthesisAndPlayback_ThenMessageUsesOneBackendPair()
+    {
+        // A SwapBackend landing mid-message must never mix engines and players:
+        // the in-flight message completes entirely on the OLD pair (the one it
+        // started with), the NEXT message runs entirely on the NEW pair.
+        var oldPlayer = new RecordingPlayer();
+        var newPlayer = new RecordingPlayer();
+        var gateSynthesis = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var oldTts = new GateTts(gateSynthesis);   // old engine: hold synthesis open
+        var newTts = new SignalingTts();
+
+        var announcer = new RaceAnnouncer(_scheduler, new SpeechTemplateRenderer(), _policy, _queue,
+            oldTts, oldPlayer, NullLogger<RaceAnnouncer>.Instance)
+        {
+            Enabled = true,
+        };
+        try
+        {
+            // Message 1 on the old backend; its synthesis is held open so the swap
+            // provably lands between synthesis and playback.
+            await _queue.EnqueueAsync(Message("old-pair message"));
+            await announcer.StartWorkerAsync();
+            await oldTts.SynthesisEntered.Task;   // worker is inside oldTts.SynthesizeAsync
+
+            announcer.SwapBackend(newTts, newPlayer, enabled: true);
+
+            // Release the old synthesis; the swap has now landed mid-message.
+            gateSynthesis.SetResult();
+
+            // Message 2 arrives after the swap — must go to the NEW engine.
+            await _queue.EnqueueAsync(Message("new-pair message"));
+            var synthesized = await Task.WhenAny(newTts.FirstSynthesis.Task, Task.Delay(TimeSpan.FromSeconds(5)));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(synthesized, Is.SameAs(newTts.FirstSynthesis.Task), "new engine never synthesized (worker stalled?)");
+                Assert.That(oldPlayer.PlayedTexts, Is.EqualTo(new[] { "old-pair message" }),
+                    "old message must play on the OLD player, not the swapped-in one");
+                Assert.That(newPlayer.PlayedTexts, Is.EqualTo(new[] { "new-pair message" }),
+                    "new message must play on the NEW player");
+            });
+        }
+        finally
+        {
+            gateSynthesis.TrySetResult();   // unblock the loop if a failure skipped the release
+            await announcer.StopWorkerAsync();
+            announcer.Dispose();
+        }
+    }
+
+    private static SpeechMessage Message(string text)
+        => new(Guid.NewGuid(), text, null, AnnouncementPriority.Normal, text,
+            DateTimeOffset.Now, DateTimeOffset.Now + TimeSpan.FromSeconds(30), false, "en-US", null);
+
+    /// <summary>Engine fake that signals when SynthesizeAsync is entered and stays pending until gated.
+    /// The clip's Format field carries the message text so RecordingPlayer can attribute plays.</summary>
+    private sealed class GateTts : ITtsEngine
+    {
+        private readonly TaskCompletionSource _gate;
+        public TaskCompletionSource SynthesisEntered { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public GateTts(TaskCompletionSource gate) => _gate = gate;
+
+        public async Task<AudioClip> SynthesizeAsync(SpeechContent content, CancellationToken ct = default)
+        {
+            SynthesisEntered.TrySetResult();
+            await _gate.Task;
+            return new AudioClip(Array.Empty<byte>(), content.Text);
+        }
+    }
+
+    /// <summary>Player fake that records the texts of played clips (via clip.Format).</summary>
+    private sealed class RecordingPlayer : IAudioPlayer
+    {
+        private readonly List<string> _played = new();
+
+        public IReadOnlyList<string> PlayedTexts { get { lock (_played) return _played.ToArray(); } }
+
+        public Task PlayAsync(AudioClip clip, CancellationToken ct = default)
+        {
+            lock (_played) _played.Add(clip.Format);
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken ct = default) => Task.CompletedTask;
     }
 
     private sealed class DelegateTts : ITtsEngine
