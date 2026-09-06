@@ -1,0 +1,34 @@
+﻿using System;
+using System.Diagnostics;
+
+namespace TrackGenius.Model
+{
+    public class RaceTimer
+    {
+        private readonly Stopwatch _stopwatch = new();
+
+        public int CountDownTime { get; set; }
+
+        public RaceTimer(int countDownTime)
+        {
+            IsStarted = false;
+            CountDownTime = countDownTime;
+        }
+
+        public bool IsStarted { get; private set; }
+
+        public TimeSpan Elapsed => _stopwatch.Elapsed;
+
+        public void Start()
+        {
+            _stopwatch.Restart();
+            IsStarted = true;
+        }
+
+        public void Stop()
+        {
+            _stopwatch.Stop();
+            IsStarted = false;
+        }
+    }
+}
